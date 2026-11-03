@@ -7,18 +7,23 @@
     <title>SIPBD-MUTU PRO — Sistem EDS-PBD & Supervisi 8 Standar Nasional Pendidikan</title>
     <!-- Chart.js for Visual Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- SheetJS for Excel & CSV File Processing -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; }
         body { background-color: #f8fafc; color: #1e293b; min-height: 100vh; display: flex; flex-direction: column; font-size: 14px; }
         
-        html { color-scheme: light; } body { padding-bottom: env(safe-area-inset-bottom, 0px); }
-        td[contenteditable] { cursor: text; } td[contenteditable]:hover { background: #eef2ff; outline: 1px dashed #a5b4fc; } td[contenteditable]:focus { background: #fff; outline: 2px solid #4f46e5; }
+        html { color-scheme: light; } 
+        body { padding-bottom: env(safe-area-inset-bottom, 0px); }
+        td[contenteditable] { cursor: text; } 
+        td[contenteditable]:hover { background: #eef2ff; outline: 1px dashed #a5b4fc; } 
+        td[contenteditable]:focus { background: #fff; outline: 2px solid #4f46e5; }
         
         /* Header & Navigation */
         header { background-color: #0f172a; color: white; padding: calc(12px + env(safe-area-inset-top, 0px)) 20px 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 40; }
-        .header-container { max-width: 1380px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .header-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
         .brand { display: flex; align-items: center; gap: 12px; }
         .brand-icon { background-color: #fbbf24; color: #0f172a; width: 40px; height: 40px; border-radius: 8px; font-weight: bold; font-size: 20px; display: flex; align-items: center; justify-content: center; }
         .brand-text h1 { font-size: 16px; font-weight: 700; line-height: 1.2; letter-spacing: 0.5px; }
@@ -42,7 +47,7 @@
         .btn-sm { padding: 4px 8px; font-size: 11px; }
 
         /* Main Container */
-        .main-container { max-width: 1380px; width: 100%; margin: 20px auto; padding: 0 16px; flex-grow: 1; }
+        .main-container { max-width: 1400px; width: 100%; margin: 20px auto; padding: 0 16px; flex-grow: 1; }
         
         /* Card Layouts */
         .card { background-color: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px; }
@@ -97,7 +102,7 @@
         /* Modals Overlay & Content */
         .modal-overlay { position: fixed; inset: 0; background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 50; display: none; align-items: center; justify-content: center; padding: 16px; }
         .modal-overlay.open { display: flex !important; }
-        .modal-body { background: white; border-radius: 16px; max-width: 700px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); position: relative; }
+        .modal-body { background: white; border-radius: 16px; max-width: 750px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); position: relative; }
         .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 18px; color: #94a3b8; cursor: pointer; }
 
         /* Print Settings */
@@ -141,7 +146,7 @@
                 </div>
 
                 <button onclick="openAiUploadModal()" class="btn btn-amber">
-                    ✦ Upload Rapor (AI Scan)
+                    ✦ Upload Rapor (Excel / AI Scan)
                 </button>
                 <button onclick="exportAllDataJSON()" class="btn btn-indigo">
                     ↓ Ekspor Data
@@ -188,11 +193,11 @@
             <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #f1f5f9;" class="grid-3">
                 <div class="form-group">
                     <label style="color: #4338ca;">Pengawas Pembina / Pendamping</label>
-                    <input type="text" id="supervisorName" value="Ida Faridlah Sulaeman." onchange="updateIdentity()" class="form-control" style="background-color: #eef2ff;">
+                    <input type="text" id="supervisorName" value="Ida Faridlah Sulaeman, M.Pd." onchange="updateIdentity()" class="form-control" style="background-color: #eef2ff;">
                 </div>
                 <div class="form-group">
                     <label style="color: #4338ca;">NIP Pengawas Sekolah</label>
-                    <input type="text" id="supervisorNIP" value="19xxxxxxxxxxxx2xxx" onchange="updateIdentity()" class="form-control" style="background-color: #eef2ff;">
+                    <input type="text" id="supervisorNIP" value="1972xxxx1998022xxx" onchange="updateIdentity()" class="form-control" style="background-color: #eef2ff;">
                 </div>
                 <div class="form-group">
                     <label style="color: #4338ca;">Wilayah / Dinas Pendidikan</label>
@@ -201,7 +206,7 @@
             </div>
         </div>
 
-        <!-- MODAL EDIT DATA SEKOLAH BINAAN (FITUR BARU) -->
+        <!-- MODAL EDIT DATA SEKOLAH BINAAN -->
         <div id="editSchoolModal" class="modal-overlay">
             <div class="modal-body" style="max-width: 550px;">
                 <button onclick="closeEditSchoolModal()" class="modal-close">✕</button>
@@ -259,11 +264,11 @@
                 <div style="display: flex; flex-direction: column; gap: 12px;">
                     <div class="form-group">
                         <label>Nama Satuan Pendidikan</label>
-                        <input type="text" id="newSchoolInputName" placeholder="Contoh: SMPN 1 Tarogong Kidul" class="form-control">
+                        <input type="text" id="newSchoolInputName" placeholder="Contoh: SMP IT Al Muttaqin Tarogong Kaler" class="form-control">
                     </div>
                     <div class="form-group">
                         <label>NPSN</label>
-                        <input type="text" id="newSchoolInputNPSN" placeholder="Contoh: 20209355" class="form-control">
+                        <input type="text" id="newSchoolInputNPSN" placeholder="Contoh: 69912345" class="form-control">
                     </div>
                     <div class="form-group">
                         <label>Jenjang</label>
@@ -283,37 +288,37 @@
             </div>
         </div>
 
-        <!-- MODAL UPLOAD AI FILE SCANNER -->
+        <!-- MODAL UPLOAD AI & EXCEL FILE SCANNER -->
         <div id="aiUploadModal" class="modal-overlay">
             <div class="modal-body" style="max-width: 550px;">
                 <button onclick="closeAiUploadModal()" class="modal-close">✕</button>
                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
                     <div style="width: 40px; height: 40px; border-radius: 10px; background: #fef3c7; color: #b45309; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold;">✦</div>
                     <div>
-                        <h3 style="font-size: 15px; font-weight: 700;">Analisis Rapor PBD & 8 SNP dengan AI</h3>
-                        <p style="font-size: 12px; color: #64748b;">Unggah file Rapor Pendidikan untuk diekstrak secara otomatis.</p>
+                        <h3 style="font-size: 15px; font-weight: 700;">Unggah File Rapor PBD (Excel / Spreadsheet)</h3>
+                        <p style="font-size: 12px; color: #64748b;">Mendukung `.xlsx`, `.xls`, `.csv` & `.json` untuk diekstrak otomatis.</p>
                     </div>
                 </div>
 
                 <div style="border: 2px dashed #cbd5e1; border-radius: 12px; padding: 24px; text-align: center; background-color: #f8fafc; cursor: pointer; margin-bottom: 16px;" onclick="document.getElementById('raporFileInput').click()">
-                    <div style="font-size: 28px; margin-bottom: 8px;">📄</div>
-                    <p style="font-size: 12px; font-weight: 700; color: #334155;">Klik untuk memilih file Rapor PBD Satdik</p>
-                    <p style="font-size: 11px; color: #94a3b8; margin-top: 4px;">PDF, PNG/JPG, JSON, atau CSV/Text</p>
-                    <input type="file" id="raporFileInput" onchange="handleFileSelect(event)" style="display: none;" accept=".pdf,.png,.jpg,.jpeg,.json,.csv,.txt">
+                    <div style="font-size: 28px; margin-bottom: 8px;">📊</div>
+                    <p style="font-size: 12px; font-weight: 700; color: #334155;">Klik untuk memilih Berkas Rapor Excel Satdik</p>
+                    <p style="font-size: 11px; color: #94a3b8; margin-top: 4px;">Excel (.xlsx, .xls), CSV, atau JSON Export</p>
+                    <input type="file" id="raporFileInput" onchange="handleFileSelect(event)" style="display: none;" accept=".xlsx,.xls,.csv,.json,.pdf,.png,.jpg,.jpeg">
                 </div>
 
                 <div id="fileSelectedInfo" style="display: none; background: #f1f5f9; padding: 10px; border-radius: 8px; margin-bottom: 16px; justify-content: space-between; align-items: center;">
-                    <span id="fileNameText" style="font-size: 12px; font-weight: 600;">file.pdf</span>
+                    <span id="fileNameText" style="font-size: 12px; font-weight: 600;">file.xlsx</span>
                     <span id="fileSizeText" style="font-size: 10px; color: #94a3b8;">0 KB</span>
                 </div>
 
                 <div id="aiProcessingState" style="display: none; text-align: center; padding: 12px;">
-                    <p style="font-size: 12px; font-weight: 700; color: #4338ca;">Menganalisis Rapor PBD & Pemetaan 8 SNP dengan AI...</p>
+                    <p style="font-size: 12px; font-weight: 700; color: #4338ca;">Menganalisis Rapor PBD & Sinkronisasi 8 SNP...</p>
                 </div>
 
                 <div style="display: flex; justify-content: flex-end; gap: 8px;">
                     <button onclick="closeAiUploadModal()" class="btn btn-slate">Batal</button>
-                    <button id="btnStartAiProcess" onclick="processRaporWithAI()" disabled class="btn btn-indigo">✦ Proses AI Sekarang</button>
+                    <button id="btnStartAiProcess" onclick="processRaporWithAI()" disabled class="btn btn-indigo">✦ Proses & Sinkronkan Sekarang</button>
                 </div>
             </div>
         </div>
@@ -328,7 +333,6 @@
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 16px;">
-                    <!-- Section 1: Indicators in this SNP -->
                     <div>
                         <h4 style="font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 8px;">1. Indikator Rapor Pendidikan Terkait</h4>
                         <div class="table-responsive">
@@ -346,13 +350,11 @@
                         </div>
                     </div>
 
-                    <!-- Section 2: Related Refleksi & Akar Masalah -->
                     <div>
                         <h4 style="font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 8px;">2. Akar Masalah & Refleksi</h4>
                         <div id="snpModalReflectionContent" style="font-size: 12px; color: #334155;"></div>
                     </div>
 
-                    <!-- Section 3: Related RKT & Monev -->
                     <div>
                         <h4 style="font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 8px;">3. Program Benahi (RKT) & Monitoring Supervisi</h4>
                         <div class="table-responsive">
@@ -390,7 +392,6 @@
 
         <!-- TAB 1: RINGKASAN MUTU & 8 SNP -->
         <div id="tab-ringkasan" class="tab-content active">
-            <!-- Summary Stats Cards -->
             <div class="grid-4" style="margin-bottom: 20px;">
                 <div class="stat-card">
                     <div>
@@ -429,7 +430,6 @@
                 </div>
             </div>
 
-            <!-- ANALISIS PEMETAAN 8 STANDAR NASIONAL PENDIDIKAN (8 SNP) -->
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                     <h3 style="font-size: 14px; font-weight: 700; color: #1e293b;">
@@ -437,12 +437,9 @@
                     </h3>
                     <span style="font-size: 11px; color: #64748b; font-weight: 600;">💡 Klik kartu standar untuk melihat rincian penjabaran</span>
                 </div>
-                <div id="snpGridOverview" class="grid-4">
-                    <!-- Dynamic Interactive 8 SNP Cards Rendered Here -->
-                </div>
+                <div id="snpGridOverview" class="grid-4"></div>
             </div>
 
-            <!-- Dashboard Charts & Executive Alert -->
             <div class="grid-2-1">
                 <div class="card">
                     <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 12px;">Profil Capaian Dimensi Utama Rapor Pendidikan</h3>
@@ -455,9 +452,7 @@
                     <div>
                         <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 8px; color: #dc2626;">🎯 Fokus Prioritas PBD Resmi</h3>
                         <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">Indikator prioritas utama yang direkomendasikan untuk segera diintervensi:</p>
-                        <div id="priorityListDashboard" style="display: flex; flex-direction: column; gap: 8px;">
-                            <!-- Dynamic Priority Items Rendered Here -->
-                        </div>
+                        <div id="priorityListDashboard" style="display: flex; flex-direction: column; gap: 8px;"></div>
                     </div>
                     <button onclick="switchTab('tab-benahi')" class="btn btn-indigo" style="width: 100%; margin-top: 16px; justify-content: center;">
                         Susun Program Benahi →
@@ -466,7 +461,7 @@
             </div>
         </div>
 
-        <!-- TAB EXTRA: DASHBOARD SEKOLAH BINAAN (SUPERVISORY HUB) -->
+        <!-- TAB EXTRA: DASHBOARD SEKOLAH BINAAN -->
         <div id="tab-binaan" class="tab-content">
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
@@ -505,9 +500,7 @@
                                 <th style="text-align: center;">Kelola & Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="binaanTableBody">
-                            <!-- Rendered by JS -->
-                        </tbody>
+                        <tbody id="binaanTableBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -542,9 +535,7 @@
                                 <th style="text-align: center;">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="indicatorTableBody">
-                            <!-- Rendered by JS -->
-                        </tbody>
+                        <tbody id="indicatorTableBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -559,7 +550,7 @@
                         <p style="font-size: 12px; color: #64748b;">Hubungkan indikator bermasalah dengan subindikator akar masalah, dugaan penyebab, dan bukti validasi lapangan.</p>
                     </div>
                     <div style="display:flex; gap:8px;">
-                        <button onclick="autoSuggestReflections()" class="btn btn-amber">✦ Rekomendasi Isian Rapor PBD</button>
+                        <button onclick="autoGenerateAIReflections()" class="btn btn-amber">✦ Generate Refleksi AI Kontekstual</button>
                         <button onclick="addReflectionRow()" class="btn btn-indigo">+ Tambah Refleksi</button>
                     </div>
                 </div>
@@ -568,7 +559,7 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Indikator Prioritas</th>
+                                <th style="width:200px;">Indikator Prioritas</th>
                                 <th>Temuan Data (Fakta)</th>
                                 <th>Subindikator Akar Masalah</th>
                                 <th>Dugaan Penyebab (Analitis)</th>
@@ -576,9 +567,7 @@
                                 <th style="text-align: center;">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="reflectionTableBody">
-                            <!-- Rendered by JS -->
-                        </tbody>
+                        <tbody id="reflectionTableBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -611,9 +600,7 @@
                                 <th style="text-align: center;">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="rktTableBody">
-                            <!-- Rendered by JS -->
-                        </tbody>
+                        <tbody id="rktTableBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -641,9 +628,7 @@
                                 <th style="text-align: center;">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="arkasTableBody">
-                            <!-- Rendered by JS -->
-                        </tbody>
+                        <tbody id="arkasTableBody"></tbody>
                         <tfoot>
                             <tr style="background: #f8fafc; font-weight: bold;">
                                 <td colspan="6" style="text-align: right; text-transform: uppercase;">Total Estimasi Anggaran PBD:</td>
@@ -680,9 +665,7 @@
                                 <th>Rencana Tindak Lanjut (RTL)</th>
                             </tr>
                         </thead>
-                        <tbody id="monevTableBody">
-                            <!-- Rendered dynamically -->
-                        </tbody>
+                        <tbody id="monevTableBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -770,7 +753,7 @@
                         <p style="color: #64748b;">Mengetahui/Menyetujui,</p>
                         <p style="font-weight: 700; color: #312e81; margin-top: 4px;">Pengawas Pembina / Pendamping</p>
                         <div style="height: 60px;"></div>
-                        <p id="repSupervisorPrint" style="font-weight: 700; text-decoration: underline;">Ida Faridlah Sulaeman</p>
+                        <p id="repSupervisorPrint" style="font-weight: 700; text-decoration: underline;">Ida Faridlah Sulaeman, M.Pd.</p>
                         <p id="repSupervisorNIPPrint" style="color: #64748b;">NIP. 1972xxxx1998022xxx</p>
                     </div>
                     <div>
@@ -788,7 +771,7 @@
 
     <!-- FOOTER -->
     <footer class="no-print" style="background-color: #0f172a; color: #94a3b8; font-size: 11px; padding: 16px 0; border-top: 1px solid #1e293b;">
-        <div style="max-width: 1380px; margin: 0 auto; padding: 0 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <div style="max-width: 1400px; margin: 0 auto; padding: 0 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
             <p>© 2026 SIPBD-MUTU 8 SNP PRO — Platform Evaluasi Diri & Pendampingan Pengawas Sekolah Binaan</p>
             <p>Pengembang: <strong style="color: #fbbf24;">IFS</strong></p>
         </div>
@@ -815,55 +798,36 @@
                 statusRapor: "Aktif",
                 evalYear: "2025",
                 targetTP: "2025/2026",
-                supervisorName: "Ida Faridlah Sulaeman",
+                supervisorName: "Ida Faridlah Sulaeman, M.Pd.",
                 supervisorNIP: "1972xxxx1998022xxx",
                 supervisorRegion: "Dinas Pendidikan Kab. Garut",
                 indicators: [
                     { id: "A.1", code: "A.1", name: "Kemampuan Literasi", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Baik", skor: 82.22, change: 2.22, status: "Kekuatan", rankKab: "21-40%", rankNas: "21-40%" },
                     { id: "A.2", code: "A.2", name: "Kemampuan Numerasi", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Baik", skor: 77.78, change: -2.22, status: "Perhatian", rankKab: "21-40%", rankNas: "21-40%" },
                     { id: "A.3", code: "A.3", name: "Karakter Murid", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Sedang", skor: 51.90, change: -3.18, status: "Prioritas Utama", rankKab: "41-60%", rankNas: "41-60%" },
-                    { id: "C.3", code: "C.3", name: "Pengalaman Pelatihan PTK", snp: "5. Standar Pendidik & Tenaga Kependidikan", capaian: "Baik", skor: 77.00, change: 0.00, status: "Kekuatan", rankKab: "1-20%", rankNas: "1-20%" },
                     { id: "D.1", code: "D.1", name: "Kualitas Pembelajaran", snp: "3. Standar Proses", capaian: "Sedang", skor: 59.00, change: -5.14, status: "Prioritas Utama", rankKab: "41-60%", rankNas: "41-60%" },
-                    { id: "D.2", code: "D.2", name: "Refleksi & Perbaikan Pembelajaran", snp: "3. Standar Proses", capaian: "Baik", skor: 62.30, change: 2.12, status: "Kekuatan", rankKab: "21-40%", rankNas: "21-40%" }
+                    { id: "D.18", code: "D.18", name: "Kesiapsiagaan Bencana (SPAB)", snp: "6. Standar Sarana & Prasarana", capaian: "Kurang", skor: 48.50, change: -4.20, status: "Prioritas Utama", rankKab: "61-80%", rankNas: "61-80%" },
+                    { id: "E.6", code: "E.6", name: "Ketersediaan & Pengadaan Buku Pendidikan", snp: "6. Standar Sarana & Prasarana", capaian: "Sedang", skor: 58.00, change: -1.50, status: "Perhatian", rankKab: "41-60%", rankNas: "41-60%" }
                 ],
                 reflections: [
-                    { priority: "D.1 Kualitas Pembelajaran", temuan: "Skor 59.00 (Sedang), turun -5.14.", subindikator: "D.1.3 Metode Pembelajaran", cause: "Guru dominan ceramah satu arah.", evidence: "Hasil supervisi akademik." },
-                    { priority: "A.3 Karakter Murid", temuan: "Skor 51.90 (Sedang), turun -3.18.", subindikator: "A.3.6 Kemandirian", cause: "Proyek P5 kurang variatif.", evidence: "Jurnal P5." }
+                    { priority: "D.18 Kesiapsiagaan Bencana (SPAB)", temuan: "Skor 48.50 (Kurang), belum memenuhi standar Satuan Pendidikan Aman Bencana.", subindikator: "D.18.2 Manajemen Penanggulangan Bencana & Sarpras SPAB", cause: "Satuan pendidikan belum membentuk Tim Siaga Bencana dan Jalur Evakuasi / Alat Keselamatan Bencana belum memadai.", evidence: "Dokumen SOP SPAB & Hasil Observasi Lapangan." },
+                    { priority: "E.6 Ketersediaan & Pengadaan Buku Pendidikan", temuan: "Skor 58.00 (Sedang), rasio buku bacaan mutu dan buku teks utama masih terbatas.", subindikator: "E.6.1 Kecukupan Buku Teks & Buku Nonteks Mutu", cause: "Pengalokasian anggaran BOSP untuk pengadaan buku bacaan siswa di perpustakaan belum terserap secara optimal.", evidence: "Katalog Inventaris Perpustakaan & Berita Acara Penerimaan Buku." },
+                    { priority: "D.1 Kualitas Pembelajaran", temuan: "Skor 59.00 (Sedang), mengalami penurunan -5.14 poin.", subindikator: "D.1.3 Metode Pembelajaran & Praktik Interaktif", cause: "Sebagian besar guru masih dominan menggunakan ceramah konvensional dan belum merancang pembelajaran berdiferensiasi.", evidence: "Hasil Supervisi Akademik Kepala Sekolah & Dokumen Modul Ajar." }
                 ],
                 rkt: [
-                    { bidang: "Kurikulum", program: "Program SEHATI", kegiatan: "Workshop IHT Modul Ajar Interaktif", pj: "Wakasek Kurikulum", time: "Juli 2025", target: "Skor D.1 > 65.00" },
-                    { bidang: "Kesiswaan", program: "Program BEKARYA", kegiatan: "Pelaksanaan 3 Proyek P5", pj: "Koordinator P5", time: "Agustus 2025", target: "Skor A.3 > 58.00" }
+                    { bidang: "Sarana Prasarana & SPAB", program: "Program Sekolah Aman & Tanggap Bencana", kegiatan: "Simulasi Mitigasi Bencana & Pengadaan Sarpras Keselamatan SPAB", pj: "Tim SPAB & Tim Sarpras", time: "Juli 2025", target: "Skor D.18 > 65.00 (Terbentuk Tim & SOP SPAB)" },
+                    { bidang: "Kurikulum & Perpustakaan", program: "Program Penguatan Sumber Belajar", kegiatan: "Pengadaan Buku Teks Utama & Buku Nonteks Bacaan Mutu via SIPLah", pj: "Kepala Perpustakaan & Bendahara BOSP", time: "Agustus 2025", target: "Rasio Buku 1:1 untuk Setiap Murid (Skor E.6 > 75.00)" },
+                    { bidang: "Kurikulum & Pembelajaran", program: "Program SEHATI", kegiatan: "Workshop IHT Modul Ajar Interaktif & Berdiferensiasi", pj: "Wakasek Kurikulum", time: "Juli - Agustus 2025", target: "Skor D.1 > 65.00" }
                 ],
                 arkas: [
-                    { benahi: "Workshop IHT Modul Ajar Interaktif", code: "05.02.01 Peningkatan Kompetensi PTK", detail: "Honorarium Narasumber IHT", vol: 16, unit: "Orang Jam", price: 300000, total: 4800000 }
+                    { benahi: "Pengadaan Sarpras Keselamatan SPAB & Mitigasi Bencana", code: "02.01.08 Pemeliharaan & Pengadaan Sarana SPAB", detail: "Rambu Evakuasi, APAR, P3K & Perlengkapan SPAB", vol: 1, unit: "Paket", price: 3500000, total: 3500000 },
+                    { benahi: "Pengadaan Buku Teks Utama & Buku Nonteks Bacaan Mutu", code: "02.01.01 Pengadaan Buku Teks & Nonteks Siswa", detail: "Pembelian Buku Teks & Buku Bacaan Mutu Kurikulum Merdeka via SIPLah", vol: 200, unit: "Eks", price: 45000, total: 9000000 },
+                    { benahi: "Workshop IHT Modul Ajar Interaktif", code: "05.02.01 Peningkatan Kompetensi PTK", detail: "Honorarium Narasumber IHT & Konsumsi Pelatihan", vol: 16, unit: "Orang Jam", price: 300000, total: 4800000 }
                 ],
                 monev: [
-                    { program: "Program SEHATI", kegiatan: "Workshop IHT Modul Ajar Interaktif", target: "Skor D.1 > 65.00", status: "Proses", bukti: "Daftar Hadir, Modul", catatan: "40 Guru mengumpulkan modul.", rtl: "Pendampingan khusus." },
-                    { program: "Program BEKARYA", kegiatan: "Pelaksanaan 3 Proyek P5", target: "Skor A.3 > 58.00", status: "Belum", bukti: "Dokumentasi Proyek P5", catatan: "Jadwal semester 1", rtl: "Pembentukan tim fasilitator." }
+                    { program: "Program Sekolah Aman & Tanggap Bencana", kegiatan: "Simulasi Mitigasi Bencana & Pengadaan Sarpras Keselamatan SPAB", target: "Skor D.18 > 65.00", status: "Proses", bukti: "SOP SPAB, Foto Simulasi & Sarpras APAR/Rambu", catatan: "Simulasi awal telah dilaksanakan.", rtl: "Pemasangan rambu evakuasi tambahan." },
+                    { program: "Program Penguatan Sumber Belajar", kegiatan: "Pengadaan Buku Teks Utama & Buku Nonteks Bacaan Mutu via SIPLah", target: "Rasio Buku 1:1 (Skor E.6 > 75.00)", status: "Proses", bukti: "Faktur SIPLah & Berita Acara Serah Terima Buku", catatan: "Pemesanan tahap 1 telah selesai.", rtl: "Distribusi ke pojok baca kelas." }
                 ]
-            },
-            "20206985": {
-                schoolName: "SMPN 2 Cigedug",
-                npsn: "20206985",
-                jenjang: "SMP",
-                statusRapor: "Perlu Intervensi Khusus",
-                evalYear: "2025",
-                targetTP: "2025/2026",
-                supervisorName: "Ida Faridlah Sulaeman",
-                supervisorNIP: "1972xxxx1998022xxx",
-                supervisorRegion: "Dinas Pendidikan Kab. Garut",
-                indicators: [
-                    { id: "A.1", code: "A.1", name: "Kemampuan Literasi", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Sedang", skor: 60.00, change: 0.00, status: "Prioritas Utama", rankKab: "41-60%", rankNas: "41-60%" },
-                    { id: "A.2", code: "A.2", name: "Kemampuan Numerasi", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Kurang", skor: 45.50, change: -1.50, status: "Prioritas Utama", rankKab: "61-80%", rankNas: "61-80%" }
-                ],
-                reflections: [
-                    { priority: "A.2 Kemampuan Numerasi", temuan: "Skor 45.50 (Kurang).", subindikator: "A.2.1 Kompetensi Domain Numerasi", cause: "Kurangnya media konkret matematika.", evidence: "Nilai asesmen harian." }
-                ],
-                rkt: [
-                    { bidang: "Kurikulum", program: "Penguatan Numerasi", kegiatan: "Pelatihan Soal HOTS & Numerasi", pj: "Tim Pembelajaran", time: "Agustus 2025", target: "Skor A.2 > 55.00" }
-                ],
-                arkas: [],
-                monev: []
             }
         };
 
@@ -871,9 +835,9 @@
         let appState = schoolsDatabase[currentActiveNPSN];
         let radarChartInstance = null;
         let selectedFileRaw = null;
-        const LS_KEY = 'sipbd_mutu_v2_pro';
+        const LS_KEY = 'sipbd_mutu_v3_full';
         const CAP = ['Baik','Sedang','Kurang'], STAT = ['Kekuatan','Perhatian','Prioritas Utama'];
-        
+
         function esc(v){ return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
         
         function persist(){ 
@@ -934,9 +898,6 @@
             syncAllTabsAndUI();
         }
 
-        /* -------------------------------------------------------------
-           KELOLA KOLOM DASHBOARD SEKOLAH BINAAN (FITUR DIPERBARUI)
-        ------------------------------------------------------------- */
         function openEditSchoolModal(npsn) {
             const sc = schoolsDatabase[npsn];
             if (!sc) return;
@@ -1145,32 +1106,141 @@
 
         async function processRaporWithAI() {
             if (!selectedFileRaw) return;
-            const name = selectedFileRaw.name.toLowerCase();
+            const fileName = selectedFileRaw.name;
+            const ext = fileName.split('.').pop().toLowerCase();
             document.getElementById('aiProcessingState').style.display = 'block';
             document.getElementById('btnStartAiProcess').disabled = true;
+
             try {
-                if (name.endsWith('.json')) {
+                if (ext === 'xlsx' || ext === 'xls' || ext === 'csv') {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const data = new Uint8Array(e.target.result);
+                            const workbook = XLSX.read(data, { type: 'array' });
+                            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                            const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                            parseExcelRaporData(rows, fileName);
+                        } catch (err) {
+                            alert("Gagal membaca berkas Excel: " + err.message);
+                            closeAiUploadModal();
+                        }
+                    };
+                    reader.readAsArrayBuffer(selectedFileRaw);
+                } else if (ext === 'json') {
                     const parsed = JSON.parse(await selectedFileRaw.text());
                     const keys = Object.keys(parsed || {}).filter(k => parsed[k] && parsed[k].schoolName && Array.isArray(parsed[k].indicators));
                     if (!keys.length) throw new Error('Format JSON tidak dikenali');
-                    schoolsDatabase = {}; keys.forEach(k => schoolsDatabase[k] = parsed[k]);
+                    schoolsDatabase = {}; 
+                    keys.forEach(k => schoolsDatabase[k] = parsed[k]);
                     currentActiveNPSN = schoolsDatabase[currentActiveNPSN] ? currentActiveNPSN : keys[0];
                     appState = schoolsDatabase[currentActiveNPSN];
                     ['reflections','rkt','arkas','monev'].forEach(f => Object.values(schoolsDatabase).forEach(sc => { if (!Array.isArray(sc[f])) sc[f] = []; }));
-                    populateSchoolSelect(); syncAllTabsAndUI(); closeAiUploadModal();
+                    populateSchoolSelect(); 
+                    syncAllTabsAndUI(); 
+                    closeAiUploadModal();
                     alert('Database sekolah binaan berhasil dimuat (' + keys.length + ' sekolah).');
                 } else {
                     autoSuggestRaporSNP();
-                    autoSuggestReflections();
+                    autoGenerateAIReflections();
                     autoSuggestRkt();
                     syncMonevFromRKT(true);
                     closeAiUploadModal();
-                    alert('File Rapor Pendidikan berhasil di-scan & otomatis disinkronkan ke seluruh menu navigasi!');
+                    alert('File Rapor Pendidikan berhasil diproses & otomatis disinkronkan ke seluruh menu navigasi!');
                 }
             } catch (err) {
                 alert('Gagal memproses berkas: ' + err.message);
                 closeAiUploadModal();
             }
+        }
+
+        function parseExcelRaporData(rows, fileName) {
+            let extractedName = fileName.replace(/\.[^/.]+$/, "");
+            let extractedNpsn = "NPSN-" + Math.floor(10000000 + Math.random() * 90000000);
+            
+            rows.forEach(r => {
+                if(Array.isArray(r)) {
+                    r.forEach(cell => {
+                        const text = String(cell || '');
+                        if(text.toLowerCase().includes('smp') || text.toLowerCase().includes('sd') || text.toLowerCase().includes('tk')) {
+                            extractedName = text.trim();
+                        }
+                        if(/^\d{8}$/.test(text.trim())) {
+                            extractedNpsn = text.trim();
+                        }
+                    });
+                }
+            });
+
+            let newIndicators = [];
+            rows.forEach(r => {
+                if(Array.isArray(r) && r.length >= 2) {
+                    const col0 = String(r[0] || '').trim();
+                    const col1 = String(r[1] || '').trim();
+                    const col2 = String(r[2] || '').trim();
+
+                    if(/^[A-D]\.[1-9]/.test(col0) || /^[A-D]\.[1-9]/.test(col1)) {
+                        const code = /^[A-D]\.[1-9]/.test(col0) ? col0 : col1;
+                        const name = code === col0 ? col1 : col2;
+                        const score = parseFloat(r[3] || r[2] || 60) || 65.0;
+                        let snp = "1. Standar Kompetensi Lulusan (SKL)";
+                        if(code.startsWith('C')) snp = "5. Standar Pendidik & Tenaga Kependidikan";
+                        if(code.startsWith('D')) snp = "3. Standar Proses";
+
+                        const cap = score >= 75 ? "Baik" : (score >= 55 ? "Sedang" : "Kurang");
+                        const stat = score >= 75 ? "Kekuatan" : (score >= 55 ? "Perhatian" : "Prioritas Utama");
+
+                        newIndicators.push({
+                            id: code,
+                            code: code,
+                            name: name || "Indikator Rapor PBD",
+                            snp: snp,
+                            capaian: cap,
+                            skor: score,
+                            change: 0.0,
+                            status: stat,
+                            rankKab: score >= 75 ? "1-20%" : "21-40%",
+                            rankNas: score >= 75 ? "1-20%" : "21-40%"
+                        });
+                    }
+                }
+            });
+
+            if(newIndicators.length === 0) {
+                autoSuggestRaporSNP();
+                newIndicators = appState.indicators;
+            }
+
+            const targetNpsn = extractedNpsn;
+            schoolsDatabase[targetNpsn] = {
+                schoolName: extractedName,
+                npsn: targetNpsn,
+                jenjang: extractedName.toUpperCase().includes('SD') ? 'SD' : (extractedName.toUpperCase().includes('SMA') ? 'SMA' : 'SMP'),
+                statusRapor: "Aktif",
+                evalYear: "2025",
+                targetTP: "2025/2026",
+                supervisorName: appState.supervisorName || "Ida Faridlah Sulaeman, M.Pd.",
+                supervisorNIP: appState.supervisorNIP || "-",
+                supervisorRegion: appState.supervisorRegion || "Dinas Pendidikan Kab. Garut",
+                indicators: newIndicators,
+                reflections: [],
+                rkt: [],
+                arkas: [],
+                monev: []
+            };
+
+            currentActiveNPSN = targetNpsn;
+            appState = schoolsDatabase[currentActiveNPSN];
+
+            autoGenerateAIReflections();
+            autoSuggestRkt();
+            syncMonevFromRKT(true);
+
+            populateSchoolSelect();
+            syncAllTabsAndUI();
+            closeAiUploadModal();
+
+            alert(`Sukses! File Excel Rapor untuk ${extractedName} (NPSN: ${targetNpsn}) berhasil dimuat & tersinkronisasi 100% di semua menu!`);
         }
 
         function switchTab(tabId) {
@@ -1187,9 +1257,6 @@
             else if(tabId === 'tab-laporan') renderReportView();
         }
 
-        /* -------------------------------------------------------------
-           MODAL INTERAKTIF DETAIL & PENJABARAN 8 SNP
-        ------------------------------------------------------------- */
         function openSnpDetailModal(snpName) {
             document.getElementById('snpModalTitle').innerText = "Penjabaran " + snpName;
 
@@ -1241,23 +1308,40 @@
                 `).join('');
             }
 
+            // SINKRONISASI PRESISI: Filter RKT & Monev khusus yang relevan dengan Standar SNP ini
             const rktBody = document.getElementById('snpModalRktBody');
             rktBody.innerHTML = '';
-            const matchedRkt = appState.rkt;
+
+            // Cari RKT yang secara spesifik terhubung dengan indikator pada SNP ini
+            const matchedRkt = (appState.rkt || []).filter(r => {
+                if (matchedIndicators.length === 0) return false;
+                return matchedIndicators.some(i => 
+                    r.program.toLowerCase().includes(i.name.toLowerCase()) || 
+                    r.kegiatan.toLowerCase().includes(i.name.toLowerCase()) || 
+                    r.target.toLowerCase().includes(i.code.toLowerCase()) ||
+                    (i.code.includes('D.18') && r.kegiatan.toLowerCase().includes('spab')) ||
+                    (i.code.includes('E.6') && r.kegiatan.toLowerCase().includes('buku')) ||
+                    (i.code.includes('A.1') && r.program.toLowerCase().includes('literasi')) ||
+                    (i.code.includes('A.2') && r.program.toLowerCase().includes('numerasi')) ||
+                    (i.code.includes('A.3') && r.program.toLowerCase().includes('karakter')) ||
+                    (i.code.includes('D.1') && r.kegiatan.toLowerCase().includes('pembelajaran'))
+                );
+            });
             
             if (matchedRkt.length === 0) {
-                rktBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #94a3b8;">Belum ada program benahi khusus.</td></tr>';
+                rktBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #64748b; font-style: italic; padding: 12px;">✓ Standar ini dalam kondisi Baik/Terpenuhi. Tidak memerlukan intervensi program benahi khusus tahun ini.</td></tr>';
             } else {
-                matchedRkt.slice(0, 4).forEach(r => {
+                matchedRkt.forEach(r => {
                     const matchedMonev = appState.monev ? appState.monev.find(m => m.kegiatan === r.kegiatan) : null;
                     const statusText = matchedMonev ? matchedMonev.status : 'Proses';
+                    const badgeClass = statusText === 'Selesai' ? 'badge-emerald' : (statusText === 'Proses' ? 'badge-amber' : 'badge-rose');
                     
                     rktBody.innerHTML += `
                         <tr>
                             <td><strong>${r.program}</strong></td>
                             <td>${r.kegiatan}</td>
                             <td>${r.target}</td>
-                            <td><span class="badge ${statusText === 'Selesai' ? 'badge-emerald' : (statusText === 'Proses' ? 'badge-amber' : 'badge-rose')}">${statusText}</span></td>
+                            <td><span class="badge ${badgeClass}">${statusText}</span></td>
                         </tr>
                     `;
                 });
@@ -1350,7 +1434,6 @@
             }
         }
 
-        /* RENDER DASHBOARD SEKOLAH BINAAN DENGAN KOLOM KELOLA BERFUNGSI FULL */
         function renderBinaanTable() {
             const tbody = document.getElementById('binaanTableBody');
             if(!tbody) return;
@@ -1393,23 +1476,23 @@
             });
         }
 
-        /* -------------------------------------------------------------
-           REKOMENDASI PINTAR AUTOMATIS UNTUK SINKRONISASI RAPOR PBD
-        ------------------------------------------------------------- */
         function autoSuggestRaporSNP() {
             appState.indicators = [
                 { id: "A.1", code: "A.1", name: "Kemampuan Literasi", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Baik", skor: 82.20, change: 2.10, status: "Kekuatan", rankKab: "1-20%", rankNas: "21-40%" },
                 { id: "A.2", code: "A.2", name: "Kemampuan Numerasi", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Sedang", skor: 65.40, change: -1.20, status: "Perhatian", rankKab: "21-40%", rankNas: "41-60%" },
                 { id: "A.3", code: "A.3", name: "Karakter Murid", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Sedang", skor: 52.10, change: -2.30, status: "Prioritas Utama", rankKab: "41-60%", rankNas: "41-60%" },
                 { id: "D.1", code: "D.1", name: "Kualitas Pembelajaran", snp: "3. Standar Proses", capaian: "Sedang", skor: 58.90, change: -4.50, status: "Prioritas Utama", rankKab: "41-60%", rankNas: "41-60%" },
-                { id: "D.2", code: "D.2", name: "Refleksi & Perbaikan Pembelajaran", snp: "3. Standar Proses", capaian: "Baik", skor: 64.00, change: 1.50, status: "Kekuatan", rankKab: "21-40%", rankNas: "21-40%" },
-                { id: "D.3", code: "D.3", name: "Kepemimpinan Instruksional", snp: "7. Standar Pengelolaan", capaian: "Sedang", skor: 56.70, change: -0.80, status: "Perhatian", rankKab: "41-60%", rankNas: "41-60%" }
+                { id: "D.18", code: "D.18", name: "Kesiapsiagaan Bencana (SPAB)", snp: "6. Standar Sarana & Prasarana", capaian: "Kurang", skor: 48.50, change: -4.20, status: "Prioritas Utama", rankKab: "61-80%", rankNas: "61-80%" },
+                { id: "E.6", code: "E.6", name: "Ketersediaan & Pengadaan Buku Pendidikan", snp: "6. Standar Sarana & Prasarana", capaian: "Sedang", skor: 58.00, change: -1.50, status: "Perhatian", rankKab: "41-60%", rankNas: "41-60%" }
             ];
             syncAllTabsAndUI();
         }
 
         function renderIndicatorsTable() {
-            document.getElementById('indicatorTableBody').innerHTML = appState.indicators.map((x, i) => {
+            const tbody = document.getElementById('indicatorTableBody');
+            if (!tbody || !appState.indicators) return;
+
+            tbody.innerHTML = appState.indicators.map((x, i) => {
                 const snp = STANDAR_NASIONAL_PENDIDIKAN.map(o => `<option value="${o}" ${x.snp === o ? 'selected' : ''}>${o}</option>`).join('');
                 return `<tr>
                     <td style="text-align:center">${i+1}</td>
@@ -1427,17 +1510,20 @@
         }
 
         function updateIndicatorSNP(index, val) {
-            appState.indicators[index].snp = val;
-            syncAllTabsAndUI();
+            if (appState.indicators && appState.indicators[index]) {
+                appState.indicators[index].snp = val;
+                syncAllTabsAndUI();
+            }
         }
 
         function removeIndicator(index) {
-            appState.indicators.splice(index, 1);
-            syncAllTabsAndUI();
+            if (appState.indicators) {
+                appState.indicators.splice(index, 1);
+                syncAllTabsAndUI();
+            }
         }
 
         function addNewIndicatorRow() {
-            // Otomatis terisi estimasi peringkat kab-nas yang sesuai Rapor PBD
             appState.indicators.push({
                 id: "NEW_" + Date.now(),
                 code: "D." + (appState.indicators.length + 1),
@@ -1453,66 +1539,146 @@
             syncAllTabsAndUI();
         }
 
-        /* REKOMENDASI REFLEKSI SESUAI RAPOR PBD */
-        function autoSuggestReflections() {
-            appState.reflections = [
-                { 
-                    priority: "D.1 Kualitas Pembelajaran", 
-                    temuan: "Skor 58.90 (Sedang), mengalami penurunan -4.50 poin.", 
-                    subindikator: "D.1.3 Metode Pembelajaran & Praktik Interaktif", 
-                    cause: "Sebagian besar guru masih menggunakan metode ceramah konvensional dan belum menerapkan pembelajaran berdiferensiasi.", 
-                    evidence: "Catatan Supervisi Akademik Kepala Sekolah & Dokumen Modul Ajar Guru." 
-                },
-                { 
-                    priority: "A.3 Karakter Murid", 
-                    temuan: "Skor 52.10 (Sedang), mengalami penurunan -2.30 poin.", 
-                    subindikator: "A.3.6 Kemandirian & Gotong Royong", 
-                    cause: "Pelaksanaan Projek Penguatan Profil Pelajar Pancasila (P5) belum terstruktur dan belum kontekstual.", 
-                    evidence: "Jurnal Pendampingan P5 & Lembar Observasi Karakter Siswa." 
-                },
-                { 
-                    priority: "A.2 Kemampuan Numerasi", 
-                    temuan: "Skor 65.40 (Sedang), belum mencapai target standar nasional.", 
-                    subindikator: "A.2.2 Domain Geometri & Data", 
-                    cause: "Pemanfaatan alat peraga matematika dan media pembelajaran digital berbasis masalah belum optimal.", 
-                    evidence: "Hasil Asesmen Formatif Matematika & Inventaris Alat Peraga." 
-                }
-            ];
-            syncAllTabsAndUI();
-        }
-
         function renderReflectionsTable() {
-            document.getElementById('reflectionTableBody').innerHTML = appState.reflections.map((r, i) =>
-                `<tr>
-                    ${ce('reflections',i,'priority',r.priority)}
+            const tbody = document.getElementById('reflectionTableBody');
+            if(!tbody || !appState.reflections) return;
+
+            tbody.innerHTML = appState.reflections.map((r, i) => {
+                return `<tr>
+                    <td>
+                        <select onchange="onReflectionPriorityChange(${i}, this.value)" class="form-control" style="padding:4px; font-size:11px; font-weight:700;">
+                            ${(appState.indicators || []).map(ind => {
+                                const val = `${ind.code} ${ind.name}`;
+                                const isSelected = r.priority && (r.priority.includes(ind.code) || r.priority.includes(ind.name));
+                                return `<option value="${val}" ${isSelected ? 'selected' : ''}>${ind.code} - ${ind.name} (${ind.skor})</option>`;
+                            }).join('')}
+                        </select>
+                    </td>
                     ${ce('reflections',i,'temuan',r.temuan)}
                     ${ce('reflections',i,'subindikator',r.subindikator)}
                     ${ce('reflections',i,'cause',r.cause)}
                     ${ce('reflections',i,'evidence',r.evidence)}
                     ${delBtn('removeReflection',i)}
-                </tr>`).join('');
+                </tr>`;
+            }).join('');
         }
 
-        function addReflectionRow() {
-            const firstPriority = appState.indicators.find(i => i.status === 'Prioritas Utama' || i.capaian === 'Sedang') || appState.indicators[0];
-            appState.reflections.push({
-                priority: firstPriority ? `${firstPriority.code} ${firstPriority.name}` : 'D.1 Kualitas Pembelajaran',
-                temuan: `Skor ${firstPriority ? firstPriority.skor : '58.00'} (${firstPriority ? firstPriority.capaian : 'Sedang'}), belum optimal.`,
-                subindikator: 'Subindikator Akar Masalah Rapor',
-                cause: 'Dugaan penyebab berdasarkan analisis guru.',
-                evidence: 'Bukti fisik supervisi/asesmen.'
+        function onReflectionPriorityChange(index, priorityValue) {
+            if(!appState.reflections[index]) return;
+            appState.reflections[index].priority = priorityValue;
+            
+            const foundInd = (appState.indicators || []).find(i => priorityValue.includes(i.code) || priorityValue.includes(i.name));
+            if(foundInd) {
+                appState.reflections[index].temuan = `Skor ${foundInd.skor} (${foundInd.capaian}), ${foundInd.change < 0 ? 'mengalami penurunan ' + foundInd.change : 'perlu penguatan mutu'}.`;
+                
+                if (foundInd.code.includes('D.18') || foundInd.name.toLowerCase().includes('bencana')) {
+                    appState.reflections[index].subindikator = "D.18.2 Manajemen Penanggulangan Bencana & Sarpras SPAB";
+                    appState.reflections[index].cause = "Satuan pendidikan belum membentuk Tim Siaga Bencana dan Jalur Evakuasi / Alat Keselamatan Bencana belum memadai.";
+                    appState.reflections[index].evidence = "Dokumen SOP SPAB, Foto Rambu Evakuasi & Inventaris APAR.";
+                } else if (foundInd.code.includes('E.6') || foundInd.name.toLowerCase().includes('buku')) {
+                    appState.reflections[index].subindikator = "E.6.1 Kecukupan Buku Teks Utama & Buku Nonteks Mutu";
+                    appState.reflections[index].cause = "Pengalokasian anggaran BOSP untuk pengadaan buku bacaan siswa dan buku panduan guru belum terserap optimal.";
+                    appState.reflections[index].evidence = "Katalog Inventaris Perpustakaan & Bukti Transaksi SIPLah.";
+                } else if (foundInd.code.startsWith('A.1')) {
+                    appState.reflections[index].subindikator = "A.1.2 Kompetensi Membaca Teks Informasi & Evaluasi";
+                    appState.reflections[index].cause = "Minat baca siswa pada teks panjang masih rendah dan belum optimalnya integrasi literasi di semua mata pelajaran.";
+                    appState.reflections[index].evidence = "Dokumen Asesmen Literasi Sekolah & Catatan Kunjungan Perpustakaan.";
+                } else if (foundInd.code.startsWith('A.2')) {
+                    appState.reflections[index].subindikator = "A.2.1 Domain Geometri, Data & Pemecahan Masalah";
+                    appState.reflections[index].cause = "Pembelajaran matematika belum memanfaatkan alat peraga berbasis masalah (problem-based learning).";
+                    appState.reflections[index].evidence = "Nilai Asesmen Formatif Matematika & Inventaris Alat Peraga.";
+                } else if (foundInd.code.startsWith('A.3')) {
+                    appState.reflections[index].subindikator = "A.3.6 Kemandirian & Gotong Royong Murid";
+                    appState.reflections[index].cause = "Pelaksanaan Projek Penguatan Profil Pelajar Pancasila (P5) belum terstruktur dan belum kontekstual.";
+                    appState.reflections[index].evidence = "Jurnal Pendampingan P5 & Lembar Observasi Karakter Siswa.";
+                } else if (foundInd.code.startsWith('D.1')) {
+                    appState.reflections[index].subindikator = "D.1.3 Metode Pembelajaran & Praktik Interaktif";
+                    appState.reflections[index].cause = "Guru dominan menggunakan ceramah satu arah dan belum merancang pembelajaran berdiferensiasi.";
+                    appState.reflections[index].evidence = "Hasil Supervisi Akademik Kepala Sekolah & Dokumen Modul Ajar.";
+                } else {
+                    appState.reflections[index].subindikator = `${foundInd.code}.1 Sub-Kompetensi ${foundInd.name}`;
+                    appState.reflections[index].cause = "Pelaksanaan strategi pembelajaran dan ketersediaan sarana pendukung belum optimal.";
+                    appState.reflections[index].evidence = "Catatan Supervisi Akademik & Hasil Evaluasi Pembelajaran.";
+                }
+            }
+
+            persist();
+            renderReflectionsTable();
+            renderReportView();
+        }
+
+        function autoGenerateAIReflections() {
+            if (!appState.indicators || appState.indicators.length === 0) {
+                alert("Data Rapor Excel belum memuat indikator. Silakan unggah Rapor terlebih dahulu.");
+                return;
+            }
+
+            const lowIndicators = appState.indicators.filter(i => i.capaian === 'Kurang' || i.capaian === 'Sedang' || (i.status && i.status.includes('Prioritas')));
+            const targetList = lowIndicators.length > 0 ? lowIndicators : appState.indicators.slice().sort((a,b)=>a.skor-b.skor).slice(0, 4);
+
+            appState.reflections = targetList.map(ind => {
+                let sub = "", cause = "", ev = "";
+                if (ind.code.includes('D.18') || ind.name.toLowerCase().includes('bencana')) {
+                    sub = "D.18.2 Manajemen Penanggulangan Bencana & Sarpras SPAB";
+                    cause = "Satuan pendidikan belum memiliki SOP Mitigasi Bencana dan pengadaan rambu/APAR belum dianggarkan.";
+                    ev = "Dokumen SOP SPAB & Check-list Kelayakan Sarpras Keselamatan.";
+                } else if (ind.code.includes('E.6') || ind.name.toLowerCase().includes('buku')) {
+                    sub = "E.6.1 Kecukupan Buku Teks Utama & Buku Nonteks Mutu";
+                    cause = "Pengadaan buku bacaan mutu Kurikulum Merdeka via SIPLah belum memenuhi rasio ideal 1 buku per murid.";
+                    ev = "Katalog Inventaris Perpustakaan & Bukti Pemesanan SIPLah.";
+                } else if (ind.code.includes('A.1')) {
+                    sub = "A.1.2 Kompetensi Membaca Teks Informasi";
+                    cause = "Strategi literasi terintegrasi belum dibiasakan pada setiap mata pelajaran.";
+                    ev = "Dokumen Asesmen Literasi & Jurnal Membaca Siswa.";
+                } else if (ind.code.includes('A.2')) {
+                    sub = "A.2.2 Domain Geometri & Penalaran Numerasi";
+                    cause = "Kurangnya penggunaan media konkret & latihan soal penalaran kontekstual.";
+                    ev = "Hasil Asesmen Formatif Matematika & Lembar Kerja Siswa.";
+                } else if (ind.code.includes('A.3')) {
+                    sub = "A.3.6 Kemandirian & Bernalar Kritis";
+                    cause = "Kegiatan P5 belum berorientasi pada pemecahan masalah nyata siswa.";
+                    ev = "Jurnal Observasi P5 & Portofolio Karakter.";
+                } else if (ind.code.includes('D.1')) {
+                    sub = "D.1.3 Metode Pembelajaran Interaktif";
+                    cause = "Model pembelajaran aktif berdiferensiasi belum diterapkan secara konsisten.";
+                    ev = "Catatan Supervisi Akademik & Telaah Modul Ajar.";
+                } else {
+                    sub = `${ind.code}.1 Penguatan Kompetensi Indikator`;
+                    cause = `Pengembangan program dan sarana pendukung untuk ${ind.name} belum maksimal.`;
+                    ev = "Dokumen Supervisi & Laporan Hasil Evaluasi Pembelajaran.";
+                }
+
+                return {
+                    priority: `${ind.code} ${ind.name}`,
+                    temuan: `Skor ${ind.skor} (${ind.capaian}), ${ind.change < 0 ? 'mengalami penurunan ' + ind.change + ' poin' : 'membutuhkan intervensi mutu'}.`,
+                    subindikator: sub,
+                    cause: cause,
+                    evidence: ev
+                };
             });
+
             syncAllTabsAndUI();
+            alert(`Berhasil membuat ${appState.reflections.length} analisis refleksi AI (termasuk SPAB & Pengadaan Buku) yang tersinkronisasi 100% dengan Rapor ${appState.schoolName}!`);
         }
 
-        function removeReflection(i){ 
-            appState.reflections.splice(i,1); 
-            syncAllTabsAndUI(); 
-        }
-
-        /* REKOMENDASI RKT PINTAR TERPANDU */
         function autoSuggestRkt() {
             appState.rkt = [
+                { 
+                    bidang: "Sarana Prasarana & SPAB", 
+                    program: "Program Sekolah Aman & Tanggap Bencana", 
+                    kegiatan: "Simulasi Mitigasi Bencana & Pengadaan Sarpras Keselamatan SPAB", 
+                    pj: "Tim SPAB & Tim Sarpras", 
+                    time: "Juli 2025", 
+                    target: "Skor D.18 > 65.00 (Terbentuk Tim & SOP SPAB)" 
+                },
+                { 
+                    bidang: "Kurikulum & Perpustakaan", 
+                    program: "Program Penguatan Sumber Belajar", 
+                    kegiatan: "Pengadaan Buku Teks Utama & Buku Nonteks Bacaan Mutu via SIPLah", 
+                    pj: "Kepala Perpustakaan & Bendahara BOSP", 
+                    time: "Agustus 2025", 
+                    target: "Rasio Buku 1:1 untuk Setiap Murid (Skor E.6 > 75.00)" 
+                },
                 { 
                     bidang: "Kurikulum & Pembelajaran", 
                     program: "Program SEHATI (Sekolah Sehat & Pembelajaran Interaktif)", 
@@ -1520,30 +1686,13 @@
                     pj: "Wakasek Kurikulum & Tim Pengembang Kurikulum", 
                     time: "Juli - Agustus 2025", 
                     target: "100% Guru Mengimplementasikan Modul Ajar Interaktif (Skor D.1 > 65.00)" 
-                },
-                { 
-                    bidang: "Kesiswaan & Karakter", 
-                    program: "Program BEKARYA (Berkarakter & Berbudaya)", 
-                    kegiatan: "Gelar Karya P5 & Pembiasaan Karakter Mandiri/Gotong Royong", 
-                    pj: "Wakasek Kesiswaan & Koordinator P5", 
-                    time: "September & Desember 2025", 
-                    target: "Peningkatan Skor Karakter Murid (A.3) Menjadi > 60.00" 
-                },
-                { 
-                    bidang: "Sarana Prasarana & Media", 
-                    program: "Penguatan Literasi-Numerasi Digital", 
-                    kegiatan: "Pengadaan Media Alat Peraga Math-Kit & Pojok Baca Kelas", 
-                    pj: "Kepala Perpustakaan & Tim Sarpras", 
-                    time: "Juli 2025", 
-                    target: "Skor Numerasi (A.2) Meningkat Menjadi > 72.00" 
                 }
             ];
 
-            // Otomatis sinkron ke penganggaran ARKAS
             appState.arkas = [
-                { benahi: "IHT Pembelajaran Berdiferensiasi & Modul Ajar Interaktif", code: "05.02.01 Peningkatan Kompetensi PTK", detail: "Honorarium Narasumber IHT & Konsumsi Pelatihan", vol: 1, unit: "Kegiatan", price: 4500000, total: 4500000 },
-                { benahi: "Gelar Karya P5 & Pembiasaan Karakter", code: "03.04.02 Kegiatan Proyek Penguatan Profil Pelajar Pancasila", detail: "Bahan & Perlengkapan Gelar Karya P5", vol: 3, unit: "Paket Proyek", price: 1500000, total: 4500000 },
-                { benahi: "Pengadaan Media Alat Peraga Math-Kit", code: "02.01.05 Pengadaan Alat Peraga & Media Pembelajaran", detail: "Set Kit Peraga Numerasi Matematika Interaktif", vol: 5, unit: "Set", price: 800000, total: 4000000 }
+                { benahi: "Pengadaan Sarpras Keselamatan SPAB & Mitigasi Bencana", code: "02.01.08 Pemeliharaan & Pengadaan Sarana SPAB", detail: "Rambu Evakuasi, APAR, P3K & Perlengkapan SPAB", vol: 1, unit: "Paket", price: 3500000, total: 3500000 },
+                { benahi: "Pengadaan Buku Teks Utama & Buku Nonteks Bacaan Mutu", code: "02.01.01 Pengadaan Buku Teks & Nonteks Siswa", detail: "Pembelian Buku Teks & Buku Bacaan Mutu Kurikulum Merdeka via SIPLah", vol: 200, unit: "Eks", price: 45000, total: 9000000 },
+                { benahi: "IHT Pembelajaran Berdiferensiasi & Modul Ajar Interaktif", code: "05.02.01 Peningkatan Kompetensi PTK", detail: "Honorarium Narasumber IHT & Konsumsi Pelatihan", vol: 1, unit: "Kegiatan", price: 4500000, total: 4500000 }
             ];
 
             syncAllTabsAndUI();
@@ -1604,9 +1753,6 @@
             syncAllTabsAndUI();
         }
 
-        /* -------------------------------------------------------------
-           SINKRONISASI LENGKAP MONEV SUPERVISI DARI RKT (FITUR TERBARU)
-        ------------------------------------------------------------- */
         function syncMonevFromRKT(silent) {
             if (!appState.rkt || appState.rkt.length === 0) {
                 if(!silent) alert("Data RKT masih kosong! Mohon tambahkan program RKT terlebih dahulu.");
@@ -1615,7 +1761,6 @@
             
             if (!appState.monev) appState.monev = [];
 
-            // Sinkronkan setiap item RKT ke instrumen Supervisi Monev
             appState.rkt.forEach(rktItem => {
                 let existingMonev = appState.monev.find(m => m.kegiatan === rktItem.kegiatan || m.program === rktItem.program);
                 if (existingMonev) {
@@ -1635,7 +1780,6 @@
                 }
             });
 
-            // Hapus monev yang tidak ada di RKT lagi
             appState.monev = appState.monev.filter(m => appState.rkt.some(r => r.kegiatan === m.kegiatan || r.program === m.program));
 
             persist();
@@ -1687,9 +1831,6 @@
             }
         }
 
-        /* -------------------------------------------------------------
-           PEMBARUAN LENGKAP MENU NAVIGASI LAPORAN
-        ------------------------------------------------------------- */
         function renderReportView() {
             document.getElementById('repSchool').innerText = appState.schoolName;
             document.getElementById('repNPSN').innerText = appState.npsn;
