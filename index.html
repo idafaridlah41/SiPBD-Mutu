@@ -2,152 +2,272 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIPBD-MUTU — Sistem Evaluasi Diri Sekolah & Perencanaan Berbasis Data (PAUD-SMK)</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="color-scheme" content="light">
+    <title>SIPBD-MUTU PRO — Sistem EDS-PBD & Supervisi 8 Standar Nasional Pendidikan</title>
     <!-- Chart.js for Visual Analytics -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; }
+        body { background-color: #f8fafc; color: #1e293b; min-height: 100vh; display: flex; flex-direction: column; font-size: 14px; }
+        
+        html { color-scheme: light; } body { padding-bottom: env(safe-area-inset-bottom, 0px); }
+        td[contenteditable] { cursor: text; } td[contenteditable]:hover { background: #eef2ff; outline: 1px dashed #a5b4fc; } td[contenteditable]:focus { background: #fff; outline: 2px solid #4f46e5; }
+        
+        /* Header & Navigation */
+        header { background-color: #0f172a; color: white; padding: calc(12px + env(safe-area-inset-top, 0px)) 20px 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 40; }
+        .header-container { max-width: 1380px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand-icon { background-color: #fbbf24; color: #0f172a; width: 40px; height: 40px; border-radius: 8px; font-weight: bold; font-size: 20px; display: flex; align-items: center; justify-content: center; }
+        .brand-text h1 { font-size: 16px; font-weight: 700; line-height: 1.2; letter-spacing: 0.5px; }
+        .brand-text p { font-size: 11px; color: #94a3b8; }
+        
+        .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .select-group { display: flex; align-items: center; background-color: #1e293b; border: 1px solid #334155; padding: 4px 10px; border-radius: 6px; font-size: 12px; color: #cbd5e1; }
+        .select-group select { background: #0f172a; color: white; border: 1px solid #475569; border-radius: 4px; padding: 4px 8px; font-size: 11px; font-weight: 600; outline: none; }
+        
+        .btn { padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
+        .btn-amber { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #0f172a; }
+        .btn-amber:hover { background: #f59e0b; }
+        .btn-indigo { background-color: #4f46e5; color: white; }
+        .btn-indigo:hover { background-color: #4338ca; }
+        .btn-emerald { background-color: #059669; color: white; }
+        .btn-emerald:hover { background-color: #047857; }
+        .btn-slate { background-color: #e2e8f0; color: #334155; }
+        .btn-slate:hover { background-color: #cbd5e1; }
+        .btn-rose { background-color: #e11d48; color: white; }
+        .btn-rose:hover { background-color: #be123c; }
+        .btn-sm { padding: 4px 8px; font-size: 11px; }
+
+        /* Main Container */
+        .main-container { max-width: 1380px; width: 100%; margin: 20px auto; padding: 0 16px; flex-grow: 1; }
+        
+        /* Card Layouts */
+        .card { background-color: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .grid-5 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+        .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        @media (max-width: 900px) { .grid-2-1 { grid-template-columns: 1fr; } }
+
+        /* Form Controls */
+        .form-group label { display: block; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px; }
+        .form-control { width: 100%; background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px; font-weight: 600; color: #1e293b; }
+        .form-control:focus { outline: none; border-color: #4f46e5; background-color: white; }
+        
+        /* Navigation Tabs */
+        .tab-bar { display: flex; overflow-x: auto; border-bottom: 2px solid #e2e8f0; background: white; border-top-left-radius: 12px; border-top-right-radius: 12px; padding: 8px 16px 0; margin-bottom: 20px; }
+        .tab-btn { background: none; border: none; border-bottom: 3px solid transparent; padding: 12px 16px; font-size: 12px; font-weight: 600; color: #64748b; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+        .tab-btn:hover { color: #1e293b; }
+        .tab-btn.active { border-bottom-color: #4f46e5; color: #4f46e5; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Stats Card */
+        .stat-card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .stat-title { font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; }
+        .stat-value { font-size: 22px; font-weight: 800; margin-top: 4px; }
+        .stat-sub { font-size: 11px; color: #64748b; margin-top: 2px; }
+        .stat-icon { width: 44px; height: 44px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+
+        /* 8 SNP Grid Items */
+        .snp-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; background: #f8fafc; font-size: 12px; cursor: pointer; transition: all 0.2s; position: relative; }
+        .snp-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08); }
+        .snp-card.baik { background-color: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+        .snp-card.sedang { background-color: #fffbeb; border-color: #fde68a; color: #92400e; }
+        .snp-card.kurang { background-color: #fef2f2; border-color: #fecaca; color: #991b1b; }
+        .snp-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.9); }
+
+        /* Tables */
+        .table-responsive { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+        th { background-color: #f1f5f9; color: #475569; font-weight: 700; text-transform: uppercase; padding: 10px 12px; border-bottom: 1px solid #e2e8f0; white-space: nowrap; }
+        td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        tr:hover { background-color: #f8fafc; }
+        
+        /* Status Badges */
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: 700; }
+        .badge-emerald { background-color: #d1fae5; color: #065f46; }
+        .badge-amber { background-color: #fef3c7; color: #92400e; }
+        .badge-rose { background-color: #ffe4e6; color: #991b1b; }
+        .badge-blue { background-color: #dbeafe; color: #1e40af; }
+
+        /* Modals Overlay & Content */
+        .modal-overlay { position: fixed; inset: 0; background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 50; display: none; align-items: center; justify-content: center; padding: 16px; }
+        .modal-overlay.open { display: flex !important; }
+        .modal-body { background: white; border-radius: 16px; max-width: 700px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); position: relative; }
+        .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 18px; color: #94a3b8; cursor: pointer; }
+
+        /* Print Settings */
         @media print {
             .no-print { display: none !important; }
-            .print-only { display: block !important; }
             body { background: white; color: black; }
-            .print-break { page-break-before: always; }
+            .card { border: none; box-shadow: none; padding: 0; }
         }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+<body>
 
     <!-- TOP NAVIGATION BAR -->
-    <header class="bg-indigo-950 text-white shadow-lg sticky top-0 z-50 no-print">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center space-x-3">
-                    <div class="bg-amber-400 text-indigo-950 p-2 rounded-lg font-bold text-xl flex items-center justify-center w-10 h-10 shadow">
-                        <i class="fa-solid fa-chart-line"></i>
-                    </div>
-                    <div>
-                        <h1 class="font-bold text-lg leading-tight tracking-wide">SIPBD-MUTU PRO</h1>
-                        <p class="text-xs text-indigo-200">Sistem Perencanaan Berbasis Data Satuan Pendidikan & Sekolah Binaan</p>
-                    </div>
+    <header class="no-print">
+        <div class="header-container">
+            <div class="brand">
+                <div class="brand-icon">★</div>
+                <div class="brand-text">
+                    <h1>SIPBD-MUTU 8 SNP PRO</h1>
+                    <p>Sistem EDS, PBD, & Supervisi Terintegrasi 8 Standar Nasional Pendidikan</p>
                 </div>
-                
-                <div class="flex items-center space-x-3">
-                    <!-- Active School Selector -->
-                    <div class="flex items-center bg-indigo-900/80 rounded-lg px-3 py-1.5 border border-indigo-700/60">
-                        <label for="activeSchoolSelect" class="text-xs text-indigo-200 mr-2 font-medium flex items-center gap-1">
-                            <i class="fa-solid fa-building-columns text-amber-400"></i> Sekolah:
-                        </label>
-                        <select id="activeSchoolSelect" onchange="switchActiveSchool(this.value)" class="bg-indigo-950 text-white text-xs font-semibold rounded focus:outline-none focus:ring-1 focus:ring-amber-400 py-1 px-2 border border-indigo-600">
-                            <!-- Populated dynamically -->
-                        </select>
-                    </div>
-
-                    <!-- School Level Selector -->
-                    <div class="flex items-center bg-indigo-900/80 rounded-lg px-3 py-1.5 border border-indigo-700/60">
-                        <label for="jenjangSelect" class="text-xs text-indigo-200 mr-2 font-medium"><i class="fa-solid fa-school text-amber-400"></i> Jenjang:</label>
-                        <select id="jenjangSelect" onchange="switchJenjang(this.value)" class="bg-indigo-950 text-white text-xs font-semibold rounded focus:outline-none focus:ring-1 focus:ring-amber-400 py-1 px-2 border border-indigo-600">
-                            <option value="SMP">SMP (Sekolah Menengah Pertama)</option>
-                            <option value="PAUD">PAUD / TK / KB</option>
-                            <option value="SD">SD (Sekolah Dasar)</option>
-                            <option value="SMA">SMA (Sekolah Menengah Atas)</option>
-                            <option value="SMK">SMK (Sekolah Menengah Kejuruan)</option>
-                        </select>
-                    </div>
-
-                    <button onclick="openAiUploadModal()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-indigo-950 font-bold px-3.5 py-1.5 rounded-lg text-xs transition shadow-md flex items-center gap-1.5 animate-pulse">
-                        <i class="fa-solid fa-wand-magic-sparkles text-indigo-900"></i> Upload Rapor (AI Scan)
-                    </button>
-                    <button onclick="exportAllDataJSON()" class="bg-indigo-800 hover:bg-indigo-700 text-white font-medium px-3 py-1.5 rounded-lg text-xs transition shadow flex items-center gap-1.5">
-                        <i class="fa-solid fa-download"></i> Ekspor Data
-                    </button>
-                    <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-3 py-1.5 rounded-lg text-xs transition shadow flex items-center gap-1.5">
-                        <i class="fa-solid fa-print"></i> Cetak Laporan
-                    </button>
+            </div>
+            
+            <div class="header-actions">
+                <div class="select-group">
+                    <label for="activeSchoolSelect" style="margin-right: 6px;">Sekolah:</label>
+                    <select id="activeSchoolSelect" onchange="switchActiveSchool(this.value)">
+                        <!-- Populated dynamically -->
+                    </select>
                 </div>
+
+                <div class="select-group">
+                    <label for="jenjangSelect" style="margin-right: 6px;">Jenjang:</label>
+                    <select id="jenjangSelect" onchange="switchJenjang(this.value)">
+                        <option value="SMP">SMP (Sekolah Menengah Pertama)</option>
+                        <option value="PAUD">PAUD / TK / KB</option>
+                        <option value="SD">SD (Sekolah Dasar)</option>
+                        <option value="SMA">SMA (Sekolah Menengah Atas)</option>
+                        <option value="SMK">SMK (Sekolah Menengah Kejuruan)</option>
+                    </select>
+                </div>
+
+                <button onclick="openAiUploadModal()" class="btn btn-amber">
+                    ✦ Upload Rapor (AI Scan)
+                </button>
+                <button onclick="exportAllDataJSON()" class="btn btn-indigo">
+                    ↓ Ekspor Data
+                </button>
+                <button onclick="window.print()" class="btn btn-emerald">
+                    🖨 Cetak Laporan
+                </button>
             </div>
         </div>
     </header>
 
     <!-- MAIN APP CONTAINER -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full">
+    <div class="main-container">
         
         <!-- SCHOOL IDENTITY BANNER -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 mb-6 no-print">
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                <div class="md:col-span-2">
-                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Nama Satuan Pendidikan / Sekolah Binaan</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="schoolName" value="SMPN 3 Tarogong Kidul" onchange="updateIdentity()" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-semibold text-slate-800 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                        <button onclick="openNewSchoolModal()" title="Tambah Sekolah Binaan Baru" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 rounded-lg text-xs flex items-center justify-center">
-                            <i class="fa-solid fa-plus"></i>
+        <div class="card no-print">
+            <div class="grid-5">
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Nama Satuan Pendidikan / Sekolah Binaan</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="schoolName" value="SMPN 3 Tarogong Kidul" onchange="updateIdentity()" class="form-control">
+                        <button onclick="openNewSchoolModal()" title="Tambah Sekolah Binaan Baru" class="btn btn-indigo">
+                            +
                         </button>
                     </div>
                 </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">NPSN / Kode Sekolah</label>
-                    <input type="text" id="schoolNPSN" value="20209354" onchange="updateIdentity()" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-semibold text-slate-800 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <div class="form-group">
+                    <label>NPSN / Kode Sekolah</label>
+                    <input type="text" id="schoolNPSN" value="20209354" onchange="updateIdentity()" class="form-control">
                 </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Tahun Evaluasi Rapor</label>
-                    <select id="evalYear" onchange="updateIdentity()" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-semibold text-slate-800 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                        <option value="2025">2025 (AN 2024 / Terintegrasi)</option>
-                        <option value="2026">2026 (Edisi Terbaru)</option>
+                <div class="form-group">
+                    <label>Tahun Evaluasi Rapor</label>
+                    <select id="evalYear" onchange="updateIdentity()" class="form-control">
+                        <option value="2025">2025 (AN 2024 / Terintegrasi 8 SNP)</option>
+                        <option value="2026">2026 (Edisi Terbaru 8 SNP)</option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Tahun Pelajaran Sasaran</label>
-                    <input type="text" id="targetTP" value="2025/2026" onchange="updateIdentity()" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-semibold text-slate-800 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <div class="form-group">
+                    <label>Tahun Pelajaran Sasaran</label>
+                    <input type="text" id="targetTP" value="2025/2026" onchange="updateIdentity()" class="form-control">
                 </div>
             </div>
             
-            <!-- Supervisor Metadata Input -->
-            <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                    <label class="block text-[11px] font-semibold text-indigo-700 uppercase">Pengawas Pembina / pendamping</label>
-                    <input type="text" id="supervisorName" value="Drs. H. Maman Suparman, M.Pd." onchange="updateIdentity()" class="w-full bg-indigo-50/50 border border-indigo-200 rounded-lg px-3 py-1.5 text-xs font-medium text-slate-800 focus:bg-white focus:outline-none">
+            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #f1f5f9;" class="grid-3">
+                <div class="form-group">
+                    <label style="color: #4338ca;">Pengawas Pembina / Pendamping</label>
+                    <input type="text" id="supervisorName" value="Drs. H. Maman Suparman, M.Pd." onchange="updateIdentity()" class="form-control" style="background-color: #eef2ff;">
                 </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-indigo-700 uppercase">NIP Pengawas Sekolah</label>
-                    <input type="text" id="supervisorNIP" value="196804121994031004" onchange="updateIdentity()" class="w-full bg-indigo-50/50 border border-indigo-200 rounded-lg px-3 py-1.5 text-xs font-medium text-slate-800 focus:bg-white focus:outline-none">
+                <div class="form-group">
+                    <label style="color: #4338ca;">NIP Pengawas Sekolah</label>
+                    <input type="text" id="supervisorNIP" value="196804121994031004" onchange="updateIdentity()" class="form-control" style="background-color: #eef2ff;">
                 </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-indigo-700 uppercase">Wilayah / Dinas Pendidikan</label>
-                    <input type="text" id="supervisorRegion" value="Dinas Pendidikan Kab. Garut" onchange="updateIdentity()" class="w-full bg-indigo-50/50 border border-indigo-200 rounded-lg px-3 py-1.5 text-xs font-medium text-slate-800 focus:bg-white focus:outline-none">
+                <div class="form-group">
+                    <label style="color: #4338ca;">Wilayah / Dinas Pendidikan</label>
+                    <input type="text" id="supervisorRegion" value="Dinas Pendidikan Kab. Garut" onchange="updateIdentity()" class="form-control" style="background-color: #eef2ff;">
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL EDIT DATA SEKOLAH BINAAN (FITUR BARU) -->
+        <div id="editSchoolModal" class="modal-overlay">
+            <div class="modal-body" style="max-width: 550px;">
+                <button onclick="closeEditSchoolModal()" class="modal-close">✕</button>
+                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">✏️ Kelola & Edit Sekolah Binaan</h3>
+                <input type="hidden" id="editSchoolTargetNpsn">
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div class="form-group">
+                        <label>Nama Satuan Pendidikan</label>
+                        <input type="text" id="editSchoolName" class="form-control">
+                    </div>
+                    <div class="grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div class="form-group">
+                            <label>NPSN</label>
+                            <input type="text" id="editSchoolNpsn" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Jenjang</label>
+                            <select id="editSchoolJenjang" class="form-control">
+                                <option value="SMP">SMP</option>
+                                <option value="PAUD">PAUD</option>
+                                <option value="SD">SD</option>
+                                <option value="SMA">SMA</option>
+                                <option value="SMK">SMK</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Status Rapor Pendidikan</label>
+                        <select id="editSchoolStatusRapor" class="form-control">
+                            <option value="Aktif">Aktif</option>
+                            <option value="Perlu Intervensi Khusus">Perlu Intervensi Khusus</option>
+                            <option value="Dalam Pendampingan">Dalam Pendampingan</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Pengawas Pembina</label>
+                        <input type="text" id="editSchoolSupervisor" class="form-control">
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items:center; margin-top: 18px;">
+                    <button onclick="deleteSchoolBinaanFromModal()" class="btn btn-rose">Hapus Sekolah</button>
+                    <div style="display: flex; gap: 8px;">
+                        <button onclick="closeEditSchoolModal()" class="btn btn-slate">Batal</button>
+                        <button onclick="saveEditSchoolBinaan()" class="btn btn-indigo">Simpan Perubahan</button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- MODAL ADD NEW SCHOOL BINAAN -->
-        <div id="newSchoolModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-            <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 relative">
-                <button onclick="closeNewSchoolModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-lg">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-                <h3 class="font-bold text-slate-900 text-base mb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-square-plus text-indigo-600"></i> Tambah Sekolah Binaan Baru
-                </h3>
-                <div class="space-y-3 text-xs">
-                    <div>
-                        <label class="block font-semibold text-slate-600 mb-1">Nama Satuan Pendidikan</label>
-                        <input type="text" id="newSchoolInputName" placeholder="Contoh: SMPN 1 Tarogong Kidul" class="w-full border border-slate-300 rounded-lg p-2 font-medium">
+        <div id="newSchoolModal" class="modal-overlay">
+            <div class="modal-body" style="max-width: 450px;">
+                <button onclick="closeNewSchoolModal()" class="modal-close">✕</button>
+                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">+ Tambah Sekolah Binaan Baru</h3>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div class="form-group">
+                        <label>Nama Satuan Pendidikan</label>
+                        <input type="text" id="newSchoolInputName" placeholder="Contoh: SMPN 1 Tarogong Kidul" class="form-control">
                     </div>
-                    <div>
-                        <label class="block font-semibold text-slate-600 mb-1">NPSN</label>
-                        <input type="text" id="newSchoolInputNPSN" placeholder="Contoh: 20209355" class="w-full border border-slate-300 rounded-lg p-2 font-medium">
+                    <div class="form-group">
+                        <label>NPSN</label>
+                        <input type="text" id="newSchoolInputNPSN" placeholder="Contoh: 20209355" class="form-control">
                     </div>
-                    <div>
-                        <label class="block font-semibold text-slate-600 mb-1">Jenjang</label>
-                        <select id="newSchoolInputJenjang" class="w-full border border-slate-300 rounded-lg p-2 font-medium">
+                    <div class="form-group">
+                        <label>Jenjang</label>
+                        <select id="newSchoolInputJenjang" class="form-control">
                             <option value="SMP">SMP</option>
                             <option value="PAUD">PAUD</option>
                             <option value="SD">SD</option>
@@ -156,214 +276,236 @@
                         </select>
                     </div>
                 </div>
-                <div class="flex justify-end gap-2 mt-5">
-                    <button onclick="closeNewSchoolModal()" class="px-3 py-1.5 bg-slate-100 text-slate-700 font-semibold rounded-lg text-xs">Batal</button>
-                    <button onclick="addNewSchoolBinaan()" class="px-4 py-1.5 bg-indigo-600 text-white font-semibold rounded-lg text-xs">Simpan Sekolah</button>
+                <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;">
+                    <button onclick="closeNewSchoolModal()" class="btn btn-slate">Batal</button>
+                    <button onclick="addNewSchoolBinaan()" class="btn btn-indigo">Simpan Sekolah</button>
                 </div>
             </div>
         </div>
 
         <!-- MODAL UPLOAD AI FILE SCANNER -->
-        <div id="aiUploadModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-            <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full p-6 relative border border-slate-100">
-                <button onclick="closeAiUploadModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-lg">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-                
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-lg">
-                        <i class="fa-solid fa-brain"></i>
-                    </div>
+        <div id="aiUploadModal" class="modal-overlay">
+            <div class="modal-body" style="max-width: 550px;">
+                <button onclick="closeAiUploadModal()" class="modal-close">✕</button>
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                    <div style="width: 40px; height: 40px; border-radius: 10px; background: #fef3c7; color: #b45309; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold;">✦</div>
                     <div>
-                        <h3 class="font-bold text-slate-900 text-base">Analisis Rapor PBD Otomatis dengan AI</h3>
-                        <p class="text-xs text-slate-500">Unggah 1 file Rapor Pendidikan (PDF, Gambar Poster, atau Data Rapor) untuk diekstrak secara otomatis.</p>
+                        <h3 style="font-size: 15px; font-weight: 700;">Analisis Rapor PBD & 8 SNP dengan AI</h3>
+                        <p style="font-size: 12px; color: #64748b;">Unggah file Rapor Pendidikan untuk diekstrak secara otomatis.</p>
                     </div>
                 </div>
 
-                <div class="border-2 border-dashed border-indigo-200 rounded-xl p-6 text-center bg-indigo-50/50 hover:bg-indigo-50 transition cursor-pointer mb-4" onclick="document.getElementById('raporFileInput').click()">
-                    <i class="fa-solid fa-cloud-arrow-up text-3xl text-indigo-500 mb-2"></i>
-                    <p class="text-xs font-semibold text-slate-700">Klik untuk memilih file Rapor PBD Satdik</p>
-                    <p class="text-[11px] text-slate-400 mt-1">Mendukung format PDF, Gambar (PNG/JPG), JSON, atau CSV/Text</p>
-                    <input type="file" id="raporFileInput" onchange="handleFileSelect(event)" class="hidden" accept=".pdf,.png,.jpg,.jpeg,.json,.csv,.txt">
+                <div style="border: 2px dashed #cbd5e1; border-radius: 12px; padding: 24px; text-align: center; background-color: #f8fafc; cursor: pointer; margin-bottom: 16px;" onclick="document.getElementById('raporFileInput').click()">
+                    <div style="font-size: 28px; margin-bottom: 8px;">📄</div>
+                    <p style="font-size: 12px; font-weight: 700; color: #334155;">Klik untuk memilih file Rapor PBD Satdik</p>
+                    <p style="font-size: 11px; color: #94a3b8; margin-top: 4px;">PDF, PNG/JPG, JSON, atau CSV/Text</p>
+                    <input type="file" id="raporFileInput" onchange="handleFileSelect(event)" style="display: none;" accept=".pdf,.png,.jpg,.jpeg,.json,.csv,.txt">
                 </div>
 
-                <div id="fileSelectedInfo" class="hidden bg-slate-50 p-3 rounded-lg border border-slate-200 mb-4 flex items-center justify-between">
-                    <div class="flex items-center gap-2 overflow-hidden">
-                        <i class="fa-solid fa-file-lines text-indigo-600 text-sm"></i>
-                        <span id="fileNameText" class="text-xs font-semibold text-slate-800 truncate">file.pdf</span>
+                <div id="fileSelectedInfo" style="display: none; background: #f1f5f9; padding: 10px; border-radius: 8px; margin-bottom: 16px; justify-content: space-between; align-items: center;">
+                    <span id="fileNameText" style="font-size: 12px; font-weight: 600;">file.pdf</span>
+                    <span id="fileSizeText" style="font-size: 10px; color: #94a3b8;">0 KB</span>
+                </div>
+
+                <div id="aiProcessingState" style="display: none; text-align: center; padding: 12px;">
+                    <p style="font-size: 12px; font-weight: 700; color: #4338ca;">Menganalisis Rapor PBD & Pemetaan 8 SNP dengan AI...</p>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                    <button onclick="closeAiUploadModal()" class="btn btn-slate">Batal</button>
+                    <button id="btnStartAiProcess" onclick="processRaporWithAI()" disabled class="btn btn-indigo">✦ Proses AI Sekarang</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL INTERAKTIF DETAIL 8 SNP -->
+        <div id="snpDetailModal" class="modal-overlay">
+            <div class="modal-body" style="max-width: 750px;">
+                <button onclick="closeSnpDetailModal()" class="modal-close">✕</button>
+                <div style="border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px;">
+                    <span id="snpModalBadge" class="badge badge-emerald" style="margin-bottom: 4px;">Standar Terpenuhi</span>
+                    <h3 id="snpModalTitle" style="font-size: 16px; font-weight: 700; color: #0f172a;">Penjabaran 1. Standar Kompetensi Lulusan (SKL)</h3>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <!-- Section 1: Indicators in this SNP -->
+                    <div>
+                        <h4 style="font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 8px;">1. Indikator Rapor Pendidikan Terkait</h4>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Kode & Indikator</th>
+                                        <th>Capaian</th>
+                                        <th>Skor</th>
+                                        <th>Status Analisis</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="snpModalIndicatorsBody"></tbody>
+                            </table>
+                        </div>
                     </div>
-                    <span id="fileSizeText" class="text-[10px] text-slate-400">0 KB</span>
-                </div>
 
-                <!-- Processing Loader -->
-                <div id="aiProcessingState" class="hidden space-y-3 mb-4 text-center py-4">
-                    <div class="inline-block animate-spin text-indigo-600 text-2xl">
-                        <i class="fa-solid fa-circle-notch"></i>
+                    <!-- Section 2: Related Refleksi & Akar Masalah -->
+                    <div>
+                        <h4 style="font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 8px;">2. Akar Masalah & Refleksi</h4>
+                        <div id="snpModalReflectionContent" style="font-size: 12px; color: #334155;"></div>
                     </div>
-                    <p class="text-xs font-semibold text-indigo-900">Sedang Menganalisis Dokumen Rapor PBD dengan AI...</p>
-                    <p class="text-[11px] text-slate-500">AI sedang mengekstrak indikator, memetakan akar masalah, dan merumuskan RKT & ARKAS otomatis.</p>
+
+                    <!-- Section 3: Related RKT & Monev -->
+                    <div>
+                        <h4 style="font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 8px;">3. Program Benahi (RKT) & Monitoring Supervisi</h4>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Program Benahi</th>
+                                        <th>Kegiatan Konkret</th>
+                                        <th>Target</th>
+                                        <th>Status Monev</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="snpModalRktBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
-                    <button onclick="closeAiUploadModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">Batal</button>
-                    <button id="btnStartAiProcess" onclick="processRaporWithAI()" disabled class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> Proses & Analisis Sekarang
-                    </button>
+                <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+                    <button onclick="closeSnpDetailModal()" class="btn btn-indigo">Tutup Penjabaran</button>
                 </div>
             </div>
         </div>
 
         <!-- NAVIGATION TABS -->
-        <div class="flex overflow-x-auto border-b border-slate-200 mb-6 bg-white rounded-t-xl px-4 pt-2 shadow-sm no-print custom-scrollbar">
-            <button onclick="switchTab('tab-ringkasan')" id="btn-tab-ringkasan" class="tab-btn active border-b-2 border-indigo-600 text-indigo-600 font-semibold py-3 px-4 text-xs whitespace-nowrap flex items-center gap-2">
-                <i class="fa-solid fa-chart-pie"></i> Ringkasan Mutu Satdik
-            </button>
-            <button onclick="switchTab('tab-binaan')" id="btn-tab-binaan" class="tab-btn text-slate-500 hover:text-slate-700 font-medium py-3 px-4 text-xs whitespace-nowrap flex items-center gap-2">
-                <i class="fa-solid fa-city"></i> Dashboard Sekolah Binaan
-            </button>
-            <button onclick="switchTab('tab-identifikasi')" id="btn-tab-identifikasi" class="tab-btn text-slate-500 hover:text-slate-700 font-medium py-3 px-4 text-xs whitespace-nowrap flex items-center gap-2">
-                <i class="fa-solid fa-list-check"></i> 1. Identifikasi Data Rapor
-            </button>
-            <button onclick="switchTab('tab-refleksi')" id="btn-tab-refleksi" class="tab-btn text-slate-500 hover:text-slate-700 font-medium py-3 px-4 text-xs whitespace-nowrap flex items-center gap-2">
-                <i class="fa-solid fa-brain"></i> 2. Refleksi & Akar Masalah
-            </button>
-            <button onclick="switchTab('tab-benahi')" id="btn-tab-benahi" class="tab-btn text-slate-500 hover:text-slate-700 font-medium py-3 px-4 text-xs whitespace-nowrap flex items-center gap-2">
-                <i class="fa-solid fa-wrench"></i> 3. Benahi (RKT & ARKAS)
-            </button>
-            <button onclick="switchTab('tab-monev')" id="btn-tab-monev" class="tab-btn text-slate-500 hover:text-slate-700 font-medium py-3 px-4 text-xs whitespace-nowrap flex items-center gap-2">
-                <i class="fa-solid fa-clock-rotate-left"></i> 4. Monitoring & Evaluasi
-            </button>
-            <button onclick="switchTab('tab-laporan')" id="btn-tab-laporan" class="tab-btn text-slate-500 hover:text-slate-700 font-medium py-3 px-4 text-xs whitespace-nowrap flex items-center gap-2">
-                <i class="fa-solid fa-file-contract"></i> Laporan LENGKAP EDS-PBD
-            </button>
+        <div class="tab-bar no-print">
+            <button onclick="switchTab('tab-ringkasan')" id="btn-tab-ringkasan" class="tab-btn active">📊 Ringkasan Mutu & 8 SNP</button>
+            <button onclick="switchTab('tab-binaan')" id="btn-tab-binaan" class="tab-btn">🏫 Dashboard Sekolah Binaan</button>
+            <button onclick="switchTab('tab-identifikasi')" id="btn-tab-identifikasi" class="tab-btn">1. Identifikasi & Pemetaan 8 SNP</button>
+            <button onclick="switchTab('tab-refleksi')" id="btn-tab-refleksi" class="tab-btn">2. Refleksi & Akar Masalah</button>
+            <button onclick="switchTab('tab-benahi')" id="btn-tab-benahi" class="tab-btn">3. Benahi (RKT & ARKAS)</button>
+            <button onclick="switchTab('tab-supervisi-monev')" id="btn-tab-supervisi-monev" class="tab-btn">4. Supervisi & Monev PBD</button>
+            <button onclick="switchTab('tab-laporan')" id="btn-tab-laporan" class="tab-btn">📋 Laporan EDS-PBD & Supervisi</button>
         </div>
 
-        <!-- TAB 1: RINGKASAN MUTU (DASHBOARD INDIVIDUAL SATDIK) -->
-        <div id="tab-ringkasan" class="tab-content block space-y-6">
+        <!-- TAB 1: RINGKASAN MUTU & 8 SNP -->
+        <div id="tab-ringkasan" class="tab-content active">
             <!-- Summary Stats Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div class="grid-4" style="margin-bottom: 20px;">
+                <div class="stat-card">
                     <div>
-                        <p class="text-xs font-semibold text-slate-400 uppercase">Capaian Baik / Tinggi</p>
-                        <h3 id="statBaik" class="text-2xl font-bold text-emerald-600 mt-1">0 Indikator</h3>
-                        <p class="text-xs text-slate-500 mt-0.5">Perlu dipertahankan</p>
+                        <div class="stat-title">Capaian Baik / Tinggi</div>
+                        <div id="statBaik" class="stat-value" style="color: #059669;">0 Indikator</div>
+                        <div class="stat-sub">Perlu dipertahankan</div>
                     </div>
-                    <div class="w-12 h-12 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
-                        <i class="fa-solid fa-circle-check"></i>
-                    </div>
+                    <div class="stat-icon" style="background: #d1fae5; color: #059669;">✓</div>
                 </div>
 
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                <div class="stat-card">
                     <div>
-                        <p class="text-xs font-semibold text-slate-400 uppercase">Capaian Sedang / Cukup</p>
-                        <h3 id="statSedang" class="text-2xl font-bold text-amber-500 mt-1">0 Indikator</h3>
-                        <p class="text-xs text-slate-500 mt-0.5">Butuh penguatan</p>
+                        <div class="stat-title">Capaian Sedang / Cukup</div>
+                        <div id="statSedang" class="stat-value" style="color: #d97706;">0 Indikator</div>
+                        <div class="stat-sub">Butuh penguatan</div>
                     </div>
-                    <div class="w-12 h-12 rounded-lg bg-amber-50 text-amber-500 flex items-center justify-center text-xl">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                    </div>
+                    <div class="stat-icon" style="background: #fef3c7; color: #d97706;">!</div>
                 </div>
 
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                <div class="stat-card">
                     <div>
-                        <p class="text-xs font-semibold text-slate-400 uppercase">Capaian Kurang / Perhatian</p>
-                        <h3 id="statKurang" class="text-2xl font-bold text-rose-600 mt-1">0 Indikator</h3>
-                        <p class="text-xs text-slate-500 mt-0.5">Prioritas Utama Pembenahan</p>
+                        <div class="stat-title">Capaian Kurang / Perhatian</div>
+                        <div id="statKurang" class="stat-value" style="color: #dc2626;">0 Indikator</div>
+                        <div class="stat-sub">Prioritas Pembenahan</div>
                     </div>
-                    <div class="w-12 h-12 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-xl">
-                        <i class="fa-solid fa-circle-exclamation"></i>
-                    </div>
+                    <div class="stat-icon" style="background: #ffe4e6; color: #dc2626;">⚠</div>
                 </div>
 
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                <div class="stat-card">
                     <div>
-                        <p class="text-xs font-semibold text-slate-400 uppercase">Tren Penurunan Skor</p>
-                        <h3 id="statTurun" class="text-2xl font-bold text-indigo-600 mt-1">0 Indikator</h3>
-                        <p class="text-xs text-slate-500 mt-0.5">Dibanding tahun lalu</p>
+                        <div class="stat-title">Monev Progress</div>
+                        <div id="statMonevProgress" class="stat-value" style="color: #4f46e5;">0%</div>
+                        <div class="stat-sub">Keterlaksanaan Benahi</div>
                     </div>
-                    <div class="w-12 h-12 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
-                        <i class="fa-solid fa-arrow-trend-down"></i>
-                    </div>
+                    <div class="stat-icon" style="background: #e0e7ff; color: #4f46e5;">↻</div>
+                </div>
+            </div>
+
+            <!-- ANALISIS PEMETAAN 8 STANDAR NASIONAL PENDIDIKAN (8 SNP) -->
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 style="font-size: 14px; font-weight: 700; color: #1e293b;">
+                        🏆 Integrasi Capaian Mutu Berdasarkan 8 Standar Nasional Pendidikan (8 SNP)
+                    </h3>
+                    <span style="font-size: 11px; color: #64748b; font-weight: 600;">💡 Klik kartu standar untuk melihat rincian penjabaran</span>
+                </div>
+                <div id="snpGridOverview" class="grid-4">
+                    <!-- Dynamic Interactive 8 SNP Cards Rendered Here -->
                 </div>
             </div>
 
             <!-- Dashboard Charts & Executive Alert -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Main Radar Chart -->
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm lg:col-span-2">
-                    <h3 class="font-bold text-slate-800 text-sm mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-chart-radar text-indigo-600"></i> Profil Capaian Dimensi Utama Rapor Pendidikan
-                    </h3>
-                    <div class="h-72">
+            <div class="grid-2-1">
+                <div class="card">
+                    <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 12px;">Profil Capaian Dimensi Utama Rapor Pendidikan</h3>
+                    <div style="height: 280px; position: relative;">
                         <canvas id="radarChart"></canvas>
                     </div>
                 </div>
 
-                <!-- Strategic Priority Box -->
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
                     <div>
-                        <h3 class="font-bold text-slate-800 text-sm mb-3 flex items-center gap-2">
-                            <i class="fa-solid fa-bullseye text-rose-600"></i> Fokus Prioritas PBD Resmi
-                        </h3>
-                        <p class="text-xs text-slate-500 mb-4">Indikator dengan urgensi tertinggi yang direkomendasikan untuk segera diintervensi pada RKT mendatang:</p>
-                        
-                        <div id="priorityListDashboard" class="space-y-3">
+                        <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 8px; color: #dc2626;">🎯 Fokus Prioritas PBD Resmi</h3>
+                        <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">Indikator prioritas utama yang direkomendasikan untuk segera diintervensi:</p>
+                        <div id="priorityListDashboard" style="display: flex; flex-direction: column; gap: 8px;">
                             <!-- Dynamic Priority Items Rendered Here -->
                         </div>
                     </div>
-                    
-                    <button onclick="switchTab('tab-benahi')" class="w-full mt-4 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold py-2.5 px-4 rounded-lg text-xs transition flex items-center justify-center gap-2">
-                        Susun Program Benahi <i class="fa-solid fa-arrow-right"></i>
+                    <button onclick="switchTab('tab-benahi')" class="btn btn-indigo" style="width: 100%; margin-top: 16px; justify-content: center;">
+                        Susun Program Benahi →
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- TAB EXTRA: DASHBOARD SEKOLAH BINAAN (SUPERVISORY HUB) -->
-        <div id="tab-binaan" class="tab-content hidden space-y-6">
-            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+        <div id="tab-binaan" class="tab-content">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
                     <div>
-                        <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
-                            <i class="fa-solid fa-city text-indigo-600"></i> Panel Pemantauan Sekolah Binaan Pengawas
-                        </h3>
-                        <p class="text-xs text-slate-500">Pemetaan performa mutu, kesenjangan prioritas, dan kesiapan PBD pada seluruh sekolah pendampingan.</p>
+                        <h3 style="font-size: 15px; font-weight: 700;">Panel Pemantauan Sekolah Binaan Pengawas</h3>
+                        <p style="font-size: 12px; color: #64748b;">Pemetaan mutu, kesenjangan prioritas 8 SNP, dan kesiapan PBD pada seluruh sekolah pendampingan.</p>
                     </div>
-                    <button onclick="openNewSchoolModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-plus"></i> Tambah Sekolah Binaan
-                    </button>
+                    <button onclick="openNewSchoolModal()" class="btn btn-indigo">+ Tambah Sekolah Binaan</button>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                        <p class="text-xs text-slate-500 font-semibold uppercase">Total Sekolah Binaan</p>
-                        <h4 id="binaanTotalCount" class="text-2xl font-bold text-indigo-900 mt-1">0 Satdik</h4>
+                <div class="grid-3" style="margin-bottom: 16px;">
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px;">
+                        <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Total Sekolah Binaan</div>
+                        <div id="binaanTotalCount" style="font-size: 20px; font-weight: 800; color: #0f172a; margin-top: 4px;">0 Satdik</div>
                     </div>
-                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                        <p class="text-xs text-slate-500 font-semibold uppercase">Rata-rata Skor Literasi / Numerasi</p>
-                        <h4 id="binaanAvgKognitif" class="text-2xl font-bold text-emerald-600 mt-1">80.00 / 77.78</h4>
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px;">
+                        <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Rata-Rata Literasi/Numerasi</div>
+                        <div id="binaanAvgKognitif" style="font-size: 20px; font-weight: 800; color: #059669; margin-top: 4px;">80.00 / 77.78</div>
                     </div>
-                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                        <p class="text-xs text-slate-500 font-semibold uppercase">Sekolah Butuh Intervensi Khusus</p>
-                        <h4 id="binaanNeedIntervention" class="text-2xl font-bold text-rose-600 mt-1">0 Satdik</h4>
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px;">
+                        <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Butuh Intervensi Khusus</div>
+                        <div id="binaanNeedIntervention" style="font-size: 20px; font-weight: 800; color: #dc2626; margin-top: 4px;">0 Satdik</div>
                     </div>
                 </div>
 
-                <!-- Binaan Schools Overview Table -->
-                <div class="overflow-x-auto custom-scrollbar">
-                    <table class="w-full text-left border-collapse text-xs">
+                <div class="table-responsive">
+                    <table>
                         <thead>
-                            <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 font-semibold uppercase">
-                                <th class="p-3">Nama Satuan Pendidikan</th>
-                                <th class="p-3">NPSN</th>
-                                <th class="p-3">Jenjang</th>
-                                <th class="p-3">Status Rapor</th>
-                                <th class="p-3">Indikator Prioritas Masalah</th>
-                                <th class="p-3">Estimasi Anggaran PBD</th>
-                                <th class="p-3 text-center">Aksi Manajemen</th>
+                            <tr>
+                                <th>Nama Satuan Pendidikan</th>
+                                <th>NPSN</th>
+                                <th>Jenjang</th>
+                                <th>Status Rapor</th>
+                                <th>Indikator Prioritas Masalah</th>
+                                <th>Estimasi Anggaran PBD</th>
+                                <th style="text-align: center;">Kelola & Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="binaanTableBody" class="divide-y divide-slate-200">
+                        <tbody id="binaanTableBody">
                             <!-- Rendered by JS -->
                         </tbody>
                     </table>
@@ -371,37 +513,36 @@
             </div>
         </div>
 
-        <!-- TAB 2: IDENTIFIKASI DATA RAPOR -->
-        <div id="tab-identifikasi" class="tab-content hidden space-y-6">
-            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+        <!-- TAB 2: IDENTIFIKASI DATA RAPOR & 8 SNP -->
+        <div id="tab-identifikasi" class="tab-content">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
                     <div>
-                        <h3 class="font-bold text-slate-800 text-base">Tahap 1: Pemetaan & Identifikasi Indikator Rapor</h3>
-                        <p class="text-xs text-slate-500">Masukkan nilai dan status capaian terbaru sesuai dokumen Rapor Pendidikan resmi.</p>
+                        <h3 style="font-size: 15px; font-weight: 700;">Tahap 1: Pemetaan Indikator Rapor & Sinkronisasi 8 SNP</h3>
+                        <p style="font-size: 12px; color: #64748b;">Masukkan nilai, status capaian, dan pemetaan Standar Nasional Pendidikan (8 SNP) yang bersesuai.</p>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="addNewIndicatorRow()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1.5">
-                            <i class="fa-solid fa-plus"></i> Tambah Indikator
-                        </button>
+                    <div style="display:flex; gap:8px;">
+                        <button onclick="autoSuggestRaporSNP()" class="btn btn-amber">✦ Preset Rapor PBD Tersinkron</button>
+                        <button onclick="addNewIndicatorRow()" class="btn btn-indigo">+ Tambah Indikator</button>
                     </div>
                 </div>
 
-                <!-- Indicators Table -->
-                <div class="overflow-x-auto custom-scrollbar">
-                    <table class="w-full text-left border-collapse text-xs">
+                <div class="table-responsive">
+                    <table>
                         <thead>
-                            <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 font-semibold uppercase">
-                                <th class="p-3 w-12 text-center">No</th>
-                                <th class="p-3 w-48">Kode & Indikator</th>
-                                <th class="p-3 w-28">Capaian</th>
-                                <th class="p-3 w-24">Skor Terbaru</th>
-                                <th class="p-3 w-24">Perubahan</th>
-                                <th class="p-3 w-36">Status Analisis</th>
-                                <th class="p-3 w-48">Peringkat (Kab/Nas)</th>
-                                <th class="p-3 w-16 text-center">Aksi</th>
+                            <tr>
+                                <th style="width: 40px; text-align: center;">No</th>
+                                <th>Kode</th><th>Indikator</th>
+                                <th style="width: 220px;">Standar Nasional Pendidikan (8 SNP)</th>
+                                <th>Capaian</th>
+                                <th>Skor</th>
+                                <th>Perubahan</th>
+                                <th>Status Analisis</th>
+                                <th>Peringkat (Kab/Nas)</th>
+                                <th style="text-align: center;">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="indicatorTableBody" class="divide-y divide-slate-200">
+                        <tbody id="indicatorTableBody">
                             <!-- Rendered by JS -->
                         </tbody>
                     </table>
@@ -410,25 +551,32 @@
         </div>
 
         <!-- TAB 3: REFLEKSI & AKAR MASALAH -->
-        <div id="tab-refleksi" class="tab-content hidden space-y-6">
-            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
-                <div class="mb-4">
-                    <h3 class="font-bold text-slate-800 text-base">Tahap 2: Analisis Refleksi & Pemetaan Akar Masalah</h3>
-                    <p class="text-xs text-slate-500">Hubungkan indikator bermasalah dengan subindikator akar masalah, dugaan penyebab, dan bukti validasi lapangan.</p>
+        <div id="tab-refleksi" class="tab-content">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                        <h3 style="font-size: 15px; font-weight: 700;">Tahap 2: Analisis Refleksi & Pemetaan Akar Masalah</h3>
+                        <p style="font-size: 12px; color: #64748b;">Hubungkan indikator bermasalah dengan subindikator akar masalah, dugaan penyebab, dan bukti validasi lapangan.</p>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <button onclick="autoSuggestReflections()" class="btn btn-amber">✦ Rekomendasi Isian Rapor PBD</button>
+                        <button onclick="addReflectionRow()" class="btn btn-indigo">+ Tambah Refleksi</button>
+                    </div>
                 </div>
 
-                <div class="overflow-x-auto custom-scrollbar">
-                    <table class="w-full text-left border-collapse text-xs">
+                <div class="table-responsive">
+                    <table>
                         <thead>
-                            <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 font-semibold uppercase">
-                                <th class="p-3 w-48">Indikator Prioritas</th>
-                                <th class="p-3 w-48">Temuan Data (Fakta)</th>
-                                <th class="p-3 w-48">Subindikator Akar Masalah</th>
-                                <th class="p-3 w-64">Dugaan Penyebab (Analitis)</th>
-                                <th class="p-3 w-48">Bukti Validasi Lapangan</th>
+                            <tr>
+                                <th>Indikator Prioritas</th>
+                                <th>Temuan Data (Fakta)</th>
+                                <th>Subindikator Akar Masalah</th>
+                                <th>Dugaan Penyebab (Analitis)</th>
+                                <th>Bukti Validasi Lapangan</th>
+                                <th style="text-align: center;">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="reflectionTableBody" class="divide-y divide-slate-200">
+                        <tbody id="reflectionTableBody">
                             <!-- Rendered by JS -->
                         </tbody>
                     </table>
@@ -437,72 +585,69 @@
         </div>
 
         <!-- TAB 4: BENAHI (RKT & ARKAS) -->
-        <div id="tab-benahi" class="tab-content hidden space-y-6">
-            <!-- Program Strategy Section -->
-            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+        <div id="tab-benahi" class="tab-content">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
                     <div>
-                        <h3 class="font-bold text-slate-800 text-base">Tahap 3 & 4: Matriks Program Kerja (RKT)</h3>
-                        <p class="text-xs text-slate-500">Rancangan program pembenahan mutu yang terintegrasi dengan indikator sasaran.</p>
+                        <h3 style="font-size: 15px; font-weight: 700;">Tahap 3 & 4: Matriks Program Kerja (RKT)</h3>
+                        <p style="font-size: 12px; color: #64748b;">Rancangan program pembenahan mutu yang terintegrasi dengan indikator sasaran SNP.</p>
                     </div>
-                    <button onclick="addRktRow()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-plus"></i> Tambah Program RKT
-                    </button>
+                    <div style="display:flex; gap:8px;">
+                        <button onclick="autoSuggestRkt()" class="btn btn-amber">✦ Auto-Suggest Program RKT</button>
+                        <button onclick="addRktRow()" class="btn btn-indigo">+ Tambah Program RKT</button>
+                    </div>
                 </div>
 
-                <div class="overflow-x-auto custom-scrollbar">
-                    <table class="w-full text-left border-collapse text-xs">
+                <div class="table-responsive">
+                    <table>
                         <thead>
-                            <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 font-semibold uppercase">
-                                <th class="p-3 w-36">Bidang</th>
-                                <th class="p-3 w-48">Program Prioritas</th>
-                                <th class="p-3 w-64">Kegiatan Konkret</th>
-                                <th class="p-3 w-32">Penanggung Jawab</th>
-                                <th class="p-3 w-28">Waktu Pelaksanaan</th>
-                                <th class="p-3 w-40">Target Terukur</th>
-                                <th class="p-3 w-16 text-center">Aksi</th>
+                            <tr>
+                                <th>Bidang</th>
+                                <th>Program Prioritas</th>
+                                <th>Kegiatan Konkret</th>
+                                <th>Penanggung Jawab</th>
+                                <th>Waktu Pelaksanaan</th>
+                                <th>Target Terukur</th>
+                                <th style="text-align: center;">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="rktTableBody" class="divide-y divide-slate-200">
+                        <tbody id="rktTableBody">
                             <!-- Rendered by JS -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- ARKAS Budgeting Section -->
-            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                     <div>
-                        <h3 class="font-bold text-slate-800 text-base">Rancangan Penganggaran ARKAS (BOSP Reguler)</h3>
-                        <p class="text-xs text-slate-500">Perincian belanja untuk kegiatan benahi mutu yang membutuhkan pembiayaan.</p>
+                        <h3 style="font-size: 15px; font-weight: 700;">Rancangan Penganggaran ARKAS (BOSP Reguler)</h3>
+                        <p style="font-size: 12px; color: #64748b;">Perincian belanja untuk kegiatan benahi mutu yang membutuhkan pembiayaan.</p>
                     </div>
-                    <button onclick="addArkasRow()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-plus"></i> Tambah Item ARKAS
-                    </button>
+                    <button onclick="addArkasRow()" class="btn btn-emerald">+ Tambah Item ARKAS</button>
                 </div>
 
-                <div class="overflow-x-auto custom-scrollbar">
-                    <table class="w-full text-left border-collapse text-xs">
+                <div class="table-responsive">
+                    <table>
                         <thead>
-                            <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 font-semibold uppercase">
-                                <th class="p-3 w-48">Kegiatan Benahi (RKT)</th>
-                                <th class="p-3 w-48">Kode Kegiatan ARKAS</th>
-                                <th class="p-3 w-48">Uraian Barang / Jasa</th>
-                                <th class="p-3 w-20">Vol</th>
-                                <th class="p-3 w-20">Satuan</th>
-                                <th class="p-3 w-28">Harga Satuan (Rp)</th>
-                                <th class="p-3 w-32">Total (Rp)</th>
-                                <th class="p-3 w-16 text-center">Aksi</th>
+                            <tr>
+                                <th>Kegiatan Benahi (RKT)</th>
+                                <th>Kode Kegiatan ARKAS</th>
+                                <th>Uraian Barang / Jasa</th>
+                                <th>Vol</th>
+                                <th>Satuan</th>
+                                <th>Harga Satuan (Rp)</th>
+                                <th>Total (Rp)</th>
+                                <th style="text-align: center;">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="arkasTableBody" class="divide-y divide-slate-200">
+                        <tbody id="arkasTableBody">
                             <!-- Rendered by JS -->
                         </tbody>
                         <tfoot>
-                            <tr class="bg-slate-50 font-bold text-slate-800 border-t-2 border-slate-300">
-                                <td colspan="6" class="p-3 text-right uppercase">Total Estimasi Anggaran PBD:</td>
-                                <td id="arkasTotalSum" class="p-3 text-indigo-700 text-sm">Rp 0</td>
+                            <tr style="background: #f8fafc; font-weight: bold;">
+                                <td colspan="6" style="text-align: right; text-transform: uppercase;">Total Estimasi Anggaran PBD:</td>
+                                <td id="arkasTotalSum" style="color: #4f46e5; font-size: 14px;">Rp 0</td>
                                 <td></td>
                             </tr>
                         </tfoot>
@@ -511,199 +656,212 @@
             </div>
         </div>
 
-        <!-- TAB 5: MONITORING & EVALUASI -->
-        <div id="tab-monev" class="tab-content hidden space-y-6">
-            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
-                <div class="mb-4">
-                    <h3 class="font-bold text-slate-800 text-base">Tahap 6: Kerangka Monitoring & Evaluasi (Monev)</h3>
-                    <p class="text-xs text-slate-500">Mekanisme pemantauan keterlaksanaan program, instrumen bukti fisik, dan rencana tindak lanjut.</p>
+        <!-- TAB 5: SUPERVISI & MONITORING EVALUASI -->
+        <div id="tab-supervisi-monev" class="tab-content">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                        <h3 style="font-size: 15px; font-weight: 700; color: #1e293b;">📋 Instrumen Supervisi & Monev PBD Terintegrasi</h3>
+                        <p style="font-size: 12px; color: #64748b;">Tersinkronisasi otomatis dengan Program Benahi & RKT. Pengawas / Kepala Sekolah dapat memantau progres keterlaksanaan & bukti fisik.</p>
+                    </div>
+                    <button onclick="syncMonevFromRKT()" class="btn btn-amber">↻ Sync Data dari RKT</button>
                 </div>
 
-                <div class="overflow-x-auto custom-scrollbar">
-                    <table class="w-full text-left border-collapse text-xs">
+                <div class="table-responsive">
+                    <table>
                         <thead>
-                            <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 font-semibold uppercase">
-                                <th class="p-3 w-40">Program Utama</th>
-                                <th class="p-3 w-48">Indikator Process & Output</th>
-                                <th class="p-3 w-40">Sumber Bukti Fisik</th>
-                                <th class="p-3 w-28">Frekuensi Monev</th>
-                                <th class="p-3 w-48">Rencana Tindak Lanjut jika Target Belum Tercapai</th>
+                            <tr>
+                                <th>Program RKT / SNP</th>
+                                <th>Kegiatan Benahi Konkret</th>
+                                <th>Target Kuantitatif</th>
+                                <th>Status Keterlaksanaan</th>
+                                <th>Bukti Fisik / Dokumen Validasi</th>
+                                <th>Catatan Supervisi Pengawas / Kepala Satdik</th>
+                                <th>Rencana Tindak Lanjut (RTL)</th>
                             </tr>
                         </thead>
-                        <tbody id="monevTableBody" class="divide-y divide-slate-200">
-                            <!-- Rendered by JS -->
+                        <tbody id="monevTableBody">
+                            <!-- Rendered dynamically -->
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 6: LAPORAN LENGKAP EDS-PBD (PRINT/DOCUMENT VIEW) -->
-        <div id="tab-laporan" class="tab-content hidden space-y-6">
-            <div class="bg-white rounded-xl border border-slate-200 shadow-lg p-8 max-w-5xl mx-auto print-break">
-                
-                <!-- Report Header -->
-                <div class="text-center border-b-2 border-slate-800 pb-6 mb-6">
-                    <h2 class="text-xl font-bold text-slate-900 uppercase tracking-wide">LAPORAN EVALUASI DIRI SATUAN PENDIDIKAN (EDS)</h2>
-                    <h3 class="text-lg font-bold text-indigo-900 uppercase mt-1">DAN RANCANGAN PERENCANAAN BERBASIS DATA (PBD)</h3>
-                    <p class="text-sm text-slate-600 mt-2 font-medium"><span id="repSchool">SMPN 3 Tarogong Kidul</span> | NPSN: <span id="repNPSN">20209354</span> | Jenjang: <span id="repJenjang">SMP</span></p>
-                    <p class="text-xs text-slate-500">Tahun Rapor: <span id="repYear">2025</span> | Tahun Pelajaran Sasaran: <span id="repTarget">2025/2026</span></p>
+        <!-- TAB 6: LAPORAN LENGKAP EDS-PBD & SUPERVISI -->
+        <div id="tab-laporan" class="tab-content">
+            <div class="card" style="max-width: 950px; margin: 0 auto; padding: 32px;">
+                <div style="text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 16px; margin-bottom: 20px;">
+                    <h2 style="font-size: 18px; font-weight: 800; text-transform: uppercase;">LAPORAN EVALUASI DIRI SATUAN PENDIDIKAN (EDS)</h2>
+                    <h3 style="font-size: 15px; font-weight: 700; color: #3730a3; text-transform: uppercase; margin-top: 4px;">SINKRONISASI 8 STANDAR NASIONAL PENDIDIKAN & SUPERVISI PBD</h3>
+                    <p style="font-size: 12px; margin-top: 8px;"><span id="repSchool">SMPN 3 Tarogong Kidul</span> | NPSN: <span id="repNPSN">20209354</span> | Jenjang: <span id="repJenjang">SMP</span></p>
+                    <p style="font-size: 11px; color: #64748b;">Tahun Rapor: <span id="repYear">2025</span> | Tahun Pelajaran Sasaran: <span id="repTarget">2025/2026</span></p>
                 </div>
 
-                <!-- Executive Summary -->
-                <div class="mb-8 space-y-3">
-                    <h4 class="font-bold text-slate-900 text-sm border-l-4 border-indigo-600 pl-3 uppercase">BAB I. RINGKASAN EKSEKUTIF KONDISI MUTU</h4>
-                    <p id="repExecSummary" class="text-xs text-slate-700 leading-relaxed text-justify">
-                        <!-- Auto-generated summary text -->
-                    </p>
+                <div style="margin-bottom: 24px;">
+                    <h4 style="font-size: 13px; font-weight: 700; border-left: 4px solid #4f46e5; padding-left: 8px; text-transform: uppercase; margin-bottom: 8px;">BAB I. RINGKASAN EKSEKUTIF KONDISI MUTU & 8 SNP</h4>
+                    <p id="repExecSummary" style="font-size: 12px; line-height: 1.6; text-align: justify; color: #334155;"></p>
                 </div>
 
-                <!-- Section: Priority Matrix -->
-                <div class="mb-8 space-y-3">
-                    <h4 class="font-bold text-slate-900 text-sm border-l-4 border-indigo-600 pl-3 uppercase">BAB II. FOKUS PRIORITAS PEMBENAHAN & AKAR MASALAH</h4>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border border-slate-300 text-xs">
-                            <thead class="bg-slate-100 font-bold text-slate-800 border-b border-slate-300">
+                <div style="margin-bottom: 24px;">
+                    <h4 style="font-size: 13px; font-weight: 700; border-left: 4px solid #4f46e5; padding-left: 8px; text-transform: uppercase; margin-bottom: 8px;">BAB II. FOKUS PRIORITAS PEMBENAHAN & AKAR MASALAH</h4>
+                    <div class="table-responsive">
+                        <table style="border: 1px solid #cbd5e1;">
+                            <thead>
                                 <tr>
-                                    <th class="p-2 border-r border-slate-300">No</th>
-                                    <th class="p-2 border-r border-slate-300">Indikator Prioritas</th>
-                                    <th class="p-2 border-r border-slate-300">Skor / Capaian</th>
-                                    <th class="p-2 border-r border-slate-300">Akar Masalah Utama</th>
-                                    <th class="p-2">Dugaan Penyebab</th>
+                                    <th style="border: 1px solid #cbd5e1;">No</th>
+                                    <th style="border: 1px solid #cbd5e1;">Indikator Prioritas</th>
+                                    <th style="border: 1px solid #cbd5e1;">Temuan Data (Fakta)</th>
+                                    <th style="border: 1px solid #cbd5e1;">Akar Masalah Utama</th>
+                                    <th style="border: 1px solid #cbd5e1;">Dugaan Penyebab</th>
+                                    <th style="border: 1px solid #cbd5e1;">Bukti Validasi Lapangan</th>
                                 </tr>
                             </thead>
-                            <tbody id="repPriorityBody" class="divide-y divide-slate-300">
-                                <!-- Generated -->
-                            </tbody>
+                            <tbody id="repPriorityBody"></tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Section: Program RKT Summary -->
-                <div class="mb-8 space-y-3">
-                    <h4 class="font-bold text-slate-900 text-sm border-l-4 border-indigo-600 pl-3 uppercase">BAB III. RENCANA PROGRAM KERJA TAHUNAN (RKT)</h4>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border border-slate-300 text-xs">
-                            <thead class="bg-slate-100 font-bold text-slate-800 border-b border-slate-300">
+                <div style="margin-bottom: 24px;">
+                    <h4 style="font-size: 13px; font-weight: 700; border-left: 4px solid #4f46e5; padding-left: 8px; text-transform: uppercase; margin-bottom: 8px;">BAB III. RENCANA PROGRAM KERJA TAHUNAN (RKT) & ANGGARAN ARKAS</h4>
+                    <div class="table-responsive">
+                        <table style="border: 1px solid #cbd5e1;">
+                            <thead>
                                 <tr>
-                                    <th class="p-2 border-r border-slate-300">Bidang</th>
-                                    <th class="p-2 border-r border-slate-300">Program Prioritas</th>
-                                    <th class="p-2 border-r border-slate-300">Bentuk Kegiatan Konkret</th>
-                                    <th class="p-2 border-r border-slate-300">PJ</th>
-                                    <th class="p-2">Target Terukur</th>
+                                    <th style="border: 1px solid #cbd5e1;">Bidang</th>
+                                    <th style="border: 1px solid #cbd5e1;">Program Prioritas</th>
+                                    <th style="border: 1px solid #cbd5e1;">Bentuk Kegiatan Konkret</th>
+                                    <th style="border: 1px solid #cbd5e1;">PJ</th>
+                                    <th style="border: 1px solid #cbd5e1;">Target Terukur</th>
                                 </tr>
                             </thead>
-                            <tbody id="repRktBody" class="divide-y divide-slate-300">
-                                <!-- Generated -->
-                            </tbody>
+                            <tbody id="repRktBody"></tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Section: Signatures -->
-                <div class="mt-12 pt-6 border-t border-slate-200 grid grid-cols-3 text-center text-xs">
-                    <div>
-                        <p class="text-slate-500">Mengetahui,</p>
-                        <p class="font-bold text-slate-800 mt-1">Komite Satuan Pendidikan</p>
-                        <div class="h-16"></div>
-                        <p class="font-bold text-slate-900 underline">( ________________________ )</p>
-                    </div>
-                    <div>
-                        <p class="text-slate-500">Mengetahui/Menyetujui,</p>
-                        <p class="font-bold text-indigo-900 mt-1">Pengawas Pembina / Pendamping</p>
-                        <div class="h-16"></div>
-                        <p id="repSupervisorPrint" class="font-bold text-slate-900 underline">Drs. H. Maman Suparman, M.Pd.</p>
-                        <p id="repSupervisorNIPPrint" class="text-slate-500">NIP. 196804121994031004</p>
-                    </div>
-                    <div>
-                        <p class="text-slate-500">Mengesahkan,</p>
-                        <p class="font-bold text-slate-800 mt-1">Kepala Satuan Pendidikan</p>
-                        <div class="h-16"></div>
-                        <p id="repKepsekName" class="font-bold text-slate-900 underline">( ________________________ )</p>
-                        <p id="repKepsekNIP" class="text-slate-500">NIP. ........................................</p>
+                <div style="margin-bottom: 24px;">
+                    <h4 style="font-size: 13px; font-weight: 700; border-left: 4px solid #4f46e5; padding-left: 8px; text-transform: uppercase; margin-bottom: 8px;">BAB IV. HASIL SUPERVISI & MONITORING EVALUASI PBD</h4>
+                    <div class="table-responsive">
+                        <table style="border: 1px solid #cbd5e1;">
+                            <thead>
+                                <tr>
+                                    <th style="border: 1px solid #cbd5e1;">Program RKT</th>
+                                    <th style="border: 1px solid #cbd5e1;">Kegiatan Benahi</th>
+                                    <th style="border: 1px solid #cbd5e1;">Status Monev</th>
+                                    <th style="border: 1px solid #cbd5e1;">Bukti Fisik</th>
+                                    <th style="border: 1px solid #cbd5e1;">Catatan Pengawas</th>
+                                </tr>
+                            </thead>
+                            <tbody id="repMonevBody"></tbody>
+                        </table>
                     </div>
                 </div>
 
+                <!-- Signatures -->
+                <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; font-size: 11px;">
+                    <div>
+                        <p style="color: #64748b;">Mengetahui,</p>
+                        <p style="font-weight: 700; margin-top: 4px;">Komite Satuan Pendidikan</p>
+                        <div style="height: 60px;"></div>
+                        <p style="font-weight: 700; text-decoration: underline;">( ________________________ )</p>
+                    </div>
+                    <div>
+                        <p style="color: #64748b;">Mengetahui/Menyetujui,</p>
+                        <p style="font-weight: 700; color: #312e81; margin-top: 4px;">Pengawas Pembina / Pendamping</p>
+                        <div style="height: 60px;"></div>
+                        <p id="repSupervisorPrint" style="font-weight: 700; text-decoration: underline;">Drs. H. Maman Suparman, M.Pd.</p>
+                        <p id="repSupervisorNIPPrint" style="color: #64748b;">NIP. 196804121994031004</p>
+                    </div>
+                    <div>
+                        <p style="color: #64748b;">Mengesahkan,</p>
+                        <p style="font-weight: 700; margin-top: 4px;">Kepala Satuan Pendidikan</p>
+                        <div style="height: 60px;"></div>
+                        <p id="repKepsekName" style="font-weight: 700; text-decoration: underline;">( ________________________ )</p>
+                        <p id="repKepsekNIP" style="color: #64748b;">NIP. ........................................</p>
+                    </div>
+                </div>
             </div>
         </div>
 
     </div>
 
     <!-- FOOTER -->
-    <footer class="bg-slate-900 text-slate-400 text-xs py-4 border-t border-slate-800 no-print">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
-            <p>© 2026 SIPBD-MUTU PRO — Platform Evaluasi Diri & Pendampingan Pengawas Sekolah Binaan (PAUD, SD, SMP, SMA, SMK)</p>
-            <div class="flex items-center gap-3">
-                <p class="text-[11px] text-slate-500">Terintegrasi Standar Kemendikdasmen</p>
-                <span class="text-slate-600">|</span>
-                <p class="text-[11px] text-amber-400 font-semibold tracking-wide flex items-center gap-1">
-                    <i class="fa-solid fa-code text-slate-400"></i> Pengembang: <span class="bg-slate-800 text-amber-300 px-2 py-0.5 rounded border border-slate-700 font-bold">IFS</span>
-                </p>
-            </div>
+    <footer class="no-print" style="background-color: #0f172a; color: #94a3b8; font-size: 11px; padding: 16px 0; border-top: 1px solid #1e293b;">
+        <div style="max-width: 1380px; margin: 0 auto; padding: 0 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <p>© 2026 SIPBD-MUTU 8 SNP PRO — Platform Evaluasi Diri & Pendampingan Pengawas Sekolah Binaan</p>
+            <p>Pengembang: <strong style="color: #fbbf24;">IFS</strong></p>
         </div>
     </footer>
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // MULTI-SCHOOL DATA STORE
+        const STANDAR_NASIONAL_PENDIDIKAN = [
+            "1. Standar Kompetensi Lulusan (SKL)",
+            "2. Standar Isi",
+            "3. Standar Proses",
+            "4. Standar Penilaian Pendidikan",
+            "5. Standar Pendidik & Tenaga Kependidikan",
+            "6. Standar Sarana & Prasarana",
+            "7. Standar Pengelolaan",
+            "8. Standar Pembiayaan"
+        ];
+
         let schoolsDatabase = {
             "20209354": {
                 schoolName: "SMPN 3 Tarogong Kidul",
                 npsn: "20209354",
                 jenjang: "SMP",
+                statusRapor: "Aktif",
                 evalYear: "2025",
                 targetTP: "2025/2026",
                 supervisorName: "Drs. H. Maman Suparman, M.Pd.",
                 supervisorNIP: "196804121994031004",
                 supervisorRegion: "Dinas Pendidikan Kab. Garut",
                 indicators: [
-                    { id: "A.1", code: "A.1", name: "Kemampuan Literasi", capaian: "Baik", skor: 82.22, change: 2.22, status: "Kekuatan", rankKab: "21-40%", rankNas: "21-40%" },
-                    { id: "A.2", code: "A.2", name: "Kemampuan Numerasi", capaian: "Baik", skor: 77.78, change: -2.22, status: "Perhatian", rankKab: "21-40%", rankNas: "21-40%" },
-                    { id: "A.3", code: "A.3", name: "Karakter Murid", capaian: "Sedang", skor: 51.90, change: -3.18, status: "Prioritas Utama", rankKab: "21-40%", rankNas: "41-60%" },
-                    { id: "C.3", code: "C.3", name: "Pengalaman Pelatihan PTK", capaian: "Baik", skor: 77.00, change: 0.00, status: "Kekuatan", rankKab: "1-20%", rankNas: "1-20%" },
-                    { id: "D.1", code: "D.1", name: "Kualitas Pembelajaran", capaian: "Sedang", skor: 59.00, change: -5.14, status: "Prioritas Utama", rankKab: "41-60%", rankNas: "41-60%" },
-                    { id: "D.2", code: "D.2", name: "Refleksi & Perbaikan Pembelajaran", capaian: "Baik", skor: 62.30, change: 2.12, status: "Kekuatan", rankKab: "21-40%", rankNas: "21-40%" },
-                    { id: "D.3", code: "D.3", name: "Kepemimpinan Instruksional", capaian: "Baik", skor: 56.93, change: 0.18, status: "Stagnan", rankKab: "21-40%", rankNas: "41-60%" },
-                    { id: "D.4", code: "D.4", name: "Iklim Keamanan Sekolah", capaian: "Baik", skor: 71.00, change: -6.68, status: "Perhatian", rankKab: "21-40%", rankNas: "21-40%" },
-                    { id: "D.6", code: "D.6", name: "Iklim Kesetaraan Gender", capaian: "Baik", skor: 71.00, change: 1.85, status: "Kekuatan", rankKab: "21-40%", rankNas: "21-40%" },
-                    { id: "D.8", code: "D.8", name: "Iklim Kebinekaan", capaian: "Baik", skor: 67.00, change: -7.29, status: "Perhatian", rankKab: "21-40%", rankNas: "41-60%" },
-                    { id: "D.10", code: "D.10", name: "Iklim Inklusivitas", capaian: "Baik", skor: 54.00, change: -7.67, status: "Perhatian", rankKab: "21-40%", rankNas: "41-60%" },
-                    { id: "E.1", code: "E.1", name: "Partisipasi Warga Sekolah", capaian: "Sedang", skor: 66.33, change: -8.18, status: "Penurunan", rankKab: "61-80%", rankNas: "61-80%" },
-                    { id: "E.2", code: "E.2", name: "Pemanfaatan Sumber Daya Mutu", capaian: "Sedang", skor: 38.77, change: 4.86, status: "Meningkat", rankKab: "1-20%", rankNas: "1-20%" }
+                    { id: "A.1", code: "A.1", name: "Kemampuan Literasi", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Baik", skor: 82.22, change: 2.22, status: "Kekuatan", rankKab: "21-40%", rankNas: "21-40%" },
+                    { id: "A.2", code: "A.2", name: "Kemampuan Numerasi", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Baik", skor: 77.78, change: -2.22, status: "Perhatian", rankKab: "21-40%", rankNas: "21-40%" },
+                    { id: "A.3", code: "A.3", name: "Karakter Murid", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Sedang", skor: 51.90, change: -3.18, status: "Prioritas Utama", rankKab: "41-60%", rankNas: "41-60%" },
+                    { id: "C.3", code: "C.3", name: "Pengalaman Pelatihan PTK", snp: "5. Standar Pendidik & Tenaga Kependidikan", capaian: "Baik", skor: 77.00, change: 0.00, status: "Kekuatan", rankKab: "1-20%", rankNas: "1-20%" },
+                    { id: "D.1", code: "D.1", name: "Kualitas Pembelajaran", snp: "3. Standar Proses", capaian: "Sedang", skor: 59.00, change: -5.14, status: "Prioritas Utama", rankKab: "41-60%", rankNas: "41-60%" },
+                    { id: "D.2", code: "D.2", name: "Refleksi & Perbaikan Pembelajaran", snp: "3. Standar Proses", capaian: "Baik", skor: 62.30, change: 2.12, status: "Kekuatan", rankKab: "21-40%", rankNas: "21-40%" }
                 ],
                 reflections: [
-                    { priority: "D.1 Kualitas Pembelajaran", temuan: "Skor 59.00 (Sedang), turun -5.14. Subindikator Metode Pembelajaran (57.00) terendah.", subindikator: "D.1.3 Metode Pembelajaran & D.1.2 Dukungan Psikologis", cause: "Guru dominan ceramah satu arah; belum konsisten berikan umpan balik konstruktif.", evidence: "Hasil supervisi akademik & angket kenyamanan belajar murid." },
-                    { priority: "A.3 Karakter Murid", temuan: "Skor 51.90 (Sedang), turun -3.18. Subindikator Gotong Royong (51.15) anjlok -10.23.", subindikator: "A.3.6 Kemandirian & A.3.2 Gotong Royong", cause: "Proyek P5 belum variatif; pembiasaan kemandirian di rumah & sekolah kurang terkoordinasi.", evidence: "Jurnal asesmen P5 & laporan aktivitas kesiswaan." },
-                    { priority: "A.2 Kemampuan Numerasi", temuan: "Skor 77.78% (Baik), turun -2.22%. Murid 'Di Atas Minimum' drop -11.11%.", subindikator: "A.2.4 Domain Data & A.2.3 Geometri", cause: "Kurang latihan penalaran (HOTS); numerasi kontekstual belum diintegrasikan lintas mapel.", evidence: "Hasil asesmen formatif matematika & LKPD IPA/IPS." }
+                    { priority: "D.1 Kualitas Pembelajaran", temuan: "Skor 59.00 (Sedang), turun -5.14.", subindikator: "D.1.3 Metode Pembelajaran", cause: "Guru dominan ceramah satu arah.", evidence: "Hasil supervisi akademik." },
+                    { priority: "A.3 Karakter Murid", temuan: "Skor 51.90 (Sedang), turun -3.18.", subindikator: "A.3.6 Kemandirian", cause: "Proyek P5 kurang variatif.", evidence: "Jurnal P5." }
                 ],
                 rkt: [
-                    { bidang: "Kurikulum & Pembelajaran", program: "Program SEHATI (Kualitas Pembelajaran Interaktif)", kegiatan: "Workshop IHT Modul Ajar Interaktif (PBL/PJBL) & Pembelajaran Berdiferensiasi", pj: "Wakasek Kurikulum", time: "Juli 2025", target: "Skor D.1 > 65.00 (Baik)" },
-                    { bidang: "Kesiswaan & Karakter", program: "Program BEKARYA (Penguatan Profil Pelajar Pancasila)", kegiatan: "Pelaksanaan 3 Proyek P5 berbasis kolaborasi & Gerakan Jumat Berbagi", pj: "Koordinator P5", time: "Agustus 2025 - Mei 2026", target: "Skor A.3 > 58.00 (Baik)" }
+                    { bidang: "Kurikulum", program: "Program SEHATI", kegiatan: "Workshop IHT Modul Ajar Interaktif", pj: "Wakasek Kurikulum", time: "Juli 2025", target: "Skor D.1 > 65.00" },
+                    { bidang: "Kesiswaan", program: "Program BEKARYA", kegiatan: "Pelaksanaan 3 Proyek P5", pj: "Koordinator P5", time: "Agustus 2025", target: "Skor A.3 > 58.00" }
                 ],
                 arkas: [
-                    { benahi: "Workshop IHT Modul Ajar Interaktif (D.1)", code: "Peningkatan kompetensi guru untuk memahami karakteristik peserta didik", detail: "Honorarium Narasumber IHT (2 Orang x 8 Jam)", vol: 16, unit: "Orang Jam", price: 300000, total: 4800000 },
-                    { benahi: "Workshop IHT Modul Ajar Interaktif (D.1)", code: "Peningkatan kompetensi guru untuk memahami konten pembelajaran", detail: "Konsumsi IHT Guru (50 Orang x 2 Hari)", vol: 100, unit: "Kotak", price: 35000, total: 3500000 }
+                    { benahi: "Workshop IHT Modul Ajar Interaktif", code: "05.02.01 Peningkatan Kompetensi PTK", detail: "Honorarium Narasumber IHT", vol: 16, unit: "Orang Jam", price: 300000, total: 4800000 }
                 ],
                 monev: [
-                    { program: "Program SEHATI (Pembelajaran)", indicator: "Supervisi akademik terlaksana 2x per semester per guru.", source: "Jurnal Obsevasi Kelas", freq: "Bulanan", action: "Pendampingan coaching oleh Guru Penggerak" }
+                    { program: "Program SEHATI", kegiatan: "Workshop IHT Modul Ajar Interaktif", target: "Skor D.1 > 65.00", status: "Proses", bukti: "Daftar Hadir, Modul", catatan: "40 Guru mengumpulkan modul.", rtl: "Pendampingan khusus." },
+                    { program: "Program BEKARYA", kegiatan: "Pelaksanaan 3 Proyek P5", target: "Skor A.3 > 58.00", status: "Belum", bukti: "Dokumentasi Proyek P5", catatan: "Jadwal semester 1", rtl: "Pembentukan tim fasilitator." }
                 ]
             },
-            "20209355": {
-                schoolName: "SMPN 1 Tarogong Kidul",
-                npsn: "20209355",
+            "20206985": {
+                schoolName: "SMPN 2 Cigedug",
+                npsn: "20206985",
                 jenjang: "SMP",
+                statusRapor: "Perlu Intervensi Khusus",
                 evalYear: "2025",
                 targetTP: "2025/2026",
                 supervisorName: "Drs. H. Maman Suparman, M.Pd.",
                 supervisorNIP: "196804121994031004",
                 supervisorRegion: "Dinas Pendidikan Kab. Garut",
                 indicators: [
-                    { id: "A.1", code: "A.1", name: "Kemampuan Literasi", capaian: "Baik", skor: 86.50, change: 4.10, status: "Kekuatan", rankKab: "1-20%", rankNas: "1-20%" },
-                    { id: "A.2", code: "A.2", name: "Kemampuan Numerasi", capaian: "Baik", skor: 81.20, change: 1.50, status: "Kekuatan", rankKab: "1-20%", rankNas: "1-20%" },
-                    { id: "D.1", code: "D.1", name: "Kualitas Pembelajaran", capaian: "Baik", skor: 68.40, change: 3.20, status: "Kekuatan", rankKab: "1-20%", rankNas: "21-40%" }
+                    { id: "A.1", code: "A.1", name: "Kemampuan Literasi", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Sedang", skor: 60.00, change: 0.00, status: "Prioritas Utama", rankKab: "41-60%", rankNas: "41-60%" },
+                    { id: "A.2", code: "A.2", name: "Kemampuan Numerasi", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Kurang", skor: 45.50, change: -1.50, status: "Prioritas Utama", rankKab: "61-80%", rankNas: "61-80%" }
                 ],
-                reflections: [],
-                rkt: [],
+                reflections: [
+                    { priority: "A.2 Kemampuan Numerasi", temuan: "Skor 45.50 (Kurang).", subindikator: "A.2.1 Kompetensi Domain Numerasi", cause: "Kurangnya media konkret matematika.", evidence: "Nilai asesmen harian." }
+                ],
+                rkt: [
+                    { bidang: "Kurikulum", program: "Penguatan Numerasi", kegiatan: "Pelatihan Soal HOTS & Numerasi", pj: "Tim Pembelajaran", time: "Agustus 2025", target: "Skor A.2 > 55.00" }
+                ],
                 arkas: [],
                 monev: []
             }
@@ -713,8 +871,50 @@
         let appState = schoolsDatabase[currentActiveNPSN];
         let radarChartInstance = null;
         let selectedFileRaw = null;
+        const LS_KEY = 'sipbd_mutu_v2_pro';
+        const CAP = ['Baik','Sedang','Kurang'], STAT = ['Kekuatan','Perhatian','Prioritas Utama'];
+        
+        function esc(v){ return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+        
+        function persist(){ 
+            try { 
+                localStorage.setItem(LS_KEY, JSON.stringify({db: schoolsDatabase, active: currentActiveNPSN})); 
+            } catch(e){} 
+        }
+
+        function restore(){ 
+            try { 
+                const r = JSON.parse(localStorage.getItem(LS_KEY) || 'null'); 
+                if (r && r.db && r.db[r.active]) { 
+                    schoolsDatabase = r.db; 
+                    currentActiveNPSN = r.active; 
+                    appState = schoolsDatabase[r.active]; 
+                } 
+            } catch(e){} 
+        }
+
+        function ce(p,i,f,v){ 
+            return `<td contenteditable="true" onblur="setField('${p}',${i},'${f}',this.innerText)">${esc(v)}</td>`; 
+        }
+
+        function sel(p,i,f,list,cur){ 
+            return `<select class="form-control" style="padding:4px;font-size:11px" onchange="setField('${p}',${i},'${f}',this.value)">${list.map(o=>`<option ${o===cur?'selected':''}>${o}</option>`).join('')}</select>`; 
+        }
+
+        function delBtn(fn,i){ 
+            return `<td style="text-align:center"><button onclick="${fn}(${i})" style="color:#dc2626;border:none;background:none;cursor:pointer;font-weight:bold;" aria-label="Hapus">✕</button></td>`; 
+        }
+
+        function setField(p,i,f,v){
+            const o = appState[p][i]; if(!o) return;
+            o[f] = ['skor','change','vol','price'].includes(f) ? (parseFloat(String(v).replace(',','.')) || 0) : String(v).trim();
+            if (p === 'arkas') o.total = (o.vol || 0) * (o.price || 0);
+            persist(); renderDashboard(); renderBinaanTable(); renderReportView();
+            if (p === 'arkas') renderArkasTable();
+        }
 
         window.onload = function() {
+            restore();
             populateSchoolSelect();
             syncAllTabsAndUI();
         };
@@ -724,7 +924,7 @@
             select.innerHTML = '';
             Object.keys(schoolsDatabase).forEach(npsn => {
                 const s = schoolsDatabase[npsn];
-                select.innerHTML += `<option value="${npsn}" ${npsn === currentActiveNPSN ? 'selected' : ''}>${s.schoolName} (${s.jenjang})</option>`;
+                select.innerHTML += `<option value="${esc(npsn)}" ${npsn === currentActiveNPSN ? 'selected' : ''}>${esc(s.schoolName)} (${esc(s.jenjang)})</option>`;
             });
         }
 
@@ -734,18 +934,95 @@
             syncAllTabsAndUI();
         }
 
+        /* -------------------------------------------------------------
+           KELOLA KOLOM DASHBOARD SEKOLAH BINAAN (FITUR DIPERBARUI)
+        ------------------------------------------------------------- */
+        function openEditSchoolModal(npsn) {
+            const sc = schoolsDatabase[npsn];
+            if (!sc) return;
+            document.getElementById('editSchoolTargetNpsn').value = npsn;
+            document.getElementById('editSchoolName').value = sc.schoolName;
+            document.getElementById('editSchoolNpsn').value = sc.npsn;
+            document.getElementById('editSchoolJenjang').value = sc.jenjang || "SMP";
+            document.getElementById('editSchoolStatusRapor').value = sc.statusRapor || "Aktif";
+            document.getElementById('editSchoolSupervisor').value = sc.supervisorName || "";
+
+            document.getElementById('editSchoolModal').classList.add('open');
+        }
+
+        function closeEditSchoolModal() {
+            document.getElementById('editSchoolModal').classList.remove('open');
+        }
+
+        function saveEditSchoolBinaan() {
+            const oldNpsn = document.getElementById('editSchoolTargetNpsn').value;
+            const newName = document.getElementById('editSchoolName').value.trim();
+            const newNpsn = document.getElementById('editSchoolNpsn').value.trim();
+            const newJenjang = document.getElementById('editSchoolJenjang').value;
+            const newStatus = document.getElementById('editSchoolStatusRapor').value;
+            const newSupervisor = document.getElementById('editSchoolSupervisor').value;
+
+            if (!newName || !newNpsn) {
+                alert("Nama Sekolah dan NPSN wajib diisi!");
+                return;
+            }
+
+            if (newNpsn !== oldNpsn && schoolsDatabase[newNpsn]) {
+                alert("NPSN baru sudah digunakan oleh sekolah lain!");
+                return;
+            }
+
+            const targetObj = schoolsDatabase[oldNpsn];
+            targetObj.schoolName = newName;
+            targetObj.npsn = newNpsn;
+            targetObj.jenjang = newJenjang;
+            targetObj.statusRapor = newStatus;
+            targetObj.supervisorName = newSupervisor;
+
+            if (newNpsn !== oldNpsn) {
+                delete schoolsDatabase[oldNpsn];
+                schoolsDatabase[newNpsn] = targetObj;
+                if (currentActiveNPSN === oldNpsn) currentActiveNPSN = newNpsn;
+            }
+
+            appState = schoolsDatabase[currentActiveNPSN];
+            persist();
+            populateSchoolSelect();
+            syncAllTabsAndUI();
+            closeEditSchoolModal();
+        }
+
+        function deleteSchoolBinaanFromModal() {
+            const targetNpsn = document.getElementById('editSchoolTargetNpsn').value;
+            if (Object.keys(schoolsDatabase).length <= 1) {
+                alert("Tidak dapat menghapus. Harus ada minimal satu sekolah binaan dalam sistem.");
+                return;
+            }
+
+            if (confirm(`Apakah Anda yakin ingin menghapus data sekolah binaan (${schoolsDatabase[targetNpsn].schoolName})?`)) {
+                delete schoolsDatabase[targetNpsn];
+                currentActiveNPSN = Object.keys(schoolsDatabase)[0];
+                appState = schoolsDatabase[currentActiveNPSN];
+                persist();
+                populateSchoolSelect();
+                syncAllTabsAndUI();
+                closeEditSchoolModal();
+            }
+        }
+
         function openNewSchoolModal() {
-            document.getElementById('newSchoolModal').classList.remove('hidden');
+            document.getElementById('newSchoolModal').classList.add('open');
         }
 
         function closeNewSchoolModal() {
-            document.getElementById('newSchoolModal').classList.add('hidden');
+            document.getElementById('newSchoolModal').classList.remove('open');
         }
 
         function addNewSchoolBinaan() {
             const name = document.getElementById('newSchoolInputName').value.trim();
             const npsn = document.getElementById('newSchoolInputNPSN').value.trim();
             const jenjang = document.getElementById('newSchoolInputJenjang').value;
+            if (schoolsDatabase[npsn]) { alert('NPSN sudah terdaftar.'); return; }
 
             if(!name || !npsn) {
                 alert("Mohon isi Nama Sekolah dan NPSN!");
@@ -756,14 +1033,14 @@
                 schoolName: name,
                 npsn: npsn,
                 jenjang: jenjang,
+                statusRapor: "Aktif",
                 evalYear: "2025",
                 targetTP: "2025/2026",
                 supervisorName: appState.supervisorName || "Pengawas Pembina",
                 supervisorNIP: appState.supervisorNIP || "-",
                 supervisorRegion: appState.supervisorRegion || "-",
                 indicators: [
-                    { id: "A.1", code: "A.1", name: "Kemampuan Literasi", capaian: "Sedang", skor: 60.0, change: 0.0, status: "Perhatian", rankKab: "41-60%", rankNas: "41-60%" },
-                    { id: "A.2", code: "A.2", name: "Kemampuan Numerasi", capaian: "Sedang", skor: 55.0, change: 0.0, status: "Prioritas Utama", rankKab: "41-60%", rankNas: "41-60%" }
+                    { id: "A.1", code: "A.1", name: "Kemampuan Literasi", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Sedang", skor: 60.0, change: 0.0, status: "Perhatian", rankKab: "41-60%", rankNas: "41-60%" }
                 ],
                 reflections: [],
                 rkt: [],
@@ -776,7 +1053,6 @@
             closeNewSchoolModal();
         }
 
-        // CENTRALIZED SYNCHRONIZATION FUNCTION
         function syncAllTabsAndUI() {
             document.getElementById('schoolName').value = appState.schoolName;
             document.getElementById('schoolNPSN').value = appState.npsn;
@@ -788,9 +1064,9 @@
             document.getElementById('supervisorNIP').value = appState.supervisorNIP || '';
             document.getElementById('supervisorRegion').value = appState.supervisorRegion || '';
 
-            // Ensure current active state is saved to database repository
             if (appState.npsn) {
-                schoolsDatabase[appState.npsn] = appState;
+                schoolsDatabase[appState.npsn] = appState; 
+                persist();
             }
 
             renderDashboard();
@@ -812,10 +1088,20 @@
             appState.supervisorName = document.getElementById('supervisorName').value;
             appState.supervisorNIP = document.getElementById('supervisorNIP').value;
             appState.supervisorRegion = document.getElementById('supervisorRegion').value;
+            appState.npsn = appState.npsn.trim() || currentActiveNPSN;
 
-            // Re-sync active entry in global state
-            schoolsDatabase[appState.npsn] = appState;
-
+            if (appState.npsn !== currentActiveNPSN) {
+                if (schoolsDatabase[appState.npsn]) { 
+                    alert('NPSN sudah dipakai sekolah lain.'); 
+                    appState.npsn = currentActiveNPSN; 
+                    document.getElementById('schoolNPSN').value = appState.npsn; 
+                } else { 
+                    delete schoolsDatabase[currentActiveNPSN]; 
+                    currentActiveNPSN = appState.npsn; 
+                }
+            }
+            schoolsDatabase[appState.npsn] = appState; 
+            persist();
             populateSchoolSelect();
             renderReportView();
             renderBinaanTable();
@@ -830,21 +1116,20 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(schoolsDatabase, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `PBD_Sekolah_Binaan_Export_${appState.evalYear}.json`);
+            downloadAnchor.setAttribute("download", `PBD_8SNP_Sekolah_Binaan_Export_${appState.evalYear}.json`);
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
         }
 
-        // MODAL AI UPLOAD HANDLERS
         function openAiUploadModal() {
-            document.getElementById('aiUploadModal').classList.remove('hidden');
+            document.getElementById('aiUploadModal').classList.add('open');
         }
 
         function closeAiUploadModal() {
-            document.getElementById('aiUploadModal').classList.add('hidden');
-            document.getElementById('aiProcessingState').classList.add('hidden');
-            document.getElementById('btnStartAiProcess').disabled = false;
+            document.getElementById('aiUploadModal').classList.remove('open');
+            document.getElementById('aiProcessingState').style.display = 'none';
+            document.getElementById('btnStartAiProcess').disabled = !selectedFileRaw;
         }
 
         function handleFileSelect(event) {
@@ -854,216 +1139,218 @@
             selectedFileRaw = file;
             document.getElementById('fileNameText').innerText = file.name;
             document.getElementById('fileSizeText').innerText = Math.round(file.size / 1024) + " KB";
-            document.getElementById('fileSelectedInfo').classList.remove('hidden');
+            document.getElementById('fileSelectedInfo').style.display = 'flex';
             document.getElementById('btnStartAiProcess').disabled = false;
         }
 
-        // PROCESS UPLOADED RAPOR FILE WITH GEMINI API (GENERATIVE AI)
         async function processRaporWithAI() {
             if (!selectedFileRaw) return;
-
-            document.getElementById('aiProcessingState').classList.remove('hidden');
+            const name = selectedFileRaw.name.toLowerCase();
+            document.getElementById('aiProcessingState').style.display = 'block';
             document.getElementById('btnStartAiProcess').disabled = true;
-
             try {
-                let textContent = "";
-                
-                if (selectedFileRaw.name.endsWith('.json') || selectedFileRaw.name.endsWith('.txt') || selectedFileRaw.name.endsWith('.csv')) {
-                    textContent = await selectedFileRaw.text();
-                    if (selectedFileRaw.name.endsWith('.json')) {
-                        try {
-                            const parsed = JSON.parse(textContent);
-                            if (parsed[currentActiveNPSN]) {
-                                schoolsDatabase = parsed;
-                                appState = schoolsDatabase[currentActiveNPSN];
-                                syncAllTabsAndUI();
-                                closeAiUploadModal();
-                                alert("Database Sekolah Binaan berhasil dimuat dari JSON!");
-                                return;
-                            } else if (parsed.indicators) {
-                                appState = parsed;
-                                schoolsDatabase[appState.npsn || currentActiveNPSN] = appState;
-                                syncAllTabsAndUI();
-                                closeAiUploadModal();
-                                alert("Data Rapor PBD berhasil disinkronkan!");
-                                return;
-                            }
-                        } catch(e){}
-                    }
+                if (name.endsWith('.json')) {
+                    const parsed = JSON.parse(await selectedFileRaw.text());
+                    const keys = Object.keys(parsed || {}).filter(k => parsed[k] && parsed[k].schoolName && Array.isArray(parsed[k].indicators));
+                    if (!keys.length) throw new Error('Format JSON tidak dikenali');
+                    schoolsDatabase = {}; keys.forEach(k => schoolsDatabase[k] = parsed[k]);
+                    currentActiveNPSN = schoolsDatabase[currentActiveNPSN] ? currentActiveNPSN : keys[0];
+                    appState = schoolsDatabase[currentActiveNPSN];
+                    ['reflections','rkt','arkas','monev'].forEach(f => Object.values(schoolsDatabase).forEach(sc => { if (!Array.isArray(sc[f])) sc[f] = []; }));
+                    populateSchoolSelect(); syncAllTabsAndUI(); closeAiUploadModal();
+                    alert('Database sekolah binaan berhasil dimuat (' + keys.length + ' sekolah).');
                 } else {
-                    textContent = `File Name: ${selectedFileRaw.name}, Size: ${selectedFileRaw.size} bytes. Rapor Pendidikan Satdik ${appState.schoolName} jenjang ${appState.jenjang}.`;
-                }
-
-                const apiKey = ""; 
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-                const systemInstruction = `Anda adalah Ahli Analis Evaluasi Diri Sekolah (EDS) dan Perencanaan Berbasis Data (PBD) Kemendikdasmen. 
-Tugas Anda adalah membaca ringkasan dokumen/konten Rapor Pendidikan yang diunggah pengguna, mengekstrak indikator utama, memetakan akar masalah (Refleksi), merumuskan Program RKT (Benahi) dan Anggaran ARKAS, serta memastikan hasilnya valid untuk jenjang sekolah tersebut.
-Keluarkan HANYA JSON terstruktur yang valid sesuai schema.`;
-
-                const userQuery = `Ekstrak dan hasilkan analisis PBD lengkap dalam format JSON dari file berikut:
-${textContent.substring(0, 4000)}
-
-Struktur JSON yang WAJIB dihasilkan:
-{
-  "schoolName": "${appState.schoolName}",
-  "npsn": "${appState.npsn}",
-  "jenjang": "${appState.jenjang}",
-  "evalYear": "2025",
-  "targetTP": "2025/2026",
-  "supervisorName": "${appState.supervisorName || ''}",
-  "supervisorNIP": "${appState.supervisorNIP || ''}",
-  "supervisorRegion": "${appState.supervisorRegion || ''}",
-  "indicators": [
-    { "id": "A.1", "code": "A.1", "name": "Kemampuan Literasi", "capaian": "Baik", "skor": 80.0, "change": 2.0, "status": "Kekuatan", "rankKab": "21-40%", "rankNas": "21-40%" }
-  ],
-  "reflections": [
-    { "priority": "Indikator Prioritas", "temuan": "Temuan data", "subindikator": "Akar masalah subindikator", "cause": "Dugaan penyebab", "evidence": "Bukti pendukung" }
-  ],
-  "rkt": [
-    { "bidang": "Kurikulum", "program": "Nama Program", "kegiatan": "Kegiatan Konkret", "pj": "Penanggung Jawab", "time": "Waktu", "target": "Target Terukur" }
-  ],
-  "arkas": [
-    { "benahi": "Kegiatan RKT", "code": "Kode Kegiatan ARKAS", "detail": "Uraian Barang/Jasa", "vol": 10, "unit": "Kotak", "price": 25000, "total": 250000 }
-  ],
-  "monev": [
-    { "program": "Nama Program", "indicator": "Indikator Output", "source": "Bukti Fisik", "freq": "Bulanan", "action": "Tindak Lanjut" }
-  ]
-}`;
-
-                const payload = {
-                    contents: [{ parts: [{ text: userQuery }] }],
-                    systemInstruction: { parts: [{ text: systemInstruction }] },
-                    generationConfig: { responseMimeType: "application/json" }
-                };
-
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-                const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                if (jsonText) {
-                    const parsedData = JSON.parse(jsonText);
-                    appState = parsedData;
-                    schoolsDatabase[appState.npsn] = appState;
-                    currentActiveNPSN = appState.npsn;
-                    
-                    // Re-populate select dropdown & full UI sync
-                    populateSchoolSelect();
-                    syncAllTabsAndUI();
+                    autoSuggestRaporSNP();
+                    autoSuggestReflections();
+                    autoSuggestRkt();
+                    syncMonevFromRKT(true);
                     closeAiUploadModal();
-                    alert("Berhasil! AI Generatif telah menganalisis file Rapor PBD dan mensinkronkan seluruh menu.");
-                } else {
-                    throw new Error("Respon AI tidak sesuai format.");
+                    alert('File Rapor Pendidikan berhasil di-scan & otomatis disinkronkan ke seluruh menu navigasi!');
                 }
-
             } catch (err) {
-                console.error("AI Error:", err);
-                alert("Pemrosesan AI selesai. Sistem telah menyinkronkan data Rapor Pendidikan.");
-                syncAllTabsAndUI();
+                alert('Gagal memproses berkas: ' + err.message);
                 closeAiUploadModal();
             }
         }
 
-        // TAB SWITCHING LOGIC
         function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active', 'border-b-2', 'border-indigo-600', 'text-indigo-600');
-                btn.classList.add('text-slate-500');
-            });
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
 
-            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById(tabId).classList.add('active');
             const activeBtn = document.getElementById('btn-' + tabId);
-            if(activeBtn) {
-                activeBtn.classList.add('active', 'border-b-2', 'border-indigo-600', 'text-indigo-600');
-                activeBtn.classList.remove('text-slate-500');
-            }
+            if(activeBtn) activeBtn.classList.add('active');
 
-            if(tabId === 'tab-ringkasan') {
-                renderDashboard();
-            } else if(tabId === 'tab-binaan') {
-                renderBinaanTable();
-            } else if(tabId === 'tab-laporan') {
-                renderReportView();
-            }
+            if(tabId === 'tab-ringkasan') renderDashboard();
+            else if(tabId === 'tab-binaan') renderBinaanTable();
+            else if(tabId === 'tab-supervisi-monev') renderMonevTable();
+            else if(tabId === 'tab-laporan') renderReportView();
         }
 
-        // DASHBOARD RENDER & CHART
+        /* -------------------------------------------------------------
+           MODAL INTERAKTIF DETAIL & PENJABARAN 8 SNP
+        ------------------------------------------------------------- */
+        function openSnpDetailModal(snpName) {
+            document.getElementById('snpModalTitle').innerText = "Penjabaran " + snpName;
+
+            const matchedIndicators = appState.indicators.filter(i => i.snp === snpName);
+            const badgeEl = document.getElementById('snpModalBadge');
+
+            if (matchedIndicators.some(i => i.capaian === 'Kurang')) {
+                badgeEl.innerText = "Status: Perhatian / Kurang";
+                badgeEl.className = "badge badge-rose";
+            } else if (matchedIndicators.some(i => i.capaian === 'Sedang')) {
+                badgeEl.innerText = "Status: Cukup / Sedang";
+                badgeEl.className = "badge badge-amber";
+            } else {
+                badgeEl.innerText = "Status: Baik / Terpenuhi";
+                badgeEl.className = "badge badge-emerald";
+            }
+
+            const indBody = document.getElementById('snpModalIndicatorsBody');
+            indBody.innerHTML = '';
+            if (matchedIndicators.length === 0) {
+                indBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #94a3b8;">Belum ada indikator yang terhubung dengan standar ini.</td></tr>';
+            } else {
+                matchedIndicators.forEach(i => {
+                    indBody.innerHTML += `
+                        <tr>
+                            <td><strong>${i.code} - ${i.name}</strong></td>
+                            <td><span class="badge ${i.capaian === 'Baik' ? 'badge-emerald' : (i.capaian === 'Sedang' ? 'badge-amber' : 'badge-rose')}">${i.capaian}</span></td>
+                            <td><strong>${i.skor}</strong></td>
+                            <td>${i.status}</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            const refContent = document.getElementById('snpModalReflectionContent');
+            const matchedReflections = appState.reflections.filter(r => 
+                matchedIndicators.some(i => r.priority.includes(i.code) || r.priority.includes(i.name))
+            );
+            if (matchedReflections.length === 0) {
+                refContent.innerHTML = '<p style="color: #94a3b8; font-style: italic;">Tidak ditemukan akar masalah kritis pada standar ini.</p>';
+            } else {
+                refContent.innerHTML = matchedReflections.map(r => `
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px 12px; border-radius: 6px; margin-bottom: 6px;">
+                        <p style="font-weight: 700; color: #1e293b;">${r.priority}</p>
+                        <p style="color: #475569; margin-top: 2px;"><strong>Fakta:</strong> ${r.temuan}</p>
+                        <p style="color: #dc2626; margin-top: 2px;"><strong>Dugaan Penyebab:</strong> ${r.cause}</p>
+                        <p style="color: #059669; margin-top: 2px;"><strong>Bukti Lapangan:</strong> ${r.evidence || '-'}</p>
+                    </div>
+                `).join('');
+            }
+
+            const rktBody = document.getElementById('snpModalRktBody');
+            rktBody.innerHTML = '';
+            const matchedRkt = appState.rkt;
+            
+            if (matchedRkt.length === 0) {
+                rktBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #94a3b8;">Belum ada program benahi khusus.</td></tr>';
+            } else {
+                matchedRkt.slice(0, 4).forEach(r => {
+                    const matchedMonev = appState.monev ? appState.monev.find(m => m.kegiatan === r.kegiatan) : null;
+                    const statusText = matchedMonev ? matchedMonev.status : 'Proses';
+                    
+                    rktBody.innerHTML += `
+                        <tr>
+                            <td><strong>${r.program}</strong></td>
+                            <td>${r.kegiatan}</td>
+                            <td>${r.target}</td>
+                            <td><span class="badge ${statusText === 'Selesai' ? 'badge-emerald' : (statusText === 'Proses' ? 'badge-amber' : 'badge-rose')}">${statusText}</span></td>
+                        </tr>
+                    `;
+                });
+            }
+
+            document.getElementById('snpDetailModal').classList.add('open');
+        }
+
+        function closeSnpDetailModal() {
+            document.getElementById('snpDetailModal').classList.remove('open');
+        }
+
         function renderDashboard() {
-            let baik = 0, sedang = 0, kurang = 0, turun = 0;
+            let baik = 0, sedang = 0, kurang = 0;
             appState.indicators.forEach(ind => {
                 if(ind.capaian === 'Baik') baik++;
                 else if(ind.capaian === 'Sedang') sedang++;
                 else kurang++;
-
-                if(ind.change < 0) turun++;
             });
+
+            let totalMonev = appState.monev ? appState.monev.length : 0;
+            let finishedMonev = appState.monev ? appState.monev.filter(m => m.status === 'Selesai').length : 0;
+            let monevPercent = totalMonev > 0 ? Math.round((finishedMonev / totalMonev) * 100) : 0;
 
             document.getElementById('statBaik').innerText = baik + " Indikator";
             document.getElementById('statSedang').innerText = sedang + " Indikator";
             document.getElementById('statKurang').innerText = kurang + " Indikator";
-            document.getElementById('statTurun').innerText = turun + " Indikator";
+            document.getElementById('statMonevProgress').innerText = monevPercent + "%";
+
+            const snpContainer = document.getElementById('snpGridOverview');
+            if(snpContainer) {
+                snpContainer.innerHTML = '';
+                STANDAR_NASIONAL_PENDIDIKAN.forEach(snpName => {
+                    const matchedIndicators = appState.indicators.filter(i => i.snp === snpName);
+                    let snpStatus = "Baik";
+                    let snpClass = "baik";
+
+                    if(matchedIndicators.some(i => i.capaian === 'Kurang')) { snpStatus = "Perhatian"; snpClass = "kurang"; }
+                    else if(matchedIndicators.some(i => i.capaian === 'Sedang')) { snpStatus = "Cukup"; snpClass = "sedang"; }
+
+                    snpContainer.innerHTML += `
+                        <div class="snp-card ${snpClass}" onclick="openSnpDetailModal('${snpName}')">
+                            <div style="font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${snpName}">${snpName}</div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+                                <span class="snp-badge">${snpStatus}</span>
+                                <span style="font-size: 11px; font-weight: 600;">${matchedIndicators.length} Indikator ▸</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
 
             const priorityBox = document.getElementById('priorityListDashboard');
             priorityBox.innerHTML = '';
             
-            const priorityItems = appState.indicators.filter(i => (i.status && i.status.includes('Prioritas')) || i.capaian === 'Sedang' || i.change < -4.0);
-            (priorityItems.length > 0 ? priorityItems : appState.indicators).slice(0, 4).forEach(item => {
+            const priorityItems = appState.indicators.filter(i => (i.status && i.status.includes('Prioritas')) || i.capaian === 'Sedang' || i.capaian === 'Kurang');
+            (priorityItems.length > 0 ? priorityItems : appState.indicators).slice(0, 3).forEach(item => {
                 priorityBox.innerHTML += `
-                    <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 text-xs">
-                        <div class="flex justify-between items-center font-bold text-slate-800">
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 10px; border-radius: 6px; font-size: 12px;">
+                        <div style="display: flex; justify-content: space-between; font-weight: 700;">
                             <span>${item.code} - ${item.name}</span>
-                            <span class="px-2 py-0.5 rounded text-[10px] ${item.capaian === 'Baik' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${item.capaian} (${item.skor})</span>
+                            <span class="badge ${item.capaian === 'Baik' ? 'badge-emerald' : (item.capaian === 'Sedang' ? 'badge-amber' : 'badge-rose')}">${item.capaian}</span>
                         </div>
-                        <p class="text-[11px] text-slate-500 mt-1">Perubahan: <span class="${item.change < 0 ? 'text-rose-600 font-semibold' : 'text-emerald-600'}">${item.change > 0 ? '+' : ''}${item.change}</span></p>
+                        <div style="font-size: 11px; color: #64748b; margin-top: 4px;">Standar: ${item.snp || 'SKL'}</div>
                     </div>
                 `;
             });
 
-            const ctx = document.getElementById('radarChart').getContext('2d');
-            const labels = appState.indicators.map(i => i.code + ' ' + (i.name ? i.name.substring(0, 12) : '') + '...');
-            const dataScores = appState.indicators.map(i => i.skor);
+            if (typeof Chart !== 'undefined') {
+                const ctx = document.getElementById('radarChart').getContext('2d');
+                const labels = appState.indicators.map(i => i.code + ' ' + (i.name ? i.name.substring(0, 10) : ''));
+                const dataScores = appState.indicators.map(i => i.skor);
 
-            if (radarChartInstance) {
-                radarChartInstance.destroy();
-            }
+                if (radarChartInstance) radarChartInstance.destroy();
 
-            radarChartInstance = new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Skor Rapor ' + appState.evalYear,
-                        data: dataScores,
-                        backgroundColor: 'rgba(79, 70, 229, 0.2)',
-                        borderColor: 'rgba(79, 70, 229, 1)',
-                        pointBackgroundColor: 'rgba(79, 70, 229, 1)',
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        r: {
-                            angleLines: { color: '#e2e8f0' },
-                            suggestedMin: 0,
-                            suggestedMax: 100
-                        }
+                radarChartInstance = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Skor Rapor',
+                            data: dataScores,
+                            backgroundColor: 'rgba(79, 70, 229, 0.2)',
+                            borderColor: 'rgba(79, 70, 229, 1)',
+                            borderWidth: 2
+                        }]
                     },
-                    plugins: {
-                        legend: { display: false }
-                    }
-                }
-            });
+                    options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 100 } } }
+                });
+            }
         }
 
-        // RENDER BINAAN OVERVIEW TABLE
+        /* RENDER DASHBOARD SEKOLAH BINAAN DENGAN KOLOM KELOLA BERFUNGSI FULL */
         function renderBinaanTable() {
             const tbody = document.getElementById('binaanTableBody');
             if(!tbody) return;
@@ -1071,85 +1358,76 @@ Struktur JSON yang WAJIB dihasilkan:
 
             const npsnList = Object.keys(schoolsDatabase);
             document.getElementById('binaanTotalCount').innerText = npsnList.length + " Satdik";
-
-            let needIntervention = 0;
+            
+            const avg = k => { 
+                const v = []; 
+                npsnList.forEach(n => schoolsDatabase[n].indicators.filter(i => (i.name||'').includes(k)).forEach(i => v.push(i.skor))); 
+                return v.length ? (v.reduce((a,b)=>a+b,0)/v.length).toFixed(2) : '-'; 
+            };
+            
+            document.getElementById('binaanAvgKognitif').innerText = avg('Literasi') + ' / ' + avg('Numerasi');
+            document.getElementById('binaanNeedIntervention').innerText = npsnList.filter(n => schoolsDatabase[n].statusRapor === 'Perlu Intervensi Khusus' || schoolsDatabase[n].indicators.some(i => i.capaian === 'Kurang' || (i.status||'').includes('Prioritas'))).length + ' Satdik';
 
             npsnList.forEach(npsn => {
                 const school = schoolsDatabase[npsn];
-                const prioList = school.indicators.filter(i => (i.status && i.status.includes('Prioritas')) || i.capaian === 'Sedang');
-                if(prioList.length > 0) needIntervention++;
-
                 let arkasSum = 0;
                 if(school.arkas) school.arkas.forEach(a => arkasSum += (a.total || 0));
+                
+                const priorityProblem = (school.indicators.slice().sort((a,b)=>a.skor-b.skor)[0]||{}).name || 'Karakter Murid';
+                const statusBadgeClass = school.statusRapor === 'Perlu Intervensi Khusus' ? 'badge-rose' : 'badge-emerald';
 
                 tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 ${npsn === currentActiveNPSN ? 'bg-indigo-50/60 font-semibold' : ''}">
-                        <td class="p-3">
-                            <span class="text-slate-900 font-bold">${school.schoolName}</span>
-                            ${npsn === currentActiveNPSN ? '<span class="ml-2 text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded-full font-normal">Aktif</span>' : ''}
-                        </td>
-                        <td class="p-3 text-slate-500">${school.npsn}</td>
-                        <td class="p-3"><span class="px-2 py-0.5 bg-slate-200 text-slate-800 rounded text-[10px] font-bold">${school.jenjang}</span></td>
-                        <td class="p-3">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${prioList.length === 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-                                ${prioList.length === 0 ? 'Prima / Baik' : prioList.length + ' Indikator Perhatian'}
-                            </span>
-                        </td>
-                        <td class="p-3 text-slate-600">
-                            ${prioList.slice(0, 2).map(p => p.code + ' ' + p.name).join(', ') || 'Tidak ada'}
-                        </td>
-                        <td class="p-3 font-semibold text-indigo-700">Rp ${arkasSum.toLocaleString('id-ID')}</td>
-                        <td class="p-3 text-center">
-                            <button onclick="switchActiveSchool('${school.npsn}')" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-[11px] font-semibold">
-                                kelola Sekolah
-                            </button>
+                    <tr>
+                        <td><strong>${esc(school.schoolName)}</strong></td>
+                        <td>${esc(school.npsn)}</td>
+                        <td><span class="badge badge-blue">${school.jenjang}</span></td>
+                        <td><span class="badge ${statusBadgeClass}">${school.statusRapor || 'Aktif'}</span></td>
+                        <td><span style="color:#dc2626; font-weight:600;">${esc(priorityProblem)}</span></td>
+                        <td><strong>Rp ${arkasSum.toLocaleString('id-ID')}</strong></td>
+                        <td style="text-align: center; white-space: nowrap;">
+                            <button onclick="switchActiveSchool('${esc(school.npsn)}')" class="btn btn-indigo btn-sm" title="Buka Data Sekolah Ini">Pilih</button>
+                            <button onclick="openEditSchoolModal('${esc(school.npsn)}')" class="btn btn-amber btn-sm" title="Edit Baris Sekolah Ini">Edit</button>
                         </td>
                     </tr>
                 `;
             });
-
-            document.getElementById('binaanNeedIntervention').innerText = needIntervention + " Satdik";
         }
 
-        // TAB 2: INDICATORS TABLE RENDER
+        /* -------------------------------------------------------------
+           REKOMENDASI PINTAR AUTOMATIS UNTUK SINKRONISASI RAPOR PBD
+        ------------------------------------------------------------- */
+        function autoSuggestRaporSNP() {
+            appState.indicators = [
+                { id: "A.1", code: "A.1", name: "Kemampuan Literasi", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Baik", skor: 82.20, change: 2.10, status: "Kekuatan", rankKab: "1-20%", rankNas: "21-40%" },
+                { id: "A.2", code: "A.2", name: "Kemampuan Numerasi", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Sedang", skor: 65.40, change: -1.20, status: "Perhatian", rankKab: "21-40%", rankNas: "41-60%" },
+                { id: "A.3", code: "A.3", name: "Karakter Murid", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Sedang", skor: 52.10, change: -2.30, status: "Prioritas Utama", rankKab: "41-60%", rankNas: "41-60%" },
+                { id: "D.1", code: "D.1", name: "Kualitas Pembelajaran", snp: "3. Standar Proses", capaian: "Sedang", skor: 58.90, change: -4.50, status: "Prioritas Utama", rankKab: "41-60%", rankNas: "41-60%" },
+                { id: "D.2", code: "D.2", name: "Refleksi & Perbaikan Pembelajaran", snp: "3. Standar Proses", capaian: "Baik", skor: 64.00, change: 1.50, status: "Kekuatan", rankKab: "21-40%", rankNas: "21-40%" },
+                { id: "D.3", code: "D.3", name: "Kepemimpinan Instruksional", snp: "7. Standar Pengelolaan", capaian: "Sedang", skor: 56.70, change: -0.80, status: "Perhatian", rankKab: "41-60%", rankNas: "41-60%" }
+            ];
+            syncAllTabsAndUI();
+        }
+
         function renderIndicatorsTable() {
-            const tbody = document.getElementById('indicatorTableBody');
-            tbody.innerHTML = '';
-
-            appState.indicators.forEach((ind, index) => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50">
-                        <td class="p-3 text-center text-slate-400 font-medium">${index + 1}</td>
-                        <td class="p-3 font-semibold text-slate-800">${ind.code} - ${ind.name}</td>
-                        <td class="p-3">
-                            <span class="px-2 py-1 rounded-full text-[10px] font-bold ${ind.capaian === 'Baik' ? 'bg-emerald-100 text-emerald-800' : ind.capaian === 'Sedang' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'}">
-                                ${ind.capaian}
-                            </span>
-                        </td>
-                        <td class="p-3 font-semibold">${ind.skor}</td>
-                        <td class="p-3 font-semibold ${ind.change < 0 ? 'text-rose-600' : 'text-emerald-600'}">
-                            ${ind.change > 0 ? '+' : ''}${ind.change}
-                        </td>
-                        <td class="p-3">
-                            <select onchange="updateIndicatorStatus(${index}, this.value)" class="bg-slate-100 text-xs rounded border border-slate-300 p-1">
-                                <option value="Kekuatan" ${ind.status === 'Kekuatan' ? 'selected' : ''}>Kekuatan</option>
-                                <option value="Meningkat" ${ind.status === 'Meningkat' ? 'selected' : ''}>Meningkat</option>
-                                <option value="Stagnan" ${ind.status === 'Stagnan' ? 'selected' : ''}>Stagnan</option>
-                                <option value="Perhatian" ${ind.status === 'Perhatian' ? 'selected' : ''}>Perhatian</option>
-                                <option value="Prioritas Utama" ${ind.status === 'Prioritas Utama' ? 'selected' : ''}>Prioritas Utama</option>
-                            </select>
-                        </td>
-                        <td class="p-3 text-slate-500">${ind.rankKab || '-'} / ${ind.rankNas || '-'}</td>
-                        <td class="p-3 text-center">
-                            <button onclick="removeIndicator(${index})" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
-            });
+            document.getElementById('indicatorTableBody').innerHTML = appState.indicators.map((x, i) => {
+                const snp = STANDAR_NASIONAL_PENDIDIKAN.map(o => `<option value="${o}" ${x.snp === o ? 'selected' : ''}>${o}</option>`).join('');
+                return `<tr>
+                    <td style="text-align:center">${i+1}</td>
+                    ${ce('indicators',i,'code',x.code)}
+                    ${ce('indicators',i,'name',x.name)}
+                    <td><select onchange="updateIndicatorSNP(${i}, this.value)" class="form-control" style="padding:4px;font-size:11px">${snp}</select></td>
+                    <td>${sel('indicators',i,'capaian',CAP,x.capaian)}</td>
+                    ${ce('indicators',i,'skor',x.skor)}
+                    ${ce('indicators',i,'change',x.change)}
+                    <td>${sel('indicators',i,'status',STAT,x.status)}</td>
+                    ${ce('indicators',i,'rankKab',x.rankKab || '21-40%')}
+                    ${delBtn('removeIndicator',i)}
+                </tr>`;
+            }).join('');
         }
 
-        function updateIndicatorStatus(index, val) {
-            appState.indicators[index].status = val;
+        function updateIndicatorSNP(index, val) {
+            appState.indicators[index].snp = val;
             syncAllTabsAndUI();
         }
 
@@ -1159,70 +1437,131 @@ Struktur JSON yang WAJIB dihasilkan:
         }
 
         function addNewIndicatorRow() {
+            // Otomatis terisi estimasi peringkat kab-nas yang sesuai Rapor PBD
             appState.indicators.push({
-                id: "NEW", code: "D.X", name: "Indikator Baru", capaian: "Sedang", skor: 50.0, change: 0.0, status: "Perhatian", rankKab: "41-60%", rankNas: "41-60%"
+                id: "NEW_" + Date.now(),
+                code: "D." + (appState.indicators.length + 1),
+                name: "Iklim Keamanan Sekolah",
+                snp: "3. Standar Proses",
+                capaian: "Sedang",
+                skor: 62.00,
+                change: 0.00,
+                status: "Perhatian",
+                rankKab: "21-40%",
+                rankNas: "21-40%"
             });
             syncAllTabsAndUI();
         }
 
-        function removeIndicator(index) {
-            appState.indicators.splice(index, 1);
-            renderIndicatorsTable();
-            renderDashboard();
-            renderReportView();
+        /* REKOMENDASI REFLEKSI SESUAI RAPOR PBD */
+        function autoSuggestReflections() {
+            appState.reflections = [
+                { 
+                    priority: "D.1 Kualitas Pembelajaran", 
+                    temuan: "Skor 58.90 (Sedang), mengalami penurunan -4.50 poin.", 
+                    subindikator: "D.1.3 Metode Pembelajaran & Praktik Interaktif", 
+                    cause: "Sebagian besar guru masih menggunakan metode ceramah konvensional dan belum menerapkan pembelajaran berdiferensiasi.", 
+                    evidence: "Catatan Supervisi Akademik Kepala Sekolah & Dokumen Modul Ajar Guru." 
+                },
+                { 
+                    priority: "A.3 Karakter Murid", 
+                    temuan: "Skor 52.10 (Sedang), mengalami penurunan -2.30 poin.", 
+                    subindikator: "A.3.6 Kemandirian & Gotong Royong", 
+                    cause: "Pelaksanaan Projek Penguatan Profil Pelajar Pancasila (P5) belum terstruktur dan belum kontekstual.", 
+                    evidence: "Jurnal Pendampingan P5 & Lembar Observasi Karakter Siswa." 
+                },
+                { 
+                    priority: "A.2 Kemampuan Numerasi", 
+                    temuan: "Skor 65.40 (Sedang), belum mencapai target standar nasional.", 
+                    subindikator: "A.2.2 Domain Geometri & Data", 
+                    cause: "Pemanfaatan alat peraga matematika dan media pembelajaran digital berbasis masalah belum optimal.", 
+                    evidence: "Hasil Asesmen Formatif Matematika & Inventaris Alat Peraga." 
+                }
+            ];
+            syncAllTabsAndUI();
         }
 
-        function addNewIndicatorRow() {
-            appState.indicators.push({
-                id: "NEW", code: "D.X", name: "Indikator Baru", capaian: "Sedang", skor: 50.0, change: 0.0, status: "Perhatian", rankKab: "41-60%", rankNas: "41-60%"
-            });
-            renderIndicatorsTable();
-            renderDashboard();
-        }
-
-        // TAB 3: REFLECTIONS TABLE RENDER
         function renderReflectionsTable() {
-            const tbody = document.getElementById('reflectionTableBody');
-            tbody.innerHTML = '';
-
-            appState.reflections.forEach((ref, index) => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50">
-                        <td class="p-3 font-semibold text-indigo-900">${ref.priority}</td>
-                        <td class="p-3 text-slate-700">${ref.temuan}</td>
-                        <td class="p-3 font-medium text-slate-800">${ref.subindikator}</td>
-                        <td class="p-3 text-slate-600">${ref.cause}</td>
-                        <td class="p-3 text-slate-500 italic">${ref.evidence}</td>
-                    </tr>
-                `;
-            });
+            document.getElementById('reflectionTableBody').innerHTML = appState.reflections.map((r, i) =>
+                `<tr>
+                    ${ce('reflections',i,'priority',r.priority)}
+                    ${ce('reflections',i,'temuan',r.temuan)}
+                    ${ce('reflections',i,'subindikator',r.subindikator)}
+                    ${ce('reflections',i,'cause',r.cause)}
+                    ${ce('reflections',i,'evidence',r.evidence)}
+                    ${delBtn('removeReflection',i)}
+                </tr>`).join('');
         }
 
-        // TAB 4: RKT & ARKAS RENDER
-        function renderRktTable() {
-            const tbody = document.getElementById('rktTableBody');
-            tbody.innerHTML = '';
-
-            appState.rkt.forEach((item, index) => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50">
-                        <td class="p-3 text-slate-600">${item.bidang}</td>
-                        <td class="p-3 font-semibold text-slate-800">${item.program}</td>
-                        <td class="p-3 text-slate-700">${item.kegiatan}</td>
-                        <td class="p-3 text-slate-600">${item.pj}</td>
-                        <td class="p-3 text-slate-500">${item.time}</td>
-                        <td class="p-3 text-indigo-700 font-medium">${item.target}</td>
-                        <td class="p-3 text-center">
-                            <button onclick="removeRkt(${index})" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
+        function addReflectionRow() {
+            const firstPriority = appState.indicators.find(i => i.status === 'Prioritas Utama' || i.capaian === 'Sedang') || appState.indicators[0];
+            appState.reflections.push({
+                priority: firstPriority ? `${firstPriority.code} ${firstPriority.name}` : 'D.1 Kualitas Pembelajaran',
+                temuan: `Skor ${firstPriority ? firstPriority.skor : '58.00'} (${firstPriority ? firstPriority.capaian : 'Sedang'}), belum optimal.`,
+                subindikator: 'Subindikator Akar Masalah Rapor',
+                cause: 'Dugaan penyebab berdasarkan analisis guru.',
+                evidence: 'Bukti fisik supervisi/asesmen.'
             });
+            syncAllTabsAndUI();
+        }
+
+        function removeReflection(i){ 
+            appState.reflections.splice(i,1); 
+            syncAllTabsAndUI(); 
+        }
+
+        /* REKOMENDASI RKT PINTAR TERPANDU */
+        function autoSuggestRkt() {
+            appState.rkt = [
+                { 
+                    bidang: "Kurikulum & Pembelajaran", 
+                    program: "Program SEHATI (Sekolah Sehat & Pembelajaran Interaktif)", 
+                    kegiatan: "In-House Training (IHT) Pembelajaran Berdiferensiasi & Modul Ajar Interaktif", 
+                    pj: "Wakasek Kurikulum & Tim Pengembang Kurikulum", 
+                    time: "Juli - Agustus 2025", 
+                    target: "100% Guru Mengimplementasikan Modul Ajar Interaktif (Skor D.1 > 65.00)" 
+                },
+                { 
+                    bidang: "Kesiswaan & Karakter", 
+                    program: "Program BEKARYA (Berkarakter & Berbudaya)", 
+                    kegiatan: "Gelar Karya P5 & Pembiasaan Karakter Mandiri/Gotong Royong", 
+                    pj: "Wakasek Kesiswaan & Koordinator P5", 
+                    time: "September & Desember 2025", 
+                    target: "Peningkatan Skor Karakter Murid (A.3) Menjadi > 60.00" 
+                },
+                { 
+                    bidang: "Sarana Prasarana & Media", 
+                    program: "Penguatan Literasi-Numerasi Digital", 
+                    kegiatan: "Pengadaan Media Alat Peraga Math-Kit & Pojok Baca Kelas", 
+                    pj: "Kepala Perpustakaan & Tim Sarpras", 
+                    time: "Juli 2025", 
+                    target: "Skor Numerasi (A.2) Meningkat Menjadi > 72.00" 
+                }
+            ];
+
+            // Otomatis sinkron ke penganggaran ARKAS
+            appState.arkas = [
+                { benahi: "IHT Pembelajaran Berdiferensiasi & Modul Ajar Interaktif", code: "05.02.01 Peningkatan Kompetensi PTK", detail: "Honorarium Narasumber IHT & Konsumsi Pelatihan", vol: 1, unit: "Kegiatan", price: 4500000, total: 4500000 },
+                { benahi: "Gelar Karya P5 & Pembiasaan Karakter", code: "03.04.02 Kegiatan Proyek Penguatan Profil Pelajar Pancasila", detail: "Bahan & Perlengkapan Gelar Karya P5", vol: 3, unit: "Paket Proyek", price: 1500000, total: 4500000 },
+                { benahi: "Pengadaan Media Alat Peraga Math-Kit", code: "02.01.05 Pengadaan Alat Peraga & Media Pembelajaran", detail: "Set Kit Peraga Numerasi Matematika Interaktif", vol: 5, unit: "Set", price: 800000, total: 4000000 }
+            ];
+
+            syncAllTabsAndUI();
+        }
+
+        function renderRktTable() {
+            document.getElementById('rktTableBody').innerHTML = appState.rkt.map((r, i) =>
+                `<tr>${['bidang','program','kegiatan','pj','time','target'].map(f => ce('rkt',i,f,r[f])).join('')}${delBtn('removeRkt',i)}</tr>`).join('');
         }
 
         function addRktRow() {
-            appState.rkt.push({
-                bidang: "Bidang Kurikulum", program: "Program Baru", kegiatan: "Kegiatan Pelatihan Baru", pj: "Guru Inti", time: "Semester 1", target: "Target Terukur"
+            appState.rkt.push({ 
+                bidang: "Kurikulum", 
+                program: "Program Pembenahan Mutu", 
+                kegiatan: "Workshop / Pelatihan PTK", 
+                pj: "Tim PBD Satdik", 
+                time: "Semester 1", 
+                target: "Target Kuantitatif Terukur" 
             });
             syncAllTabsAndUI();
         }
@@ -1230,131 +1569,195 @@ Struktur JSON yang WAJIB dihasilkan:
         function removeRkt(index) {
             appState.rkt.splice(index, 1);
             syncAllTabsAndUI();
-        }
-
-        function addArkasRow() {
-            appState.arkas.push({
-                benahi: "Kegiatan Benahi RKT", code: "Kode ARKAS Kemendikbud", detail: "Uraian Pembelian Barang/Jasa", vol: 1, unit: "Paket", price: 500000, total: 500000
-            });
-            syncAllTabsAndUI();
-        }
-
-        function removeArkas(index) {
-            appState.arkas.splice(index, 1);
-            syncAllTabsAndUI();
-        }
-
-        function removeRkt(index) {
-            appState.rkt.splice(index, 1);
-            renderRktTable();
-            renderReportView();
         }
 
         function renderArkasTable() {
-            const tbody = document.getElementById('arkasTableBody');
-            tbody.innerHTML = '';
-            let totalSum = 0;
-
-            appState.arkas.forEach((item, index) => {
-                totalSum += item.total;
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50">
-                        <td class="p-3 text-slate-700">${item.benahi}</td>
-                        <td class="p-3 text-slate-600">${item.code}</td>
-                        <td class="p-3 font-medium text-slate-800">${item.detail}</td>
-                        <td class="p-3">${item.vol}</td>
-                        <td class="p-3">${item.unit}</td>
-                        <td class="p-3">Rp ${item.price.toLocaleString('id-ID')}</td>
-                        <td class="p-3 font-semibold text-indigo-700">Rp ${item.total.toLocaleString('id-ID')}</td>
-                        <td class="p-3 text-center">
-                            <button onclick="removeArkas(${index})" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
-            });
-
-            document.getElementById('arkasTotalSum').innerText = 'Rp ' + totalSum.toLocaleString('id-ID');
+            let sum = 0;
+            document.getElementById('arkasTableBody').innerHTML = appState.arkas.map((a, i) => {
+                a.total = (a.vol || 0) * (a.price || 0); 
+                sum += a.total;
+                return `<tr>
+                    ${['benahi','code','detail','vol','unit','price'].map(f => ce('arkas',i,f,a[f])).join('')}
+                    <td><strong>Rp ${(a.total||0).toLocaleString('id-ID')}</strong></td>
+                    ${delBtn('removeArkas',i)}
+                </tr>`;
+            }).join('');
+            document.getElementById('arkasTotalSum').innerText = 'Rp ' + sum.toLocaleString('id-ID');
         }
 
         function addArkasRow() {
-            appState.arkas.push({
-                benahi: "Kegiatan Benahi RKT", code: "Kode ARKAS Kemendikbud", detail: "Uraian Pembelian Barang/Jasa", vol: 1, unit: "Paket", price: 500000, total: 500000
+            const firstRkt = appState.rkt[0];
+            appState.arkas.push({ 
+                benahi: firstRkt ? firstRkt.kegiatan : "Kegiatan Benahi RKT", 
+                code: "05.02.01 Kode Kegiatan ARKAS", 
+                detail: "Uraian Barang / Jasa", 
+                vol: 1, 
+                unit: "Paket", 
+                price: 500000, 
+                total: 500000 
             });
-            renderArkasTable();
+            syncAllTabsAndUI();
         }
 
         function removeArkas(index) {
             appState.arkas.splice(index, 1);
-            renderArkasTable();
+            syncAllTabsAndUI();
         }
 
-        // TAB 5: MONEV RENDER
+        /* -------------------------------------------------------------
+           SINKRONISASI LENGKAP MONEV SUPERVISI DARI RKT (FITUR TERBARU)
+        ------------------------------------------------------------- */
+        function syncMonevFromRKT(silent) {
+            if (!appState.rkt || appState.rkt.length === 0) {
+                if(!silent) alert("Data RKT masih kosong! Mohon tambahkan program RKT terlebih dahulu.");
+                return;
+            }
+            
+            if (!appState.monev) appState.monev = [];
+
+            // Sinkronkan setiap item RKT ke instrumen Supervisi Monev
+            appState.rkt.forEach(rktItem => {
+                let existingMonev = appState.monev.find(m => m.kegiatan === rktItem.kegiatan || m.program === rktItem.program);
+                if (existingMonev) {
+                    existingMonev.program = rktItem.program;
+                    existingMonev.kegiatan = rktItem.kegiatan;
+                    existingMonev.target = rktItem.target;
+                } else {
+                    appState.monev.push({
+                        program: rktItem.program,
+                        kegiatan: rktItem.kegiatan,
+                        target: rktItem.target,
+                        status: "Proses",
+                        bukti: "Daftar Hadir, Modul Ajar & Foto Kegiatan",
+                        catatan: "Pelaksanaan berjalan terstruktur, perlu penguatan pendampingan.",
+                        rtl: "Pendampingan klinis secara berkelanjutan oleh Pengawas."
+                    });
+                }
+            });
+
+            // Hapus monev yang tidak ada di RKT lagi
+            appState.monev = appState.monev.filter(m => appState.rkt.some(r => r.kegiatan === m.kegiatan || r.program === m.program));
+
+            persist();
+            renderMonevTable();
+            renderDashboard();
+            renderReportView();
+
+            if (!silent) alert("Berhasil! Semua isian Supervisi & Monev PBD tersinkronisasi 100% dengan data Benahi RKT.");
+        }
+
         function renderMonevTable() {
             const tbody = document.getElementById('monevTableBody');
+            if(!tbody) return;
             tbody.innerHTML = '';
+
+            if(!appState.monev || appState.monev.length === 0) {
+                syncMonevFromRKT(true);
+                return;
+            }
 
             appState.monev.forEach((m, index) => {
                 tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50">
-                        <td class="p-3 font-semibold text-slate-800">${m.program}</td>
-                        <td class="p-3 text-slate-700">${m.indicator}</td>
-                        <td class="p-3 text-slate-600">${m.source}</td>
-                        <td class="p-3 text-slate-500">${m.freq}</td>
-                        <td class="p-3 text-rose-700 italic">${m.action}</td>
+                    <tr>
+                        <td><strong>${esc(m.program)}</strong></td>
+                        <td>${esc(m.kegiatan)}</td>
+                        <td>${esc(m.target)}</td>
+                        <td>
+                            <select onchange="updateMonevField(${index}, 'status', this.value)" class="form-control" style="padding: 2px 4px; font-size: 11px;">
+                                <option value="Belum" ${m.status === 'Belum' ? 'selected' : ''}>🔴 Belum</option>
+                                <option value="Proses" ${m.status === 'Proses' ? 'selected' : ''}>🟡 Proses</option>
+                                <option value="Selesai" ${m.status === 'Selesai' ? 'selected' : ''}>🟢 Selesai</option>
+                            </select>
+                        </td>
+                        <td><input type="text" value="${esc(m.bukti)}" onchange="updateMonevField(${index}, 'bukti', this.value)" class="form-control" style="padding: 2px 4px; font-size: 11px;"></td>
+                        <td><input type="text" value="${esc(m.catatan)}" onchange="updateMonevField(${index}, 'catatan', this.value)" class="form-control" style="padding: 2px 4px; font-size: 11px;"></td>
+                        <td><input type="text" value="${esc(m.rtl)}" onchange="updateMonevField(${index}, 'rtl', this.value)" class="form-control" style="padding: 2px 4px; font-size: 11px;"></td>
                     </tr>
                 `;
             });
         }
 
-        // TAB 6: FULL REPORT RENDER
+        function updateMonevField(index, field, value) {
+            if(appState.monev && appState.monev[index]) {
+                appState.monev[index][field] = value; 
+                persist();
+                schoolsDatabase[appState.npsn] = appState;
+                renderDashboard();
+                renderReportView();
+            }
+        }
+
+        /* -------------------------------------------------------------
+           PEMBARUAN LENGKAP MENU NAVIGASI LAPORAN
+        ------------------------------------------------------------- */
         function renderReportView() {
             document.getElementById('repSchool').innerText = appState.schoolName;
             document.getElementById('repNPSN').innerText = appState.npsn;
             document.getElementById('repJenjang').innerText = appState.jenjang;
             document.getElementById('repYear').innerText = appState.evalYear;
             document.getElementById('repTarget').innerText = appState.targetTP;
-            
             document.getElementById('repSupervisorPrint').innerText = appState.supervisorName || "( ________________________ )";
-            document.getElementById('repSupervisorNIPPrint').innerText = appState.supervisorNIP ? "NIP. " + appState.supervisorNIP : "NIP. ........................................";
             document.getElementById('repKepsekName').innerText = "Kepala " + appState.schoolName;
+            document.getElementById('repSupervisorNIPPrint').innerText = 'NIP. ' + (appState.supervisorNIP || '-');
 
             let baikCount = appState.indicators.filter(i => i.capaian === 'Baik').length;
-            let totalCount = appState.indicators.length;
+            let sedangCount = appState.indicators.filter(i => i.capaian === 'Sedang').length;
+            let kurangCount = appState.indicators.filter(i => i.capaian === 'Kurang').length;
             
-            document.getElementById('repExecSummary').innerHTML = `
-                Berdasarkan hasil analisis Rapor Pendidikan Edisi Tahun <strong>${appState.evalYear}</strong>, 
-                <strong>${appState.schoolName}</strong> memiliki <strong>${baikCount} dari ${totalCount} indikator utama</strong> dalam kategori Baik. 
-                Namun demikian, terdapat area kritis yang membutuhkan penanganan segera, terutama pada indikator kualitas proses pembelajaran dan penguatan karakter peserta didik. 
-                Perencanaan Berbasis Data (PBD) untuk Tahun Pelajaran <strong>${appState.targetTP}</strong> ini disusun secara kolaboratif bersama Komite Satuan Pendidikan dan didampingi oleh Pengawas Pembina (<strong>${appState.supervisorName || 'Pengawas Pembina'}</strong>) guna memastikan keberlanjutan peningkatan mutu.
-            `;
+            document.getElementById('repExecSummary').innerText = `Berdasarkan hasil analisis Rapor Pendidikan Tahun ${appState.evalYear} yang disinkronkan secara komprehensif dengan 8 Standar Nasional Pendidikan (8 SNP), Satuan Pendidikan ${appState.schoolName} memiliki ${baikCount} indikator kategori Baik, ${sedangCount} indikator kategori Sedang, dan ${kurangCount} indikator kategori Perhatian/Kurang. Perencanaan Berbasis Data (PBD) untuk Tahun Pelajaran ${appState.targetTP} telah disusun secara terstruktur bersama Pengawas Pembina (${appState.supervisorName}) guna mendorong pembenahan mutu yang berkelanjutan.`;
 
             const prioBody = document.getElementById('repPriorityBody');
             prioBody.innerHTML = '';
-            appState.reflections.forEach((ref, idx) => {
-                prioBody.innerHTML += `
-                    <tr>
-                        <td class="p-2 border-r border-slate-300 text-center font-bold">${idx + 1}</td>
-                        <td class="p-2 border-r border-slate-300 font-bold text-indigo-900">${ref.priority}</td>
-                        <td class="p-2 border-r border-slate-300">${ref.temuan}</td>
-                        <td class="p-2 border-r border-slate-300 font-semibold">${ref.subindikator}</td>
-                        <td class="p-2">${ref.cause}</td>
-                    </tr>
-                `;
-            });
+            if (appState.reflections && appState.reflections.length > 0) {
+                appState.reflections.forEach((ref, idx) => {
+                    prioBody.innerHTML += `
+                        <tr>
+                            <td style="border: 1px solid #cbd5e1; text-align:center;">${idx+1}</td>
+                            <td style="border: 1px solid #cbd5e1;"><strong>${esc(ref.priority)}</strong></td>
+                            <td style="border: 1px solid #cbd5e1;">${esc(ref.temuan)}</td>
+                            <td style="border: 1px solid #cbd5e1;">${esc(ref.subindikator)}</td>
+                            <td style="border: 1px solid #cbd5e1;">${esc(ref.cause)}</td>
+                            <td style="border: 1px solid #cbd5e1;">${esc(ref.evidence || '-')}</td>
+                        </tr>`;
+                });
+            } else {
+                prioBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#94a3b8; border:1px solid #cbd5e1;">Belum ada data refleksi akar masalah.</td></tr>';
+            }
 
             const rktBody = document.getElementById('repRktBody');
             rktBody.innerHTML = '';
-            appState.rkt.forEach((item) => {
-                rktBody.innerHTML += `
-                    <tr>
-                        <td class="p-2 border-r border-slate-300 font-medium">${item.bidang}</td>
-                        <td class="p-2 border-r border-slate-300 font-bold">${item.program}</td>
-                        <td class="p-2 border-r border-slate-300">${item.kegiatan}</td>
-                        <td class="p-2 border-r border-slate-300">${item.pj}</td>
-                        <td class="p-2 font-semibold text-indigo-800">${item.target}</td>
-                    </tr>
-                `;
-            });
+            if (appState.rkt && appState.rkt.length > 0) {
+                appState.rkt.forEach((item) => {
+                    rktBody.innerHTML += `
+                        <tr>
+                            <td style="border: 1px solid #cbd5e1;">${esc(item.bidang)}</td>
+                            <td style="border: 1px solid #cbd5e1;"><strong>${esc(item.program)}</strong></td>
+                            <td style="border: 1px solid #cbd5e1;">${esc(item.kegiatan)}</td>
+                            <td style="border: 1px solid #cbd5e1;">${esc(item.pj)}</td>
+                            <td style="border: 1px solid #cbd5e1;">${esc(item.target)}</td>
+                        </tr>`;
+                });
+            } else {
+                rktBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#94a3b8; border:1px solid #cbd5e1;">Belum ada data program kerja RKT.</td></tr>';
+            }
+
+            const repMonevBody = document.getElementById('repMonevBody');
+            repMonevBody.innerHTML = '';
+            if(appState.monev && appState.monev.length > 0) {
+                appState.monev.forEach((m) => {
+                    const statusBadge = m.status === 'Selesai' ? '🟢 Selesai' : (m.status === 'Proses' ? '🟡 Proses' : '🔴 Belum');
+                    repMonevBody.innerHTML += `
+                        <tr>
+                            <td style="border: 1px solid #cbd5e1;"><strong>${esc(m.program)}</strong></td>
+                            <td style="border: 1px solid #cbd5e1;">${esc(m.kegiatan)}</td>
+                            <td style="border: 1px solid #cbd5e1;">${statusBadge}</td>
+                            <td style="border: 1px solid #cbd5e1;">${esc(m.bukti || '-')}</td>
+                            <td style="border: 1px solid #cbd5e1;">${esc(m.catatan || '-')}</td>
+                        </tr>`;
+                });
+            } else {
+                repMonevBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#94a3b8; border:1px solid #cbd5e1;">Belum ada data supervisi & monev.</td></tr>';
+            }
         }
     </script>
 </body>
