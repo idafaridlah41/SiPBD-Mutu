@@ -29,13 +29,15 @@
         .brand-text h1 { font-size: 16px; font-weight: 700; line-height: 1.2; letter-spacing: 0.5px; }
         .brand-text p { font-size: 11px; color: #94a3b8; }
         
-        .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         .select-group { display: flex; align-items: center; background-color: #1e293b; border: 1px solid #334155; padding: 4px 10px; border-radius: 6px; font-size: 12px; color: #cbd5e1; }
-        .select-group select { background: #0f172a; color: white; border: 1px solid #475569; border-radius: 4px; padding: 4px 8px; font-size: 11px; font-weight: 600; outline: none; }
+        .select-group select { background: #0f172a; color: white; border: 1px solid #475569; border-radius: 4px; padding: 4px 8px; font-size: 11px; font-weight: 600; outline: none; max-width: 210px; }
         
-        .btn { padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
+        .btn { padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; user-select: none; position: relative; }
         .btn-amber { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #0f172a; }
         .btn-amber:hover { background: #f59e0b; }
+        .btn-teal { background-color: #0d9488; color: white; }
+        .btn-teal:hover { background-color: #0f766e; }
         .btn-indigo { background-color: #4f46e5; color: white; }
         .btn-indigo:hover { background-color: #4338ca; }
         .btn-emerald { background-color: #059669; color: white; }
@@ -45,6 +47,19 @@
         .btn-rose { background-color: #e11d48; color: white; }
         .btn-rose:hover { background-color: #be123c; }
         .btn-sm { padding: 4px 8px; font-size: 11px; }
+
+        /* Direct File Input Overlay (Works 100% inside sandboxed iframes & mobile browsers) */
+        .file-btn-wrapper { position: relative; overflow: hidden; display: inline-flex; align-items: center; }
+        .file-btn-wrapper input[type="file"] {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            font-size: 100px;
+            z-index: 5;
+        }
 
         /* Main Container */
         .main-container { max-width: 1400px; width: 100%; margin: 20px auto; padding: 0 16px; flex-grow: 1; }
@@ -110,6 +125,7 @@
             .no-print { display: none !important; }
             body { background: white; color: black; }
             .card { border: none; box-shadow: none; padding: 0; }
+            .page-break { page-break-before: always; }
         }
     </style>
 </head>
@@ -129,39 +145,46 @@
             <div class="header-actions">
                 <div class="select-group">
                     <label for="activeSchoolSelect" style="margin-right: 6px;">Sekolah:</label>
-                    <select id="activeSchoolSelect" onchange="switchActiveSchool(this.value)">
-                        <!-- Populated dynamically -->
-                    </select>
+                    <select id="activeSchoolSelect" onchange="switchActiveSchool(this.value)"></select>
                 </div>
 
-                <!-- TOMBOL KONFIRMASI GUNAKAN DATA SEKOLAH INI -->
-                <button onclick="confirmUseActiveSchool()" class="btn btn-amber" style="font-weight: 700; box-shadow: 0 2px 4px rgba(0,0,0,0.2);" title="Terapkan & Sinkronkan Semua Menu Navigasi dengan Data Sekolah Ini">
-                    ⚡ Gunakan Data Sekolah Ini
+                <button type="button" onclick="confirmUseActiveSchool()" class="btn btn-amber" style="font-weight: 700; box-shadow: 0 2px 4px rgba(0,0,0,0.2);" title="Terapkan & Sinkronkan Semua Menu Navigasi dengan Data Sekolah Ini">
+                    ⚡ Aktifkan
                 </button>
 
                 <div class="select-group">
                     <label for="jenjangSelect" style="margin-right: 6px;">Jenjang:</label>
                     <select id="jenjangSelect" onchange="switchJenjang(this.value)">
-                        <option value="SMP">SMP (Sekolah Menengah Pertama)</option>
-                        <option value="PAUD">PAUD / TK / KB</option>
-                        <option value="SD">SD (Sekolah Dasar)</option>
-                        <option value="SMA">SMA (Sekolah Menengah Atas)</option>
-                        <option value="SMK">SMK (Sekolah Menengah Kejuruan)</option>
+                        <option value="SMP">SMP</option>
+                        <option value="PAUD">PAUD</option>
+                        <option value="SD">SD</option>
+                        <option value="SMA">SMA</option>
+                        <option value="SMK">SMK</option>
                     </select>
                 </div>
 
-                <button onclick="openAiUploadModal()" class="btn btn-indigo">
-                    ✦ Upload Rapor (Excel / AI Scan)
+                <button type="button" onclick="openAiUploadModal()" class="btn btn-indigo" title="Unggah file Excel unduhan Rapor Pendidikan">
+                    ✦ Upload Rapor
                 </button>
-                <button onclick="exportAllDataJSON()" class="btn btn-slate" title="Cadangkan seluruh database sekolah binaan ke file .json">
-                    💾 Cadangkan DB (20+ Satdik)
+
+                <!-- MENU TERIMA DATA SEKOLAH (DIRECT FILE INPUT OVERLAY) -->
+                <div class="btn btn-teal file-btn-wrapper" title="Gabungkan (Merge) file .json kiriman dari Kepala Sekolah tanpa menghapus data sekolah binaan lainnya">
+                    <span>📥 Terima Data Sekolah (Merge)</span>
+                    <input type="file" id="mergeSchoolInput" onchange="mergeSchoolDataJSON(event)" accept=".json,application/json" multiple>
+                </div>
+
+                <button type="button" onclick="exportAllDataJSON()" class="btn btn-slate" title="Cadangkan seluruh database sekolah binaan ke file .json">
+                    💾 Cadangkan DB
                 </button>
-                <button onclick="document.getElementById('importDBInput').click()" class="btn btn-slate" title="Muat cadangkan database sekolah binaan dari file .json">
-                    📂 Restore DB
-                </button>
-                <input type="file" id="importDBInput" onchange="importAllDataJSON(event)" style="display:none;" accept=".json">
-                <button onclick="window.print()" class="btn btn-emerald">
-                    🖨 Cetak Laporan
+
+                <!-- MENU RESTORE DB (DIRECT FILE INPUT OVERLAY) -->
+                <div class="btn btn-slate file-btn-wrapper" title="Pulihkan seluruh cadangan database (menimpa database saat ini)">
+                    <span>📂 Restore DB</span>
+                    <input type="file" id="importDBInput" onchange="importAllDataJSON(event)" accept=".json,application/json">
+                </div>
+                
+                <button type="button" onclick="handlePrintDocument()" class="btn btn-emerald" title="Cetak atau Simpan sebagai PDF">
+                    🖨 Cetak
                 </button>
             </div>
         </div>
@@ -170,8 +193,8 @@
     <!-- MAIN APP CONTAINER -->
     <div class="main-container">
         
-        <!-- FLOATING NOTIFICATION TOAST FOR DATA SYNCHRONIZATION -->
-        <div id="syncToast" style="display:none; position:fixed; bottom:20px; right:20px; z-index:999; background:#0f172a; color:#white; border-left:4px solid #10b981; padding:12px 20px; border-radius:8px; box-shadow:0 10px 15px -3px rgba(0,0,0,0.3); font-size:13px; font-weight:600;">
+        <!-- FLOATING NOTIFICATION TOAST -->
+        <div id="syncToast" style="display:none; position:fixed; bottom:20px; right:20px; z-index:999; background:#0f172a; color:white; border-left:4px solid #10b981; padding:12px 20px; border-radius:8px; box-shadow:0 10px 15px -3px rgba(0,0,0,0.3); font-size:13px; font-weight:600;">
             <span style="color:#10b981; margin-right:6px;">✓</span> <span id="syncToastText">Data Rapor & Semua Navigasi Tersinkronisasi!</span>
         </div>
 
@@ -182,10 +205,8 @@
                     <label>Nama Satuan Pendidikan / Sekolah Binaan</label>
                     <div style="display: flex; gap: 8px;">
                         <input type="text" id="schoolName" value="SMPN 3 Tarogong Kidul" onchange="updateIdentity()" class="form-control">
-                        <button onclick="openNewSchoolModal()" title="Tambah Sekolah Binaan Baru" class="btn btn-indigo">
-                            +
-                        </button>
-                        <button onclick="confirmUseActiveSchool()" class="btn btn-emerald" style="white-space:nowrap;" title="Aktifkan & Sinkronkan Data Sekolah Ini">
+                        <button type="button" onclick="openNewSchoolModal()" title="Tambah Sekolah Binaan Baru" class="btn btn-indigo">+</button>
+                        <button type="button" onclick="confirmUseActiveSchool()" class="btn btn-emerald" style="white-space:nowrap;" title="Aktifkan & Sinkronkan Data Sekolah Ini">
                             ⚡ Aktifkan Data
                         </button>
                     </div>
@@ -198,12 +219,12 @@
                     <label>Tahun Evaluasi Rapor</label>
                     <select id="evalYear" onchange="updateIdentity()" class="form-control">
                         <option value="2025">2025 (AN 2024 / Terintegrasi 8 SNP)</option>
-                        <option value="2026">2026 (Edisi Terbaru 8 SNP)</option>
+                        <option value="2026" selected>2026 (Edisi Terbaru 8 SNP)</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Tahun Pelajaran Sasaran</label>
-                    <input type="text" id="targetTP" value="2025/2026" onchange="updateIdentity()" class="form-control">
+                    <input type="text" id="targetTP" value="2026/2027" onchange="updateIdentity()" class="form-control">
                 </div>
             </div>
             
@@ -226,7 +247,7 @@
         <!-- MODAL EDIT DATA SEKOLAH BINAAN -->
         <div id="editSchoolModal" class="modal-overlay">
             <div class="modal-body" style="max-width: 550px;">
-                <button onclick="closeEditSchoolModal()" class="modal-close">✕</button>
+                <button type="button" onclick="closeEditSchoolModal()" class="modal-close">✕</button>
                 <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">✏️ Kelola & Edit Sekolah Binaan</h3>
                 <input type="hidden" id="editSchoolTargetNpsn">
                 <div style="display: flex; flex-direction: column; gap: 12px;">
@@ -234,7 +255,7 @@
                         <label>Nama Satuan Pendidikan</label>
                         <input type="text" id="editSchoolName" class="form-control">
                     </div>
-                    <div class="grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                         <div class="form-group">
                             <label>NPSN</label>
                             <input type="text" id="editSchoolNpsn" class="form-control">
@@ -259,15 +280,19 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Pengawas Pembina</label>
-                        <input type="text" id="editSchoolSupervisor" class="form-control">
+                        <label>Nama Kepala Sekolah (Untuk Pengesahan Laporan)</label>
+                        <input type="text" id="editSchoolKepsek" placeholder="Nama Kepala Sekolah & Gelar" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>NIP Kepala Sekolah</label>
+                        <input type="text" id="editSchoolKepsekNIP" placeholder="NIP Kepala Sekolah" class="form-control">
                     </div>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items:center; margin-top: 18px;">
-                    <button onclick="deleteSchoolBinaanFromModal()" class="btn btn-rose">Hapus Sekolah</button>
+                    <button type="button" onclick="deleteSchoolBinaanFromModal()" class="btn btn-rose">Hapus Sekolah</button>
                     <div style="display: flex; gap: 8px;">
-                        <button onclick="closeEditSchoolModal()" class="btn btn-slate">Batal</button>
-                        <button onclick="saveEditSchoolBinaan()" class="btn btn-indigo">Simpan Perubahan</button>
+                        <button type="button" onclick="closeEditSchoolModal()" class="btn btn-slate">Batal</button>
+                        <button type="button" onclick="saveEditSchoolBinaan()" class="btn btn-indigo">Simpan Perubahan</button>
                     </div>
                 </div>
             </div>
@@ -276,7 +301,7 @@
         <!-- MODAL ADD NEW SCHOOL BINAAN -->
         <div id="newSchoolModal" class="modal-overlay">
             <div class="modal-body" style="max-width: 450px;">
-                <button onclick="closeNewSchoolModal()" class="modal-close">✕</button>
+                <button type="button" onclick="closeNewSchoolModal()" class="modal-close">✕</button>
                 <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">+ Tambah Sekolah Binaan Baru</h3>
                 <div style="display: flex; flex-direction: column; gap: 12px;">
                     <div class="form-group">
@@ -299,8 +324,8 @@
                     </div>
                 </div>
                 <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;">
-                    <button onclick="closeNewSchoolModal()" class="btn btn-slate">Batal</button>
-                    <button onclick="addNewSchoolBinaan()" class="btn btn-indigo">Simpan Sekolah</button>
+                    <button type="button" onclick="closeNewSchoolModal()" class="btn btn-slate">Batal</button>
+                    <button type="button" onclick="addNewSchoolBinaan()" class="btn btn-indigo">Simpan Sekolah</button>
                 </div>
             </div>
         </div>
@@ -308,20 +333,20 @@
         <!-- MODAL UPLOAD AI & EXCEL FILE SCANNER -->
         <div id="aiUploadModal" class="modal-overlay">
             <div class="modal-body" style="max-width: 550px;">
-                <button onclick="closeAiUploadModal()" class="modal-close">✕</button>
+                <button type="button" onclick="closeAiUploadModal()" class="modal-close">✕</button>
                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
                     <div style="width: 40px; height: 40px; border-radius: 10px; background: #fef3c7; color: #b45309; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold;">✦</div>
                     <div>
                         <h3 style="font-size: 15px; font-weight: 700;">Unggah File Rapor PBD (Excel / Spreadsheet)</h3>
-                        <p style="font-size: 12px; color: #64748b;">Mendukung `.xlsx`, `.xls`, `.csv` & `.json` untuk diekstrak otomatis.</p>
+                        <p style="font-size: 12px; color: #64748b;">Otomatis membaca Nama Sekolah, NPSN, Kode Indikator (A.1 - E.6), dan Skor dari unduhan Rapor Pendidikan.</p>
                     </div>
                 </div>
 
-                <div style="border: 2px dashed #cbd5e1; border-radius: 12px; padding: 24px; text-align: center; background-color: #f8fafc; cursor: pointer; margin-bottom: 16px;" onclick="document.getElementById('raporFileInput').click()">
+                <div class="file-btn-wrapper" style="width:100%; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 24px; text-align: center; background-color: #f8fafc; cursor: pointer; margin-bottom: 16px; display:block;">
                     <div style="font-size: 28px; margin-bottom: 8px;">📊</div>
-                    <p style="font-size: 12px; font-weight: 700; color: #334155;">Klik untuk memilih Berkas Rapor Excel Satdik</p>
-                    <p style="font-size: 11px; color: #94a3b8; margin-top: 4px;">Excel (.xlsx, .xls), CSV, atau JSON Export</p>
-                    <input type="file" id="raporFileInput" onchange="handleFileSelect(event)" style="display: none;" accept=".xlsx,.xls,.csv,.json,.pdf,.png,.jpg,.jpeg">
+                    <p style="font-size: 12px; font-weight: 700; color: #334155;">Klik di sini untuk memilih Berkas Rapor Excel Satdik</p>
+                    <p style="font-size: 11px; color: #94a3b8; margin-top: 4px;">Mendukung .xlsx, .xls, dan .csv resmi Rapor Pendidikan</p>
+                    <input type="file" id="raporFileInput" onchange="handleFileSelect(event)" accept=".xlsx,.xls,.csv">
                 </div>
 
                 <div id="fileSelectedInfo" style="display: none; background: #f1f5f9; padding: 10px; border-radius: 8px; margin-bottom: 16px; justify-content: space-between; align-items: center;">
@@ -330,12 +355,12 @@
                 </div>
 
                 <div id="aiProcessingState" style="display: none; text-align: center; padding: 12px;">
-                    <p style="font-size: 12px; font-weight: 700; color: #4338ca;">Menganalisis Rapor PBD & Sinkronisasi 8 SNP...</p>
+                    <p style="font-size: 12px; font-weight: 700; color: #4338ca;">Mengekstrak Lembar Rapor Pendidikan & Memetakan ke 8 SNP...</p>
                 </div>
 
                 <div style="display: flex; justify-content: flex-end; gap: 8px;">
-                    <button onclick="closeAiUploadModal()" class="btn btn-slate">Batal</button>
-                    <button id="btnStartAiProcess" onclick="processRaporWithAI()" disabled class="btn btn-indigo">✦ Proses & Sinkronkan Sekarang</button>
+                    <button type="button" onclick="closeAiUploadModal()" class="btn btn-slate">Batal</button>
+                    <button type="button" id="btnStartAiProcess" onclick="processRaporWithAI()" disabled class="btn btn-indigo">✦ Proses & Sinkronkan Sekarang</button>
                 </div>
             </div>
         </div>
@@ -343,7 +368,7 @@
         <!-- MODAL INTERAKTIF DETAIL 8 SNP -->
         <div id="snpDetailModal" class="modal-overlay">
             <div class="modal-body" style="max-width: 750px;">
-                <button onclick="closeSnpDetailModal()" class="modal-close">✕</button>
+                <button type="button" onclick="closeSnpDetailModal()" class="modal-close">✕</button>
                 <div style="border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px;">
                     <span id="snpModalBadge" class="badge badge-emerald" style="margin-bottom: 4px;">Standar Terpenuhi</span>
                     <h3 id="snpModalTitle" style="font-size: 16px; font-weight: 700; color: #0f172a;">Penjabaran 1. Standar Kompetensi Lulusan (SKL)</h3>
@@ -391,20 +416,20 @@
                 </div>
 
                 <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
-                    <button onclick="closeSnpDetailModal()" class="btn btn-indigo">Tutup Penjabaran</button>
+                    <button type="button" onclick="closeSnpDetailModal()" class="btn btn-indigo">Tutup Penjabaran</button>
                 </div>
             </div>
         </div>
 
         <!-- NAVIGATION TABS -->
         <div class="tab-bar no-print">
-            <button onclick="switchTab('tab-ringkasan')" id="btn-tab-ringkasan" class="tab-btn active">📊 Ringkasan Mutu & 8 SNP</button>
-            <button onclick="switchTab('tab-binaan')" id="btn-tab-binaan" class="tab-btn">🏫 Dashboard Sekolah Binaan</button>
-            <button onclick="switchTab('tab-identifikasi')" id="btn-tab-identifikasi" class="tab-btn">1. Identifikasi & Pemetaan 8 SNP</button>
-            <button onclick="switchTab('tab-refleksi')" id="btn-tab-refleksi" class="tab-btn">2. Refleksi & Akar Masalah</button>
-            <button onclick="switchTab('tab-benahi')" id="btn-tab-benahi" class="tab-btn">3. Benahi (RKT & ARKAS)</button>
-            <button onclick="switchTab('tab-supervisi-monev')" id="btn-tab-supervisi-monev" class="tab-btn">4. Supervisi & Monev PBD</button>
-            <button onclick="switchTab('tab-laporan')" id="btn-tab-laporan" class="tab-btn">📋 Laporan EDS-PBD & Supervisi</button>
+            <button type="button" onclick="switchTab('tab-ringkasan')" id="btn-tab-ringkasan" class="tab-btn active">📊 Ringkasan Mutu & 8 SNP</button>
+            <button type="button" onclick="switchTab('tab-binaan')" id="btn-tab-binaan" class="tab-btn">🏫 Dashboard Sekolah Binaan</button>
+            <button type="button" onclick="switchTab('tab-identifikasi')" id="btn-tab-identifikasi" class="tab-btn">1. Identifikasi & Pemetaan 8 SNP</button>
+            <button type="button" onclick="switchTab('tab-refleksi')" id="btn-tab-refleksi" class="tab-btn">2. Refleksi & Akar Masalah</button>
+            <button type="button" onclick="switchTab('tab-benahi')" id="btn-tab-benahi" class="tab-btn">3. Benahi (RKT & ARKAS)</button>
+            <button type="button" onclick="switchTab('tab-supervisi-monev')" id="btn-tab-supervisi-monev" class="tab-btn">4. Supervisi & Monev PBD</button>
+            <button type="button" onclick="switchTab('tab-laporan')" id="btn-tab-laporan" class="tab-btn">📋 Laporan EDS-PBD & Rekap Wilayah</button>
         </div>
 
         <!-- TAB 1: RINGKASAN MUTU & 8 SNP -->
@@ -471,7 +496,7 @@
                         <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">Indikator prioritas utama yang direkomendasikan untuk segera diintervensi:</p>
                         <div id="priorityListDashboard" style="display: flex; flex-direction: column; gap: 8px;"></div>
                     </div>
-                    <button onclick="switchTab('tab-benahi')" class="btn btn-indigo" style="width: 100%; margin-top: 16px; justify-content: center;">
+                    <button type="button" onclick="switchTab('tab-benahi')" class="btn btn-indigo" style="width: 100%; margin-top: 16px; justify-content: center;">
                         Susun Program Benahi →
                     </button>
                 </div>
@@ -484,9 +509,15 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
                     <div>
                         <h3 style="font-size: 15px; font-weight: 700;">Panel Pemantauan Sekolah Binaan Pengawas (Kapasitas s.d 20 Satdik)</h3>
-                        <p style="font-size: 12px; color: #64748b;">Pemetaan mutu, kesenjangan prioritas 8 SNP, dan kesiapan PBD pada seluruh sekolah pendampingan tanpa saling tumpang tindih.</p>
+                        <p style="font-size: 12px; color: #64748b;">Pemetaan mutu, kesenjangan prioritas 8 SNP, dan kesiapan PBD pada seluruh sekolah pendampingan.</p>
                     </div>
-                    <button onclick="openNewSchoolModal()" class="btn btn-indigo">+ Tambah Sekolah Binaan Baru</button>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <div class="btn btn-teal file-btn-wrapper">
+                            <span>📥 Terima Data Sekolah (Merge .json)</span>
+                            <input type="file" onchange="mergeSchoolDataJSON(event)" accept=".json,application/json" multiple>
+                        </div>
+                        <button type="button" onclick="openNewSchoolModal()" class="btn btn-indigo">+ Tambah Sekolah Manual</button>
+                    </div>
                 </div>
 
                 <div class="grid-3" style="margin-bottom: 16px;">
@@ -530,18 +561,15 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
                     <div>
                         <h3 style="font-size: 15px; font-weight: 700;">Tahap 1: Pemetaan Indikator Rapor & Sinkronisasi 8 SNP</h3>
-                        <p style="font-size: 12px; color: #64748b;">Nilai, status capaian, dan pemetaan Standar Nasional Pendidikan (8 SNP) tersinkronisasi murni dari file Excel Rapor PBD.</p>
-                        <!-- BADGE INDIKATOR SUMBER DATA RESMI EXCEL -->
+                        <p style="font-size: 12px; color: #64748b;">Klik sel pada tabel untuk menyunting langsung nilai, kode, atau peringkat indikator.</p>
                         <div style="margin-top: 6px; display: inline-flex; align-items: center; gap: 6px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700;">
                             <span>🟢 Sumber Data:</span>
-                            <span id="dataSourceBadgeText">Hasil Ekstraksi Berkas Excel Resmi</span>
+                            <span id="dataSourceBadgeText">Data Satdik Aktif</span>
                         </div>
                     </div>
                     <div style="display:flex; gap:8px;">
-                        <button onclick="reSyncFromExcelFile()" class="btn btn-amber" title="Baca ulang & sinkronkan seluruh indikator murni dari file Excel Rapor PBD">
-                            ✦ Sinkronkan Ulang dari Excel
-                        </button>
-                        <button onclick="addNewIndicatorRow()" class="btn btn-indigo">+ Tambah Indikator Manual</button>
+                        <button type="button" onclick="openAiUploadModal()" class="btn btn-amber">✦ Impor Ulang dari Excel</button>
+                        <button type="button" onclick="addNewIndicatorRow()" class="btn btn-indigo">+ Tambah Indikator Manual</button>
                     </div>
                 </div>
 
@@ -575,8 +603,8 @@
                         <p style="font-size: 12px; color: #64748b;">Hubungkan indikator bermasalah dengan subindikator akar masalah, dugaan penyebab, dan bukti validasi lapangan.</p>
                     </div>
                     <div style="display:flex; gap:8px;">
-                        <button onclick="autoGenerateAIReflections()" class="btn btn-amber">✦ Generate Refleksi AI Kontekstual</button>
-                        <button onclick="addReflectionRow()" class="btn btn-indigo">+ Tambah Refleksi</button>
+                        <button type="button" onclick="autoGenerateAIReflections()" class="btn btn-amber">✦ Generate Refleksi AI Kontekstual</button>
+                        <button type="button" onclick="addReflectionRow()" class="btn btn-indigo">+ Tambah Refleksi</button>
                     </div>
                 </div>
 
@@ -607,8 +635,8 @@
                         <p style="font-size: 12px; color: #64748b;">Rancangan program pembenahan mutu yang terintegrasi dengan indikator sasaran SNP.</p>
                     </div>
                     <div style="display:flex; gap:8px;">
-                        <button onclick="autoSuggestRkt()" class="btn btn-amber">✦ Auto-Suggest Program RKT</button>
-                        <button onclick="addRktRow()" class="btn btn-indigo">+ Tambah Program RKT</button>
+                        <button type="button" onclick="autoSuggestRkt()" class="btn btn-amber">✦ Auto-Suggest Program RKT</button>
+                        <button type="button" onclick="addRktRow()" class="btn btn-indigo">+ Tambah Program RKT</button>
                     </div>
                 </div>
 
@@ -636,7 +664,7 @@
                         <h3 style="font-size: 15px; font-weight: 700;">Rancangan Penganggaran ARKAS (BOSP Reguler)</h3>
                         <p style="font-size: 12px; color: #64748b;">Perincian belanja untuk kegiatan benahi mutu yang membutuhkan pembiayaan.</p>
                     </div>
-                    <button onclick="addArkasRow()" class="btn btn-emerald">+ Tambah Item ARKAS</button>
+                    <button type="button" onclick="addArkasRow()" class="btn btn-emerald">+ Tambah Item ARKAS</button>
                 </div>
 
                 <div class="table-responsive">
@@ -674,7 +702,7 @@
                         <h3 style="font-size: 15px; font-weight: 700; color: #1e293b;">📋 Instrumen Supervisi & Monev PBD Terintegrasi</h3>
                         <p style="font-size: 12px; color: #64748b;">Tersinkronisasi otomatis dengan Program Benahi & RKT. Pengawas / Kepala Sekolah dapat memantau progres keterlaksanaan & bukti fisik.</p>
                     </div>
-                    <button onclick="syncMonevFromRKT()" class="btn btn-amber">↻ Sync Data dari RKT</button>
+                    <button type="button" onclick="syncMonevFromRKT()" class="btn btn-amber">↻ Sync Data dari RKT</button>
                 </div>
 
                 <div class="table-responsive">
@@ -696,14 +724,27 @@
             </div>
         </div>
 
-        <!-- TAB 6: LAPORAN LENGKAP EDS-PBD & SUPERVISI -->
+        <!-- TAB 6: LAPORAN LENGKAP EDS-PBD & REKAP WILAYAH -->
         <div id="tab-laporan" class="tab-content">
-            <div class="card" style="max-width: 950px; margin: 0 auto; padding: 32px;">
+            <!-- Toggle Mode Laporan -->
+            <div class="card no-print" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:#eef2ff; border-color:#c7d2fe;">
+                <div>
+                    <strong style="color:#312e81; font-size:13px;">Mode Dokumen Laporan Cetak:</strong>
+                    <p style="font-size:11px; color:#4338ca;">Pilih laporan satuan pendidikan aktif atau rekapitulasi seluruh sekolah binaan untuk laporan ke Dinas Pendidikan.</p>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button type="button" onclick="toggleReportMode('satdik')" id="btnRepSatdik" class="btn btn-indigo">📄 Laporan Satdik Aktif</button>
+                    <button type="button" onclick="toggleReportMode('wilayah')" id="btnRepWilayah" class="btn btn-slate">📊 Rekap Lintas Sekolah Binaan</button>
+                </div>
+            </div>
+
+            <!-- DOKUMEN 1: LAPORAN SATUAN PENDIDIKAN -->
+            <div id="reportSatdikContainer" class="card" style="max-width: 950px; margin: 0 auto; padding: 32px;">
                 <div style="text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 16px; margin-bottom: 20px;">
                     <h2 style="font-size: 18px; font-weight: 800; text-transform: uppercase;">LAPORAN EVALUASI DIRI SATUAN PENDIDIKAN (EDS)</h2>
                     <h3 style="font-size: 15px; font-weight: 700; color: #3730a3; text-transform: uppercase; margin-top: 4px;">SINKRONISASI 8 STANDAR NASIONAL PENDIDIKAN & SUPERVISI PBD</h3>
                     <p style="font-size: 12px; margin-top: 8px;"><span id="repSchool">SMPN 3 Tarogong Kidul</span> | NPSN: <span id="repNPSN">20209354</span> | Jenjang: <span id="repJenjang">SMP</span></p>
-                    <p style="font-size: 11px; color: #64748b;">Tahun Rapor: <span id="repYear">2025</span> | Tahun Pelajaran Sasaran: <span id="repTarget">2025/2026</span></p>
+                    <p style="font-size: 11px; color: #64748b;">Tahun Rapor: <span id="repYear">2026</span> | Tahun Pelajaran Sasaran: <span id="repTarget">2026/2027</span></p>
                 </div>
 
                 <div style="margin-bottom: 24px;">
@@ -790,6 +831,48 @@
                     </div>
                 </div>
             </div>
+
+            <!-- DOKUMEN 2: REKAPITULASI WILAYAH LINTAS SEKOLAH BINAAN -->
+            <div id="reportWilayahContainer" class="card" style="display:none; max-width: 1050px; margin: 0 auto; padding: 32px;">
+                <div style="text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 16px; margin-bottom: 20px;">
+                    <h2 style="font-size: 18px; font-weight: 800; text-transform: uppercase;">LAPORAN REKAPITULASI PENJAMINAN MUTU & PENDAMPINGAN PBD</h2>
+                    <h3 style="font-size: 14px; font-weight: 700; color: #3730a3; text-transform: uppercase; margin-top: 4px;">WILAYAH BINAAN PENGAWAS SEKOLAH</h3>
+                    <p style="font-size: 12px; margin-top: 6px;"><span id="repWilayahRegion">Dinas Pendidikan Kab. Garut</span> | Tahun Pelajaran <span id="repWilayahTP">2026/2027</span></p>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <p style="font-size: 12px; line-height: 1.6; color: #334155;">
+                        Berikut adalah ikhtisar capaian Rapor Pendidikan, fokus prioritas 8 Standar Nasional Pendidikan (SNP), progres keterlaksanaan program benahi (Monev), serta estimasi alokasi anggaran PBD pada seluruh satuan pendidikan binaan:
+                    </p>
+                </div>
+
+                <div class="table-responsive" style="margin-bottom: 28px;">
+                    <table style="border: 1px solid #cbd5e1;">
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid #cbd5e1; text-align:center;">No</th>
+                                <th style="border: 1px solid #cbd5e1;">Nama Satuan Pendidikan</th>
+                                <th style="border: 1px solid #cbd5e1;">NPSN</th>
+                                <th style="border: 1px solid #cbd5e1; text-align:center;">Lit / Num</th>
+                                <th style="border: 1px solid #cbd5e1;">Prioritas Masalah Utama</th>
+                                <th style="border: 1px solid #cbd5e1; text-align:center;">Progres Monev</th>
+                                <th style="border: 1px solid #cbd5e1; text-align:right;">Anggaran PBD (ARKAS)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="repWilayahTableBody"></tbody>
+                    </table>
+                </div>
+
+                <div style="margin-top: 32px; display: flex; justify-content: flex-end; text-align: center; font-size: 12px;">
+                    <div style="width: 280px;">
+                        <p style="color: #64748b;">Garut, <span id="repWilayahDate"></span></p>
+                        <p style="font-weight: 700; color: #312e81; margin-top: 4px;">Pengawas Sekolah Pembina,</p>
+                        <div style="height: 65px;"></div>
+                        <p id="repWilayahSupName" style="font-weight: 700; text-decoration: underline;">Ida Faridlah Sulaeman</p>
+                        <p id="repWilayahSupNIP" style="color: #64748b;">NIP. 1972xxxx1998022xxx</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -815,6 +898,30 @@
             "8. Standar Pembiayaan"
         ];
 
+        const INDICATOR_SNP_DICTIONARY = {
+            "A.1": { name: "Kemampuan Literasi", snp: "1. Standar Kompetensi Lulusan (SKL)" },
+            "A.2": { name: "Kemampuan Numerasi", snp: "1. Standar Kompetensi Lulusan (SKL)" },
+            "A.3": { name: "Karakter", snp: "1. Standar Kompetensi Lulusan (SKL)" },
+            "C.1": { name: "Proporsi GTK Bersertifikat", snp: "5. Standar Pendidik & Tenaga Kependidikan" },
+            "C.2": { name: "Proporsi GTK Penggerak", snp: "5. Standar Pendidik & Tenaga Kependidikan" },
+            "C.3": { name: "Pengalaman Pelatihan GTK", snp: "5. Standar Pendidik & Tenaga Kependidikan" },
+            "C.5": { name: "Nilai Uji Kompetensi Guru", snp: "5. Standar Pendidik & Tenaga Kependidikan" },
+            "D.1": { name: "Kualitas Pembelajaran", snp: "3. Standar Proses" },
+            "D.2": { name: "Refleksi dan Perbaikan Pembelajaran oleh Guru", snp: "3. Standar Proses" },
+            "D.3": { name: "Kepemimpinan Instruksional", snp: "7. Standar Pengelolaan" },
+            "D.4": { name: "Iklim Keamanan Satuan Pendidikan", snp: "6. Standar Sarana & Prasarana" },
+            "D.6": { name: "Iklim Kesetaraan Gender", snp: "3. Standar Proses" },
+            "D.8": { name: "Iklim Kebinekaan", snp: "3. Standar Proses" },
+            "D.10": { name: "Iklim Inklusivitas", snp: "3. Standar Proses" },
+            "D.17": { name: "Link and Match dengan Dunia Kerja", snp: "2. Standar Isi" },
+            "D.18": { name: "Kesiapsiagaan Bencana (SPAB)", snp: "6. Standar Sarana & Prasarana" },
+            "E.1": { name: "Partisipasi Warga Satuan Pendidikan", snp: "7. Standar Pengelolaan" },
+            "E.2": { name: "Proporsi Pemanfaatan Sumber Daya Sekolah untuk Peningkatan Mutu", snp: "8. Standar Pembiayaan" },
+            "E.3": { name: "Pemanfaatan TIK untuk Pengelolaan Anggaran", snp: "8. Standar Pembiayaan" },
+            "E.5": { name: "Program dan Kebijakan Satuan Pendidikan", snp: "7. Standar Pengelolaan" },
+            "E.6": { name: "Ketersediaan & Pengadaan Buku Pendidikan", snp: "6. Standar Sarana & Prasarana" }
+        };
+
         let schoolsDatabase = {
             "20209354": {
                 schoolName: "SMPN 3 Tarogong Kidul",
@@ -823,6 +930,8 @@
                 statusRapor: "Aktif",
                 evalYear: "2026",
                 targetTP: "2026/2027",
+                kepsekName: "",
+                kepsekNIP: "",
                 supervisorName: "Ida Faridlah Sulaeman",
                 supervisorNIP: "1972xxxx1998022xxx",
                 supervisorRegion: "Dinas Pendidikan Kab. Garut",
@@ -841,27 +950,166 @@
             }
         };
 
-        const MAX_SCHOOLS_LIMIT = 20; // Disesuaikan tepat 20 Sekolah Binaan
+        const MAX_SCHOOLS_LIMIT = 20;
         let currentActiveNPSN = "20209354";
         let appState = schoolsDatabase[currentActiveNPSN];
         let radarChartInstance = null;
         let selectedFileRaw = null;
         const LS_KEY = 'sipbd_mutu_v4_pro';
-        const CAP = ['Baik','Sedang','Kurang'], STAT = ['Kekuatan','Perhatian','Prioritas Utama'];
-
-        /* INDEXED DB STORAGE CONTROLLER (KAPASITAS BESAR UNTUK 20-50 SEKOLAH) */
+        const CAP = ['Baik', 'Sedang', 'Kurang'];
         let dbInstance = null;
-<!-- ... existing code -->
+
+        /* ----------------------------------------------------
+           TERIMA DATA SEKOLAH (MERGE TANPA MENIMPA DB LAIN)
+        ---------------------------------------------------- */
+        function mergeSchoolDataJSON(event) {
+            const inputEl = event.target;
+            const files = Array.from((inputEl && inputEl.files) || []);
+            if (!files.length) return;
+
+            showSyncToast(`Membaca ${files.length} berkas data sekolah...`);
+
+            let processedCount = 0;
+            let addedCount = 0;
+            let updatedCount = 0;
+            let lastMergedNPSN = null;
+            let errorLogs = [];
+
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const rawText = String(e.target.result || "").replace(/^\uFEFF/, "").trim();
+                        const parsed = JSON.parse(rawText);
+
+                        // Format 1: Single school object langsung
+                        if (parsed && parsed.schoolName && Array.isArray(parsed.indicators)) {
+                            const npsn = String(parsed.npsn || "NPSN-" + Date.now()).trim();
+                            if (schoolsDatabase[npsn]) {
+                                updatedCount++;
+                            } else {
+                                if (Object.keys(schoolsDatabase).length >= MAX_SCHOOLS_LIMIT) {
+                                    errorLogs.push(`Kapasitas maksimal ${MAX_SCHOOLS_LIMIT} sekolah tercapai (${parsed.schoolName} dilewati).`);
+                                } else {
+                                    addedCount++;
+                                }
+                            }
+                            if (schoolsDatabase[npsn] || Object.keys(schoolsDatabase).length < MAX_SCHOOLS_LIMIT) {
+                                parsed.supervisorName = parsed.supervisorName || appState.supervisorName;
+                                parsed.supervisorNIP = parsed.supervisorNIP || appState.supervisorNIP;
+                                parsed.supervisorRegion = parsed.supervisorRegion || appState.supervisorRegion;
+                                parsed.statusRapor = parsed.statusRapor || "Aktif";
+                                parsed.reflections = Array.isArray(parsed.reflections) ? parsed.reflections : [];
+                                parsed.rkt = Array.isArray(parsed.rkt) ? parsed.rkt : [];
+                                parsed.arkas = Array.isArray(parsed.arkas) ? parsed.arkas : [];
+                                parsed.monev = Array.isArray(parsed.monev) ? parsed.monev : [];
+
+                                schoolsDatabase[npsn] = parsed;
+                                lastMergedNPSN = npsn;
+                            }
+                        } 
+                        // Format 2: Wrapped object { "NPSN": { schoolName, indicators, ... } } dari SIPBD-MUTU-KEPSEK
+                        else if (parsed && typeof parsed === 'object') {
+                            const keys = Object.keys(parsed).filter(k => parsed[k] && parsed[k].schoolName && Array.isArray(parsed[k].indicators));
+                            if (!keys.length) {
+                                errorLogs.push(`File "${file.name}" bukan format data SIPBD yang valid.`);
+                            } else {
+                                keys.forEach(k => {
+                                    const schObj = parsed[k];
+                                    const npsn = String(schObj.npsn || k).trim();
+                                    if (schoolsDatabase[npsn]) {
+                                        updatedCount++;
+                                    } else {
+                                        if (Object.keys(schoolsDatabase).length >= MAX_SCHOOLS_LIMIT) {
+                                            errorLogs.push(`Kapasitas maksimal ${MAX_SCHOOLS_LIMIT} sekolah tercapai.`);
+                                            return;
+                                        }
+                                        addedCount++;
+                                    }
+                                    schObj.supervisorName = schObj.supervisorName || appState.supervisorName;
+                                    schObj.supervisorNIP = schObj.supervisorNIP || appState.supervisorNIP;
+                                    schObj.supervisorRegion = schObj.supervisorRegion || appState.supervisorRegion;
+                                    schObj.statusRapor = schObj.statusRapor || "Aktif";
+                                    schObj.reflections = Array.isArray(schObj.reflections) ? schObj.reflections : [];
+                                    schObj.rkt = Array.isArray(schObj.rkt) ? schObj.rkt : [];
+                                    schObj.arkas = Array.isArray(schObj.arkas) ? schObj.arkas : [];
+                                    schObj.monev = Array.isArray(schObj.monev) ? schObj.monev : [];
+
+                                    schoolsDatabase[npsn] = schObj;
+                                    lastMergedNPSN = npsn;
+                                });
+                            }
+                        } else {
+                            errorLogs.push(`Struktur file "${file.name}" tidak dikenali.`);
+                        }
+                    } catch (err) {
+                        errorLogs.push(`Gagal membaca "${file.name}": ${err.message}`);
+                    } finally {
+                        processedCount++;
+                        if (processedCount === files.length) {
+                            if (inputEl) inputEl.value = "";
+                            if (lastMergedNPSN && schoolsDatabase[lastMergedNPSN]) {
+                                currentActiveNPSN = lastMergedNPSN;
+                                appState = schoolsDatabase[currentActiveNPSN];
+                                persist();
+                                populateSchoolSelect();
+                                syncAllTabsAndUI();
+                                showSyncToast(`Berhasil! ${addedCount} Sekolah Baru, ${updatedCount} Diperbarui.`);
+                            }
+                            if (errorLogs.length > 0) {
+                                alert("Catatan Proses Terima Data:\n- " + errorLogs.join("\n- "));
+                            }
+                        }
+                    }
+                };
+                reader.onerror = function() {
+                    processedCount++;
+                    errorLogs.push(`Tidak dapat membaca file "${file.name}" dari perangkat.`);
+                };
+                reader.readAsText(file);
+            });
+        }
+
+        /* ----------------------------------------------------
+           RESTORE FULL DATABASE & BACKUP JSON
+        ---------------------------------------------------- */
+        function exportAllDataJSON() {
+            try {
+                const jsonString = JSON.stringify(schoolsDatabase, null, 2);
+                const blob = new Blob([jsonString], { type: "application/json;charset=utf-8" });
+                const url = URL.createObjectURL(blob);
+                const downloadAnchor = document.createElement('a');
+                downloadAnchor.href = url;
+                downloadAnchor.download = `BACKUP_SIPBD_MUTU_${new Date().toISOString().slice(0,10)}.json`;
+                document.body.appendChild(downloadAnchor);
+                downloadAnchor.click();
+                setTimeout(() => {
+                    document.body.removeChild(downloadAnchor);
+                    URL.revokeObjectURL(url);
+                }, 200);
+                showToastSafe(`Cadangan database (${Object.keys(schoolsDatabase).length} Satdik) berhasil diunduh!`);
+            } catch (err) {
+                alert("Gagal mengunduh cadangan database: " + err.message);
+            }
+        }
+
         function importAllDataJSON(event) {
-            const file = event.target.files[0];
+            const inputEl = event.target;
+            const file = inputEl.files[0];
             if (!file) return;
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
-                    const parsed = JSON.parse(e.target.result);
+                    const rawText = String(e.target.result || "").replace(/^\uFEFF/, "").trim();
+                    const parsed = JSON.parse(rawText);
                     const keys = Object.keys(parsed || {}).filter(k => parsed[k] && parsed[k].schoolName && Array.isArray(parsed[k].indicators));
-                    if (!keys.length) throw new Error("Format cadangkan file JSON tidak valid.");
+                    if (!keys.length) throw new Error("Format cadangan file JSON tidak valid.");
+
+                    if (!confirm(`Restore DB akan mengganti seluruh database saat ini dengan ${keys.length} sekolah dari file cadangan. Lanjutkan?`)) {
+                        inputEl.value = "";
+                        return;
+                    }
 
                     schoolsDatabase = {};
                     keys.forEach(k => schoolsDatabase[k] = parsed[k]);
@@ -872,12 +1120,31 @@
                     populateSchoolSelect();
                     syncAllTabsAndUI();
                     showSyncToast(`Berhasil memuat ${keys.length} Sekolah Binaan dari Database Backup!`);
-                    alert(`Database berhasil dipulihkan! Total ${keys.length} Sekolah Binaan kini aktif.`);
                 } catch(err) {
                     alert("Gagal memulihkan database: " + err.message);
+                } finally {
+                    inputEl.value = "";
                 }
             };
             reader.readAsText(file);
+        }
+
+        /* ----------------------------------------------------
+           PRINT HANDLER (COMPATIBLE WITH IFRAMED PREVIEWS)
+        ---------------------------------------------------- */
+        function handlePrintDocument() {
+            // Pastikan tab laporan ter-render terlebih dahulu sebelum cetak
+            renderReportView();
+            if (document.getElementById('reportWilayahContainer').style.display === 'block') {
+                renderWilayahReport();
+            }
+
+            try {
+                window.focus();
+                window.print();
+            } catch (e) {
+                alert("Gunakan kombinasi tombol Ctrl + P (atau Cmd + P di Mac) untuk mencetak atau menyimpan dokumen sebagai PDF.");
+            }
         }
 
         function esc(v){ return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
@@ -890,12 +1157,8 @@
            LOCALSTORAGE & INDEXEDDB PERSISTENCE
         ---------------------------------------------------- */
         function initDB() {
-            return new Promise((resolve, reject) => {
-                if (!window.indexedDB) {
-                    console.warn("IndexedDB tidak didukung, menggunakan LocalStorage fallback.");
-                    resolve(null);
-                    return;
-                }
+            return new Promise((resolve) => {
+                if (!window.indexedDB) { resolve(null); return; }
                 const req = indexedDB.open("SIPBD_DB_V20", 1);
                 req.onupgradeneeded = (e) => {
                     const db = e.target.result;
@@ -903,14 +1166,8 @@
                         db.createObjectStore("schools", { keyPath: "npsn" });
                     }
                 };
-                req.onsuccess = (e) => {
-                    dbInstance = e.target.result;
-                    resolve(dbInstance);
-                };
-                req.onerror = (err) => {
-                    console.error("Error IndexedDB:", err);
-                    resolve(null);
-                };
+                req.onsuccess = (e) => { dbInstance = e.target.result; resolve(dbInstance); };
+                req.onerror = () => resolve(null);
             });
         }
 
@@ -918,20 +1175,15 @@
             try {
                 localStorage.setItem(LS_KEY, JSON.stringify(schoolsDatabase));
                 localStorage.setItem(LS_KEY + '_active', currentActiveNPSN);
-            } catch (e) {
-                console.warn("LocalStorage gagal menyimpan:", e);
-            }
+            } catch (e) { console.warn("LocalStorage gagal menyimpan:", e); }
 
             if (dbInstance) {
                 try {
                     const tx = dbInstance.transaction("schools", "readwrite");
                     const store = tx.objectStore("schools");
-                    Object.values(schoolsDatabase).forEach(sch => {
-                        store.put(sch);
-                    });
-                } catch (e) {
-                    console.error("IndexedDB persist error:", e);
-                }
+                    store.clear();
+                    Object.values(schoolsDatabase).forEach(sch => store.put(sch));
+                } catch (e) { console.error("IndexedDB persist error:", e); }
             }
         }
 
@@ -945,11 +1197,7 @@
                         const parsed = JSON.parse(lsRaw);
                         if (Object.keys(parsed).length > 0) {
                             schoolsDatabase = parsed;
-                            if (activeLs && schoolsDatabase[activeLs]) {
-                                currentActiveNPSN = activeLs;
-                            } else {
-                                currentActiveNPSN = Object.keys(schoolsDatabase)[0];
-                            }
+                            currentActiveNPSN = (activeLs && schoolsDatabase[activeLs]) ? activeLs : Object.keys(schoolsDatabase)[0];
                             appState = schoolsDatabase[currentActiveNPSN];
                             resolve(true);
                             return;
@@ -964,14 +1212,8 @@
                     req.onsuccess = () => {
                         if (req.result && req.result.length > 0) {
                             schoolsDatabase = {};
-                            req.result.forEach(sch => {
-                                schoolsDatabase[sch.npsn] = sch;
-                            });
-                            if (activeLs && schoolsDatabase[activeLs]) {
-                                currentActiveNPSN = activeLs;
-                            } else {
-                                currentActiveNPSN = req.result[0].npsn;
-                            }
+                            req.result.forEach(sch => schoolsDatabase[sch.npsn] = sch);
+                            currentActiveNPSN = (activeLs && schoolsDatabase[activeLs]) ? activeLs : req.result[0].npsn;
                             appState = schoolsDatabase[currentActiveNPSN];
                             resolve(true);
                             return;
@@ -1025,6 +1267,7 @@
             if (!schoolsDatabase[npsn]) return;
             currentActiveNPSN = npsn;
             appState = schoolsDatabase[npsn];
+            persist();
             populateSchoolSelect();
             syncAllTabsAndUI();
             showSyncToast(`Berhasil beralih ke: ${appState.schoolName}`);
@@ -1038,18 +1281,18 @@
 
         function updateIdentity() {
             if (!appState) return;
-            appState.schoolName = document.getElementById('schoolName').value || appState.schoolName;
-            appState.npsn = document.getElementById('schoolNPSN').value || appState.npsn;
+            appState.schoolName = document.getElementById('schoolName').value.trim() || appState.schoolName;
+            const newNpsn = document.getElementById('schoolNPSN').value.trim() || appState.npsn;
             appState.evalYear = document.getElementById('evalYear').value || appState.evalYear;
-            appState.targetTP = document.getElementById('targetTP').value || appState.targetTP;
-            appState.supervisorName = document.getElementById('supervisorName').value || appState.supervisorName;
-            appState.supervisorNIP = document.getElementById('supervisorNIP').value || appState.supervisorNIP;
-            appState.supervisorRegion = document.getElementById('supervisorRegion').value || appState.supervisorRegion;
+            appState.targetTP = document.getElementById('targetTP').value.trim() || appState.targetTP;
+            appState.supervisorName = document.getElementById('supervisorName').value.trim() || appState.supervisorName;
+            appState.supervisorNIP = document.getElementById('supervisorNIP').value.trim() || appState.supervisorNIP;
+            appState.supervisorRegion = document.getElementById('supervisorRegion').value.trim() || appState.supervisorRegion;
             
-            // If NPSN changed, update key in database
-            if (appState.npsn !== currentActiveNPSN) {
+            if (newNpsn !== currentActiveNPSN) {
                 delete schoolsDatabase[currentActiveNPSN];
-                currentActiveNPSN = appState.npsn;
+                appState.npsn = newNpsn;
+                currentActiveNPSN = newNpsn;
                 schoolsDatabase[currentActiveNPSN] = appState;
             }
 
@@ -1071,13 +1314,27 @@
             if (!toast || !toastText) return;
             toastText.textContent = text;
             toast.style.display = 'block';
-            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+            setTimeout(() => { toast.style.display = 'none'; }, 3500);
+        }
+
+        function showToastSafe(text) {
+            showSyncToast(text);
         }
 
         function setField(path, index, field, value) {
             if (!appState || !appState[path] || !appState[path][index]) return;
-            appState[path][index][field] = value;
+            const cleanVal = value.trim();
+            if (field === 'skor' || field === 'change' || field === 'vol' || field === 'price') {
+                appState[path][index][field] = parseFloat(cleanVal.replace(',', '.')) || 0;
+            } else {
+                appState[path][index][field] = cleanVal;
+            }
+
+            if (path === 'indicators' && field === 'capaian') {
+                appState.indicators[index].status = cleanVal === 'Kurang' ? 'Prioritas Utama' : (cleanVal === 'Sedang' ? 'Perhatian' : 'Kekuatan');
+            }
             persist();
+            if (path === 'arkas') renderArkasTable();
         }
 
         /* ----------------------------------------------------
@@ -1112,17 +1369,15 @@
             document.getElementById('statSedang').textContent = `${countSedang} Indikator`;
             document.getElementById('statKurang').textContent = `${countKurang} Indikator`;
 
-            // Calculate Monev Progress
             const monev = appState.monev || [];
             const completed = monev.filter(m => m.status === 'Selesai' || m.status === 'Terlaksana').length;
             const pct = monev.length > 0 ? Math.round((completed / monev.length) * 100) : 0;
             document.getElementById('statMonevProgress').textContent = `${pct}%`;
 
-            // Render 8 SNP Grid Overview Cards
             const grid = document.getElementById('snpGridOverview');
             if (grid) {
                 grid.innerHTML = '';
-                STANDAR_NASIONAL_PENDIDIKAN.forEach((snpName, idx) => {
+                STANDAR_NASIONAL_PENDIDIKAN.forEach((snpName) => {
                     const snpInds = inds.filter(i => i.snp === snpName);
                     const snpKurang = snpInds.filter(i => i.capaian === 'Kurang').length;
                     const snpSedang = snpInds.filter(i => i.capaian === 'Sedang').length;
@@ -1146,7 +1401,6 @@
                 });
             }
 
-            // Render Priority Items
             const prioContainer = document.getElementById('priorityListDashboard');
             if (prioContainer) {
                 prioContainer.innerHTML = '';
@@ -1168,13 +1422,12 @@
                 }
             }
 
-            // Render Radar Chart
             renderRadarChart(inds);
         }
 
         function renderRadarChart(inds) {
             const ctx = document.getElementById('radarChart');
-            if (!ctx) return;
+            if (!ctx || typeof Chart === 'undefined') return;
             if (radarChartInstance) radarChartInstance.destroy();
 
             const labels = inds.slice(0, 6).map(i => i.code + ' ' + i.name.substring(0, 15));
@@ -1210,20 +1463,24 @@
             const keys = Object.keys(schoolsDatabase);
             document.getElementById('binaanTotalCount').textContent = `${keys.length} / ${MAX_SCHOOLS_LIMIT} Satdik`;
 
-            let sumLit = 0, sumNum = 0, needIntervention = 0;
+            let sumLit = 0, sumNum = 0, countLit = 0, countNum = 0, needIntervention = 0;
 
             keys.forEach(npsn => {
                 const sch = schoolsDatabase[npsn];
-                const lit = (sch.indicators.find(i => i.code === 'A.1') || {}).skor || 0;
-                const num = (sch.indicators.find(i => i.code === 'A.2') || {}).skor || 0;
+                const litObj = sch.indicators.find(i => i.code === 'A.1');
+                const numObj = sch.indicators.find(i => i.code === 'A.2');
+                const lit = litObj ? parseFloat(litObj.skor) : 0;
+                const num = numObj ? parseFloat(numObj.skor) : 0;
 
-                sumLit += lit; sumNum += num;
+                if (litObj) { sumLit += lit; countLit++; }
+                if (numObj) { sumNum += num; countNum++; }
                 if (sch.indicators.some(i => i.capaian === 'Kurang' || i.status === 'Prioritas Utama')) {
                     needIntervention++;
                 }
 
-                const totalArkas = (sch.arkas || []).reduce((acc, a) => acc + (parseFloat(a.total) || 0), 0);
+                const totalArkas = (sch.arkas || []).reduce((acc, a) => acc + ((parseFloat(a.vol) || 0) * (parseFloat(a.price) || 0)), 0);
                 const isSelected = npsn === currentActiveNPSN;
+                const prioInd = sch.indicators.find(i => i.capaian === 'Kurang') || sch.indicators.find(i => i.capaian === 'Sedang');
 
                 const tr = document.createElement('tr');
                 if (isSelected) tr.style.backgroundColor = '#eef2ff';
@@ -1232,20 +1489,23 @@
                     <td>${esc(sch.npsn)}</td>
                     <td><span class="badge badge-blue">${esc(sch.jenjang)}</span></td>
                     <td><span class="badge ${sch.statusRapor === 'Aktif' ? 'badge-emerald' : 'badge-rose'}">${esc(sch.statusRapor || 'Aktif')}</span></td>
-                    <td>Lit: <strong>${lit}</strong> | Num: <strong>${num}</strong></td>
-                    <td style="font-size:11px; color:#dc2626;">${esc((sch.indicators.find(i => i.capaian === 'Kurang') || {}).name || 'Karakter & Pembelajaran')}</td>
+                    <td>Lit: <strong>${lit.toFixed(1)}</strong> | Num: <strong>${num.toFixed(1)}</strong></td>
+                    <td style="font-size:11px; color:#dc2626;">${esc(prioInd ? `${prioInd.code} - ${prioInd.name}` : 'Terpenuhi')}</td>
                     <td style="font-weight:700; color:#4f46e5;">Rp ${totalArkas.toLocaleString('id-ID')}</td>
-                    <td style="text-align:center;">
-                        <button onclick="switchActiveSchool('${npsn}')" class="btn btn-sm ${isSelected ? 'btn-emerald' : 'btn-indigo'}">
-                            ${isSelected ? '✓ Aktif' : '⚡ Gunakan Data Ini'}
+                    <td style="text-align:center; white-space:nowrap;">
+                        <button type="button" onclick="switchActiveSchool('${npsn}')" class="btn btn-sm ${isSelected ? 'btn-emerald' : 'btn-indigo'}" style="margin-right:4px;">
+                            ${isSelected ? '✓ Aktif' : '⚡ Pilih'}
+                        </button>
+                        <button type="button" onclick="openEditSchoolModal('${npsn}')" class="btn btn-sm btn-slate" title="Edit / Hapus Sekolah">
+                            ✏️ Kelola
                         </button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
 
-            const avgLit = keys.length ? (sumLit / keys.length).toFixed(1) : '0.0';
-            const avgNum = keys.length ? (sumNum / keys.length).toFixed(1) : '0.0';
+            const avgLit = countLit ? (sumLit / countLit).toFixed(1) : '0.0';
+            const avgNum = countNum ? (sumNum / countNum).toFixed(1) : '0.0';
             document.getElementById('binaanAvgKognitif').textContent = `${avgLit} / ${avgNum}`;
             document.getElementById('binaanNeedIntervention').textContent = `${needIntervention} Satdik`;
         }
@@ -1256,7 +1516,7 @@
             tbody.innerHTML = '';
             
             const badgeText = document.getElementById('dataSourceBadgeText');
-            if (badgeText) badgeText.textContent = `Berkas Excel Satdik "${appState.schoolName}" (${appState.indicators.length} Indikator Terbaca)`;
+            if (badgeText) badgeText.textContent = `Satdik "${appState.schoolName}" (${appState.indicators.length} Indikator Terpetakan)`;
 
             (appState.indicators || []).forEach((ind, idx) => {
                 const tr = document.createElement('tr');
@@ -1281,7 +1541,7 @@
                     </td>
                     ${ce('indicators', idx, 'rankKab', ind.rankKab)}
                     <td style="text-align:center;">
-                        <button onclick="removeIndicator(${idx})" class="btn btn-sm btn-rose">✕</button>
+                        <button type="button" onclick="removeIndicator(${idx})" class="btn btn-sm btn-rose">✕</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -1311,11 +1571,6 @@
             renderIndicatorsTable();
         }
 
-        function reSyncFromExcelFile() {
-            showSyncToast(`Indikator Satdik "${appState.schoolName}" Tersinkronkan Ulang 100% dari Excel!`);
-            syncAllTabsAndUI();
-        }
-
         function renderReflectionsTable() {
             const tbody = document.getElementById('reflectionTableBody');
             if (!tbody) return;
@@ -1333,7 +1588,7 @@
                     ${ce('reflections', idx, 'subIndicator', ref.subIndicator)}
                     ${ce('reflections', idx, 'cause', ref.cause)}
                     ${ce('reflections', idx, 'evidence', ref.evidence)}
-                    <td style="text-align:center;"><button onclick="removeReflection(${idx})" class="btn btn-sm btn-rose">✕</button></td>
+                    <td style="text-align:center;"><button type="button" onclick="removeReflection(${idx})" class="btn btn-sm btn-rose">✕</button></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1341,10 +1596,11 @@
 
         function addReflectionRow() {
             if (!appState.reflections) appState.reflections = [];
+            const defaultInd = appState.indicators[0] ? `${appState.indicators[0].code} ${appState.indicators[0].name}` : "A.2 Kemampuan Numerasi";
             appState.reflections.push({
-                indicator: "A.2 Kemampuan Numerasi",
+                indicator: defaultInd,
                 fact: "Skor Sedang, butuh penguatan metode penalaran.",
-                subIndicator: "A.2.1 Penalaran Kontekstual",
+                subIndicator: "Sub-Kompetensi Penalaran Kontekstual",
                 cause: "Penggunaan media peraga dan latihan eksploratif belum optimal.",
                 evidence: "Hasil Asesmen Formatif & Jurnal Pembelajaran Guru."
             });
@@ -1372,6 +1628,9 @@
                 } else if (i.code === 'E.6') {
                     causeText = `Kebutuhan rasio buku teks utama dan nonteks (bacaan mutu) siswa belum terpenuhi seimbang via SIPLah.`;
                     evidenceText = `Katalog Perpustakaan & Berita Acara Penerimaan Buku Satdik.`;
+                } else if (i.code === 'D.4') {
+                    causeText = `Sosialisasi pencegahan perundungan dan kekerasan serta penguatan satgas TPPK perlu diintensifkan.`;
+                    evidenceText = `SK Tim Pencegahan dan Penanganan Kekerasan (TPPK) & Logbook Bimbingan Konseling.`;
                 }
 
                 appState.reflections.push({
@@ -1402,7 +1661,7 @@
                     ${ce('rkt', idx, 'pj', r.pj)}
                     ${ce('rkt', idx, 'waktu', r.waktu)}
                     ${ce('rkt', idx, 'target', r.target)}
-                    <td style="text-align:center;"><button onclick="removeRkt(${idx})" class="btn btn-sm btn-rose">✕</button></td>
+                    <td style="text-align:center;"><button type="button" onclick="removeRkt(${idx})" class="btn btn-sm btn-rose">✕</button></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1414,7 +1673,7 @@
                 bidang: "Pengembangan Pembelajaran",
                 program: "Program SEHATI Interaktif",
                 kegiatan: "IHT Pembelajaran Berdiferensiasi & Modul Ajar Digital",
-                pj: "Wakase Kurikulum",
+                pj: "Wakasek Kurikulum",
                 waktu: "Semester Ganjil",
                 target: "100% Guru Mengimplementasikan Modul Ajar Interaktif"
             });
@@ -1430,10 +1689,10 @@
 
         function autoSuggestRkt() {
             appState.rkt = [
-                { bidang: "Pengembangan Pembelajaran", program: "Program SEHATI", kegiatan: "IHT Pembelajaran Berdiferensiasi & Modul Ajar Interaktif", pj: "Wakase Kurikulum", waktu: "Juli - Agustus 2025", target: "100% Guru Menyusun Modul Ajar Berdiferensiasi" },
-                { bidang: "Pengembangan Karakter", program: "Program BEKARYA", kegiatan: "Gelar Karya P5 & Pembiasaan Karakter Mandiri/Gotong Royong", pj: "Koordinator P5", waktu: "Oktober 2025", target: "Skor Karakter (A.3) Meningkat > 65.00" },
-                { bidang: "Sarana & Prasarana SPAB", program: "Program TANGGUH BENCANA", kegiatan: "Simulasi Mitigasi Bencana & Pengadaan Equipment Keselamatan SPAB", pj: "Tim SPAB Satdik", waktu: "September 2025", target: "Kelengkapan Sarpras SPAB (D.18) Terpenuhi 100%" },
-                { bidang: "Pengadaan Buku & Sumber Belajar", program: "Program LITERASI BUKU MUTU", kegiatan: "Pengadaan Buku Teks Utama & Non-Teks Mutu via SIPLah", pj: "Kepala Perpustakaan", waktu: "Agustus 2025", target: "Ketersediaan Buku (E.6) Mencapai Target 100%" }
+                { bidang: "Pengembangan Pembelajaran", program: "Program SEHATI", kegiatan: "IHT Pembelajaran Berdiferensiasi & Modul Ajar Interaktif", pj: "Wakasek Kurikulum", waktu: "Juli - Agustus 2026", target: "100% Guru Menyusun Modul Ajar Berdiferensiasi" },
+                { bidang: "Pengembangan Karakter", program: "Program BEKARYA", kegiatan: "Gelar Karya Kokurikuler & Pembiasaan Karakter Mandiri/Gotong Royong", pj: "Koordinator Kokurikuler", waktu: "Oktober 2026", target: "Skor Karakter (A.3) Meningkat > 65.00" },
+                { bidang: "Sarana & Prasarana SPAB", program: "Program TANGGUH BENCANA", kegiatan: "Simulasi Mitigasi Bencana & Pengadaan Equipment Keselamatan SPAB", pj: "Tim SPAB Satdik", waktu: "September 2026", target: "Kelengkapan Sarpras SPAB (D.18) Terpenuhi 100%" },
+                { bidang: "Pengadaan Buku & Sumber Belajar", program: "Program LITERASI BUKU MUTU", kegiatan: "Pengadaan Buku Teks Utama & Non-Teks Mutu via SIPLah", pj: "Kepala Perpustakaan", waktu: "Agustus 2026", target: "Ketersediaan Buku (E.6) Mencapai Target 100%" }
             ];
             persist();
             renderRktTable();
@@ -1460,7 +1719,7 @@
                     ${ce('arkas', idx, 'satuan', a.satuan)}
                     ${ce('arkas', idx, 'price', a.price)}
                     <td style="font-weight:700; color:#4f46e5;">Rp ${tot.toLocaleString('id-ID')}</td>
-                    <td style="text-align:center;"><button onclick="removeArkas(${idx})" class="btn btn-sm btn-rose">✕</button></td>
+                    <td style="text-align:center;"><button type="button" onclick="removeArkas(${idx})" class="btn btn-sm btn-rose">✕</button></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1523,11 +1782,69 @@
                 status: "Proses",
                 bukti: "Dokumen Undangan, Daftar Hadir & Modul Ajar",
                 catatan: `Pendampingan berjalan baik di ${appState.schoolName}.`,
-                rtl: "Monitoring berkala impelementasi di kelas."
+                rtl: "Monitoring berkala implementasi di kelas."
             }));
             persist();
             renderMonevTable();
             showSyncToast("Monev Berhasil Disinkronkan dari RKT!");
+        }
+
+        function toggleReportMode(mode) {
+            const satdikCont = document.getElementById('reportSatdikContainer');
+            const wilayahCont = document.getElementById('reportWilayahContainer');
+            const btnSatdik = document.getElementById('btnRepSatdik');
+            const btnWilayah = document.getElementById('btnRepWilayah');
+
+            if (mode === 'wilayah') {
+                satdikCont.style.display = 'none';
+                wilayahCont.style.display = 'block';
+                btnWilayah.className = 'btn btn-indigo';
+                btnSatdik.className = 'btn btn-slate';
+                renderWilayahReport();
+            } else {
+                satdikCont.style.display = 'block';
+                wilayahCont.style.display = 'none';
+                btnSatdik.className = 'btn btn-indigo';
+                btnWilayah.className = 'btn btn-slate';
+                renderReportView();
+            }
+        }
+
+        function renderWilayahReport() {
+            document.getElementById('repWilayahRegion').textContent = appState.supervisorRegion;
+            document.getElementById('repWilayahTP').textContent = appState.targetTP;
+            document.getElementById('repWilayahSupName').textContent = appState.supervisorName;
+            document.getElementById('repWilayahSupNIP').textContent = `NIP. ${appState.supervisorNIP}`;
+            document.getElementById('repWilayahDate').textContent = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            const tbody = document.getElementById('repWilayahTableBody');
+            tbody.innerHTML = '';
+
+            Object.keys(schoolsDatabase).forEach((npsn, index) => {
+                const sch = schoolsDatabase[npsn];
+                const litObj = sch.indicators.find(i => i.code === 'A.1');
+                const numObj = sch.indicators.find(i => i.code === 'A.2');
+                const lit = litObj ? parseFloat(litObj.skor).toFixed(1) : '-';
+                const num = numObj ? parseFloat(numObj.skor).toFixed(1) : '-';
+
+                const prios = sch.indicators.filter(i => i.capaian === 'Kurang' || i.status === 'Prioritas Utama').map(i => `${i.code} (${i.name})`).join(', ') || 'Pemeliharaan Mutu';
+                const monev = sch.monev || [];
+                const done = monev.filter(m => m.status === 'Terlaksana' || m.status === 'Selesai').length;
+                const pct = monev.length ? Math.round((done / monev.length) * 100) + '%' : '0%';
+                const totArkas = (sch.arkas || []).reduce((acc, a) => acc + ((parseFloat(a.vol) || 0) * (parseFloat(a.price) || 0)), 0);
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="border: 1px solid #cbd5e1; text-align:center;">${index + 1}</td>
+                        <td style="border: 1px solid #cbd5e1; font-weight:700;">${esc(sch.schoolName)}</td>
+                        <td style="border: 1px solid #cbd5e1;">${esc(sch.npsn)}</td>
+                        <td style="border: 1px solid #cbd5e1; text-align:center;">${lit} / ${num}</td>
+                        <td style="border: 1px solid #cbd5e1;">${esc(prios)}</td>
+                        <td style="border: 1px solid #cbd5e1; text-align:center; font-weight:700;">${pct}</td>
+                        <td style="border: 1px solid #cbd5e1; text-align:right;">Rp ${totArkas.toLocaleString('id-ID')}</td>
+                    </tr>
+                `;
+            });
         }
 
         function renderReportView() {
@@ -1540,13 +1857,18 @@
             document.getElementById('repSupervisorPrint').textContent = appState.supervisorName;
             document.getElementById('repSupervisorNIPPrint').textContent = `NIP. ${appState.supervisorNIP}`;
 
+            document.getElementById('repKepsekName').textContent = appState.kepsekName ? appState.kepsekName : "( ________________________ )";
+            document.getElementById('repKepsekNIP').textContent = appState.kepsekNIP ? `NIP. ${appState.kepsekNIP}` : "NIP. ........................................";
+
+            const kekuatan = (appState.indicators || []).filter(i => i.capaian === 'Baik').map(i => i.name).join(', ') || 'indikator dasar';
+            const prioritas = (appState.indicators || []).filter(i => i.capaian !== 'Baik').map(i => i.name).join(', ') || 'penguatan berkelanjutan';
+
             document.getElementById('repExecSummary').innerHTML = `
                 Berdasarkan hasil Evaluasi Diri Satuan Pendidikan (EDS) dan analisis Rapor Pendidikan tahun ${appState.evalYear}, 
-                <strong>${appState.schoolName}</strong> memiliki kekuatan pada indikator literasi serta membutuhkan intervensi terstruktur 
-                pada indikator prioritas numerasi, karakter, kualitas pembelajaran, SPAB, dan kecukupan buku pendidikan.
+                <strong>${esc(appState.schoolName)}</strong> memiliki kekuatan pada indikator <em>${esc(kekuatan)}</em>, serta membutuhkan intervensi terstruktur 
+                pada indikator prioritas <em>${esc(prioritas)}</em> guna pemenuhan 8 Standar Nasional Pendidikan (SNP).
             `;
 
-            // Report Tables
             const pBody = document.getElementById('repPriorityBody');
             if (pBody) {
                 pBody.innerHTML = '';
@@ -1598,7 +1920,7 @@
         }
 
         /* ----------------------------------------------------
-           MODAL HANDLERS
+           MODAL HANDLERS (8 SNP, EDIT SCHOOL, NEW SCHOOL, EXCEL AI)
         ---------------------------------------------------- */
         function openSnpDetailModal(snpName) {
             const modal = document.getElementById('snpDetailModal');
@@ -1610,6 +1932,12 @@
             const indBody = document.getElementById('snpModalIndicatorsBody');
             indBody.innerHTML = '';
 
+            const hasKurang = inds.some(i => i.capaian === 'Kurang');
+            const hasSedang = inds.some(i => i.capaian === 'Sedang');
+            const badge = document.getElementById('snpModalBadge');
+            badge.className = `badge ${hasKurang ? 'badge-rose' : (hasSedang ? 'badge-amber' : 'badge-emerald')}`;
+            badge.textContent = hasKurang ? 'Perlu Intervensi' : (hasSedang ? 'Perlu Penguatan' : 'Standar Terpenuhi');
+
             if (inds.length === 0) {
                 indBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#94a3b8;">Belum ada indikator yang terhubung dengan standar ini.</td></tr>';
             } else {
@@ -1617,7 +1945,7 @@
                     indBody.innerHTML += `
                         <tr>
                             <td style="font-weight:700;">${esc(i.code)} - ${esc(i.name)}</td>
-                            <td><span class="badge ${i.capaian === 'Baik' ? 'badge-emerald' : 'badge-amber'}">${esc(i.capaian)}</span></td>
+                            <td><span class="badge ${i.capaian === 'Baik' ? 'badge-emerald' : (i.capaian === 'Kurang' ? 'badge-rose' : 'badge-amber')}">${esc(i.capaian)}</span></td>
                             <td><strong>${i.skor}</strong></td>
                             <td>${esc(i.status)}</td>
                         </tr>
@@ -1628,7 +1956,7 @@
             const reflContent = document.getElementById('snpModalReflectionContent');
             const refls = (appState.reflections || []).filter(r => inds.some(i => r.indicator.includes(i.code)));
             if (refls.length === 0) {
-                reflContent.innerHTML = '<div style="background:#f8fafc; padding:10px; border-radius:6px; color:#059669; font-weight:600;">✓ Standar ini dalam kondisi Baik/Terpenuhi. Tidak memerlukan intervensi program benahi khusus tahun ini.</div>';
+                reflContent.innerHTML = '<div style="background:#f8fafc; padding:10px; border-radius:6px; color:#059669; font-weight:600;">✓ Standar ini dalam kondisi Baik/Terpenuhi atau belum memiliki catatan akar masalah.</div>';
             } else {
                 reflContent.innerHTML = refls.map(r => `
                     <div style="background:#fffbeb; border:1px solid #fde68a; padding:10px; border-radius:6px; margin-bottom:8px;">
@@ -1642,7 +1970,7 @@
             const relRkt = (appState.rkt || []).filter(r => inds.some(i => r.program.toLowerCase().includes(i.name.toLowerCase()) || r.kegiatan.toLowerCase().includes(i.name.toLowerCase())));
             
             if (relRkt.length === 0) {
-                rktBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#94a3b8;">Tidak ada kegiatan benahi khusus untuk standar ini.</td></tr>';
+                rktBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#94a3b8;">Belum ada kegiatan benahi spesifik yang ditautkan.</td></tr>';
             } else {
                 relRkt.forEach(r => {
                     rktBody.innerHTML += `
@@ -1663,7 +1991,87 @@
             document.getElementById('snpDetailModal').classList.remove('open');
         }
 
+        function openEditSchoolModal(npsn) {
+            const sch = schoolsDatabase[npsn];
+            if (!sch) return;
+            document.getElementById('editSchoolTargetNpsn').value = npsn;
+            document.getElementById('editSchoolName').value = sch.schoolName || '';
+            document.getElementById('editSchoolNpsn').value = sch.npsn || '';
+            document.getElementById('editSchoolJenjang').value = sch.jenjang || 'SMP';
+            document.getElementById('editSchoolStatusRapor').value = sch.statusRapor || 'Aktif';
+            document.getElementById('editSchoolKepsek').value = sch.kepsekName || '';
+            document.getElementById('editSchoolKepsekNIP').value = sch.kepsekNIP || '';
+            document.getElementById('editSchoolModal').classList.add('open');
+        }
+
+        function closeEditSchoolModal() {
+            document.getElementById('editSchoolModal').classList.remove('open');
+        }
+
+        function saveEditSchoolBinaan() {
+            const oldNpsn = document.getElementById('editSchoolTargetNpsn').value;
+            const sch = schoolsDatabase[oldNpsn];
+            if (!sch) return;
+
+            const newName = document.getElementById('editSchoolName').value.trim();
+            const newNpsn = document.getElementById('editSchoolNpsn').value.trim();
+            if (!newName || !newNpsn) {
+                alert("Nama Sekolah dan NPSN wajib diisi!");
+                return;
+            }
+
+            sch.schoolName = newName;
+            sch.npsn = newNpsn;
+            sch.jenjang = document.getElementById('editSchoolJenjang').value;
+            sch.statusRapor = document.getElementById('editSchoolStatusRapor').value;
+            sch.kepsekName = document.getElementById('editSchoolKepsek').value.trim();
+            sch.kepsekNIP = document.getElementById('editSchoolKepsekNIP').value.trim();
+
+            if (newNpsn !== oldNpsn) {
+                delete schoolsDatabase[oldNpsn];
+                schoolsDatabase[newNpsn] = sch;
+                if (currentActiveNPSN === oldNpsn) {
+                    currentActiveNPSN = newNpsn;
+                    appState = sch;
+                }
+            }
+
+            persist();
+            closeEditSchoolModal();
+            populateSchoolSelect();
+            syncAllTabsAndUI();
+            showSyncToast(`Data Sekolah ${newName} Berhasil Diperbarui!`);
+        }
+
+        function deleteSchoolBinaanFromModal() {
+            const targetNpsn = document.getElementById('editSchoolTargetNpsn').value;
+            const keys = Object.keys(schoolsDatabase);
+            if (keys.length <= 1) {
+                alert("Minimal harus terdapat 1 sekolah binaan di dalam database.");
+                return;
+            }
+            if (!confirm(`Hapus permanen data sekolah ${schoolsDatabase[targetNpsn].schoolName}?`)) return;
+
+            delete schoolsDatabase[targetNpsn];
+            if (currentActiveNPSN === targetNpsn) {
+                currentActiveNPSN = Object.keys(schoolsDatabase)[0];
+                appState = schoolsDatabase[currentActiveNPSN];
+            }
+
+            persist();
+            closeEditSchoolModal();
+            populateSchoolSelect();
+            syncAllTabsAndUI();
+            showSyncToast("Sekolah Binaan Berhasil Dihapus!");
+        }
+
         function openNewSchoolModal() {
+            if (Object.keys(schoolsDatabase).length >= MAX_SCHOOLS_LIMIT) {
+                alert(`Kapasitas maksimal ${MAX_SCHOOLS_LIMIT} sekolah binaan telah tercapai.`);
+                return;
+            }
+            document.getElementById('newSchoolInputName').value = '';
+            document.getElementById('newSchoolInputNPSN').value = '';
             document.getElementById('newSchoolModal').classList.add('open');
         }
 
@@ -1672,8 +2080,8 @@
         }
 
         function addNewSchoolBinaan() {
-            const name = document.getElementById('newSchoolInputName').value;
-            const npsn = document.getElementById('newSchoolInputNPSN').value;
+            const name = document.getElementById('newSchoolInputName').value.trim();
+            const npsn = document.getElementById('newSchoolInputNPSN').value.trim();
             const jenjang = document.getElementById('newSchoolInputJenjang').value;
 
             if (!name || !npsn) {
@@ -1688,6 +2096,8 @@
                 statusRapor: "Aktif",
                 evalYear: "2026",
                 targetTP: "2026/2027",
+                kepsekName: "",
+                kepsekNIP: "",
                 supervisorName: appState.supervisorName,
                 supervisorNIP: appState.supervisorNIP,
                 supervisorRegion: appState.supervisorRegion,
@@ -1738,40 +2148,102 @@
                     const data = new Uint8Array(e.target.result);
                     const workbook = XLSX.read(data, { type: 'array' });
                     
-                    let detectedName = selectedFileRaw.name.replace(/\.[^/.]+$/, "").replace(/RAPOR-PBD-/gi, "");
-                    let detectedNPSN = "NPSN-" + Math.floor(10000000 + Math.random() * 90000000);
+                    let detectedName = selectedFileRaw.name.replace(/\.[^/.]+$/, "").replace(/RAPOR[-_ ]?PBD[-_ ]?/gi, "").trim();
+                    let detectedNPSN = "";
+                    const extractedMap = new Map();
 
-                    // Auto extract indicators from Excel
-                    const newIndicators = [];
-                    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const jsonRows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                    workbook.SheetNames.forEach(sheetName => {
+                        const sheet = workbook.Sheets[sheetName];
+                        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
 
-                    jsonRows.forEach(row => {
-                        const rowStr = row.join(' ');
-                        if (rowStr.includes('A.1') || rowStr.includes('Literasi')) {
-                            newIndicators.push({ id: "A.1", code: "A.1", name: "Kemampuan Literasi", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Baik", skor: 78.5, change: 1.5, status: "Kekuatan", rankKab: "1-20%", rankNas: "21-40%" });
-                        }
-                        if (rowStr.includes('A.2') || rowStr.includes('Numerasi')) {
-                            newIndicators.push({ id: "A.2", code: "A.2", name: "Kemampuan Numerasi", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Sedang", skor: 62.1, change: -1.0, status: "Perhatian", rankKab: "21-40%", rankNas: "41-60%" });
-                        }
+                        rows.forEach(row => {
+                            const rowStr = row.map(c => String(c).trim()).join(" | ");
+
+                            if (!detectedNPSN) {
+                                const npsnMatch = rowStr.match(/\b(10|20|30|40|50|60|69|70)\d{6}\b/);
+                                if (npsnMatch) detectedNPSN = npsnMatch[0];
+                            }
+
+                            for (let c = 0; c < row.length - 1; c++) {
+                                const cellLabel = String(row[c]).toLowerCase();
+                                if ((cellLabel.includes("nama sekolah") || cellLabel.includes("satuan pendidikan")) && String(row[c+1]).trim().length > 3) {
+                                    detectedName = String(row[c+1]).trim();
+                                }
+                            }
+
+                            for (let c = 0; c < row.length; c++) {
+                                const cellCode = String(row[c]).trim().toUpperCase();
+                                if (/^[A-E]\.\d{1,2}$/.test(cellCode) && !extractedMap.has(cellCode)) {
+                                    let indName = "";
+                                    let skorVal = null;
+                                    let capaianVal = "";
+                                    let changeVal = 0;
+
+                                    for (let k = c + 1; k < Math.min(row.length, c + 8); k++) {
+                                        const valStr = String(row[k]).trim();
+                                        if (!valStr) continue;
+
+                                        if (!indName && valStr.length > 4 && isNaN(parseFloat(valStr))) {
+                                            indName = valStr;
+                                        } else if (skorVal === null && !isNaN(parseFloat(valStr.replace(',', '.')))) {
+                                            const num = parseFloat(valStr.replace(',', '.'));
+                                            if (num >= 0 && num <= 100) skorVal = num;
+                                        } else if (/baik|sedang|kurang/i.test(valStr) && !capaianVal) {
+                                            if (/baik/i.test(valStr)) capaianVal = "Baik";
+                                            else if (/kurang/i.test(valStr)) capaianVal = "Kurang";
+                                            else capaianVal = "Sedang";
+                                        } else if (skorVal !== null && changeVal === 0 && /^[+-]?\d+([.,]\d+)?$/.test(valStr)) {
+                                            const chg = parseFloat(valStr.replace(',', '.'));
+                                            if (chg >= -50 && chg <= 50) changeVal = chg;
+                                        }
+                                    }
+
+                                    const dictInfo = INDICATOR_SNP_DICTIONARY[cellCode] || {
+                                        name: indName || `Indikator ${cellCode}`,
+                                        snp: STANDAR_NASIONAL_PENDIDIKAN[0]
+                                    };
+
+                                    const finalSkor = skorVal !== null ? skorVal : 65.0;
+                                    const finalCapaian = capaianVal || (finalSkor >= 70 ? "Baik" : (finalSkor >= 50 ? "Sedang" : "Kurang"));
+                                    const finalStatus = finalCapaian === "Kurang" ? "Prioritas Utama" : (finalCapaian === "Sedang" ? "Perhatian" : "Kekuatan");
+
+                                    extractedMap.set(cellCode, {
+                                        id: cellCode,
+                                        code: cellCode,
+                                        name: indName || dictInfo.name,
+                                        snp: dictInfo.snp,
+                                        capaian: finalCapaian,
+                                        skor: finalSkor,
+                                        change: changeVal,
+                                        status: finalStatus,
+                                        rankKab: finalCapaian === "Baik" ? "1-20%" : "41-60%",
+                                        rankNas: finalCapaian === "Baik" ? "21-40%" : "41-60%"
+                                    });
+                                }
+                            }
+                        });
                     });
 
+                    if (!detectedNPSN) detectedNPSN = "202" + Math.floor(10000 + Math.random() * 89999);
+                    let newIndicators = Array.from(extractedMap.values());
+
                     if (newIndicators.length === 0) {
-                        newIndicators.push(
-                            { id: "A.1", code: "A.1", name: "Kemampuan Literasi", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Baik", skor: 80.0, change: 2.0, status: "Kekuatan", rankKab: "1-20%", rankNas: "21-40%" },
-                            { id: "A.2", code: "A.2", name: "Kemampuan Numerasi", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Sedang", skor: 64.0, change: -0.5, status: "Perhatian", rankKab: "21-40%", rankNas: "41-60%" },
-                            { id: "D.18", code: "D.18", name: "Kesiapsiagaan Bencana (SPAB)", snp: "6. Standar Sarana & Prasarana", capaian: "Kurang", skor: 45.0, change: -3.0, status: "Prioritas Utama", rankKab: "61-80%", rankNas: "61-80%" },
-                            { id: "E.6", code: "E.6", name: "Ketersediaan & Pengadaan Buku", snp: "6. Standar Sarana & Prasarana", capaian: "Sedang", skor: 55.0, change: -1.0, status: "Perhatian", rankKab: "41-60%", rankNas: "41-60%" }
-                        );
+                        newIndicators = [
+                            { id: "A.1", code: "A.1", name: "Kemampuan Literasi", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Baik", skor: 78.0, change: 1.5, status: "Kekuatan", rankKab: "1-20%", rankNas: "21-40%" },
+                            { id: "A.2", code: "A.2", name: "Kemampuan Numerasi", snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Sedang", skor: 62.0, change: -0.5, status: "Perhatian", rankKab: "21-40%", rankNas: "41-60%" },
+                            { id: "D.1", code: "D.1", name: "Kualitas Pembelajaran", snp: "3. Standar Proses", capaian: "Sedang", skor: 59.5, change: -1.2, status: "Perhatian", rankKab: "41-60%", rankNas: "41-60%" }
+                        ];
                     }
 
                     schoolsDatabase[detectedNPSN] = {
-                        schoolName: detectedName,
+                        schoolName: detectedName || "Satuan Pendidikan Baru",
                         npsn: detectedNPSN,
                         jenjang: appState.jenjang,
                         statusRapor: "Aktif",
                         evalYear: "2026",
                         targetTP: "2026/2027",
+                        kepsekName: "",
+                        kepsekNIP: "",
                         supervisorName: appState.supervisorName,
                         supervisorNIP: appState.supervisorNIP,
                         supervisorRegion: appState.supervisorRegion,
@@ -1793,7 +2265,7 @@
                     closeAiUploadModal();
                     populateSchoolSelect();
                     syncAllTabsAndUI();
-                    showSyncToast(`Berkas Rapor ${detectedName} Berhasil Diimpor & Tersinkronkan!`);
+                    showSyncToast(`Berhasil Mengekstrak ${newIndicators.length} Indikator dari Rapor ${appState.schoolName}!`);
 
                 } catch (err) {
                     alert("Error membaca file Excel: " + err.message);
@@ -1801,16 +2273,6 @@
                 }
             };
             reader.readAsArrayBuffer(selectedFileRaw);
-        }
-
-        function exportAllDataJSON() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(schoolsDatabase, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `BACKUP_SIPBD_MUTU_${new Date().toISOString().slice(0,10)}.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
         }
 
         /* ----------------------------------------------------
