@@ -77,11 +77,56 @@
         .form-control { width: 100%; background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px; font-weight: 600; color: #1e293b; }
         .form-control:focus { outline: none; border-color: #4f46e5; background-color: white; }
         
-        /* Navigation Tabs */
-        .tab-bar { display: flex; overflow-x: auto; border-bottom: 2px solid #e2e8f0; background: white; border-top-left-radius: 12px; border-top-right-radius: 12px; padding: 8px 16px 0; margin-bottom: 20px; }
-        .tab-btn { background: none; border: none; border-bottom: 3px solid transparent; padding: 12px 16px; font-size: 12px; font-weight: 600; color: #64748b; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
-        .tab-btn:hover { color: #1e293b; }
-        .tab-btn.active { border-bottom-color: #4f46e5; color: #4f46e5; }
+        /* Navigation Tabs — Tampil Penuh Multi-Baris Rapi Tanpa Geser */
+        .tab-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        @media (max-width: 960px) {
+            .tab-bar { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 640px) {
+            .tab-bar { grid-template-columns: repeat(2, 1fr); }
+        }
+        .tab-btn {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 6px;
+            transition: all 0.2s;
+            line-height: 1.3;
+        }
+        .tab-btn:hover {
+            background-color: #eef2ff;
+            border-color: #c7d2fe;
+            color: #4338ca;
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #4f46e5, #3730a3);
+            border-color: #4f46e5;
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25);
+        }
+        /* Menjadikan tombol ke-7 melebar proporsional pada layar desktop (4 kolom -> baris 1: 4 item, baris 2: 3 item) */
+        @media (min-width: 961px) {
+            .tab-btn:nth-child(7) { grid-column: span 2; }
+        }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
@@ -421,7 +466,7 @@
             </div>
         </div>
 
-        <!-- NAVIGATION TABS -->
+        <!-- NAVIGATION TABS (TAMPIL PENUH 2 BARIS RAPI TANPA GESER) -->
         <div class="tab-bar no-print">
             <button type="button" onclick="switchTab('tab-ringkasan')" id="btn-tab-ringkasan" class="tab-btn active">📊 Ringkasan Mutu & 8 SNP</button>
             <button type="button" onclick="switchTab('tab-binaan')" id="btn-tab-binaan" class="tab-btn">🏫 Dashboard Sekolah Binaan</button>
@@ -429,7 +474,7 @@
             <button type="button" onclick="switchTab('tab-refleksi')" id="btn-tab-refleksi" class="tab-btn">2. Refleksi & Akar Masalah</button>
             <button type="button" onclick="switchTab('tab-benahi')" id="btn-tab-benahi" class="tab-btn">3. Benahi (RKT & ARKAS)</button>
             <button type="button" onclick="switchTab('tab-supervisi-monev')" id="btn-tab-supervisi-monev" class="tab-btn">4. Supervisi & Monev PBD</button>
-            <button type="button" onclick="switchTab('tab-laporan')" id="btn-tab-laporan" class="tab-btn">📋 Laporan EDS-PBD & Rekap Wilayah</button>
+            <button type="button" onclick="switchTab('tab-laporan')" id="btn-tab-laporan" class="tab-btn">📋 Laporan EDS-PBD & Supervisi</button>
         </div>
 
         <!-- TAB 1: RINGKASAN MUTU & 8 SNP -->
@@ -1133,7 +1178,6 @@
            PRINT HANDLER (COMPATIBLE WITH IFRAMED PREVIEWS)
         ---------------------------------------------------- */
         function handlePrintDocument() {
-            // Pastikan tab laporan ter-render terlebih dahulu sebelum cetak
             renderReportView();
             if (document.getElementById('reportWilayahContainer').style.display === 'block') {
                 renderWilayahReport();
