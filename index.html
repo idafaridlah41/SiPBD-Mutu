@@ -23,19 +23,19 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; }
-        body { background-color: #f8fafc; color: #1e293b; min-height: 100vh; display: flex; flex-direction: column; font-size: calc(14px * var(--ui-scale)); line-height: 1.45; }
+        body { background-color: #f8fafc; color: #1e293b; min-height: 100vh; display: flex; flex-direction: column; font-size: calc(14px * var(--ui-scale)); line-height: 1.45; overflow-x: hidden; }
         
         html { color-scheme: light; } 
         body { padding-bottom: env(safe-area-inset-bottom, 0px); }
         td[contenteditable] { cursor: text; } 
-        td[contenteditable]:hover { background: #eef2ff; outline: 1px dashed #6366f1; } 
+        td[contenteditable]:hover { background: #fffbeb; outline: 1px dashed #f59e0b; } 
         td[contenteditable]:focus { background: #fff; outline: 2px solid #0d9488; }
         
         /* Header & Navigation */
         header { background: linear-gradient(135deg, #0f172a, #1e1b4b); color: white; padding: calc(12px + env(safe-area-inset-top, 0px)) 20px 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 40; }
         .header-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
         .brand { display: flex; align-items: center; gap: 12px; }
-        .brand-icon { background-color: #fbbf24; color: #0f172a; width: 42px; height: 42px; border-radius: 10px; font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .brand-icon { background-color: #f59e0b; color: #0f172a; width: 42px; height: 42px; border-radius: 10px; font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .brand-text h1 { font-size: calc(16px * var(--ui-scale)); font-weight: 800; line-height: 1.2; letter-spacing: 0.5px; }
         .brand-text p { font-size: calc(11px * var(--ui-scale)); color: #94a3b8; }
         
@@ -44,15 +44,15 @@
         .select-group select { background: #0f172a; color: white; border: 1px solid #475569; border-radius: 4px; padding: 4px 8px; font-size: calc(11px * var(--ui-scale)); font-weight: 600; outline: none; }
 
         /* Font Accessibility Switcher */
-        .font-switcher { display: inline-flex; align-items: center; background-color: #1e293b; border: 1px solid #fbbf24; border-radius: 6px; padding: 2px; gap: 2px; }
+        .font-switcher { display: inline-flex; align-items: center; background-color: #1e293b; border: 1px solid #f59e0b; border-radius: 6px; padding: 2px; gap: 2px; }
         .font-switcher-label { font-size: 11px; color: #fbbf24; font-weight: 700; padding: 0 6px; white-space: nowrap; }
         .font-btn { background: transparent; color: #cbd5e1; border: none; border-radius: 4px; padding: 4px 8px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.15s; }
         .font-btn:hover { background: #334155; color: #fff; }
-        .font-btn.active { background: #fbbf24; color: #0f172a; }
+        .font-btn.active { background: #f59e0b; color: #0f172a; }
         
         .btn { padding: 7px 12px; border-radius: 6px; font-size: calc(12px * var(--ui-scale)); font-weight: 600; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; user-select: none; position: relative; }
-        .btn-amber { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #0f172a; }
-        .btn-amber:hover { background: #f59e0b; }
+        .btn-amber { background: linear-gradient(135deg, #f59e0b, #d97706); color: #0f172a; }
+        .btn-amber:hover { background: #d97706; }
         .btn-teal { background-color: #0d9488; color: white; }
         .btn-teal:hover { background-color: #0f766e; }
         .btn-indigo { background-color: #4f46e5; color: white; }
@@ -82,7 +82,7 @@
         .main-container { max-width: 1400px; width: 100%; margin: 20px auto; padding: 0 16px; flex-grow: 1; }
         
         /* Card Layouts */
-        .card { background-color: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .card { background-color: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px; max-width: 100%; overflow: hidden; }
         .grid-5 { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; }
         .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
         .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
@@ -90,11 +90,12 @@
         @media (max-width: 900px) { .grid-2-1 { grid-template-columns: 1fr; } }
 
         /* Form Controls */
+        .form-group { min-width: 0; }
         .form-group label { display: block; font-size: calc(11px * var(--ui-scale)); font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 4px; }
-        .form-control { width: 100%; background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: calc(13px * var(--ui-scale)); font-weight: 600; color: #1e293b; }
+        .form-control { width: 100%; max-width: 100%; background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: calc(13px * var(--ui-scale)); font-weight: 600; color: #1e293b; overflow: hidden; text-overflow: ellipsis; }
         .form-control:focus { outline: none; border-color: #0d9488; background-color: white; }
         
-        /* Navigation Tabs — Tampil Penuh 2 Baris Rapi Tanpa Geser */
+        /* Navigation Tabs */
         .tab-bar {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -169,6 +170,7 @@
         th { background-color: #f1f5f9; color: #334155; font-weight: 700; text-transform: uppercase; padding: 10px 12px; border-bottom: 1px solid #e2e8f0; white-space: nowrap; }
         td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; line-height: 1.45; }
         tr:hover { background-color: #f8fafc; }
+        .nowrap { white-space: nowrap; }
         
         /* Status Badges */
         .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: calc(10px * var(--ui-scale)); font-weight: 700; white-space: nowrap; }
@@ -184,30 +186,49 @@
         .prio-item-snp { font-size: calc(10px * var(--ui-scale)); font-weight: 700; color: #0f766e; }
         .prio-item-desc { font-weight: 600; font-size: calc(12px * var(--ui-scale)); line-height: 1.5; color: #0f172a; }
 
+        /* Report Document Layout (Screen & Print Precision) */
+        .report-sheet { max-width: 960px; margin: 0 auto; padding: 32px; background: #ffffff; }
+        .report-kop { text-align: center; border-bottom: 3px double #0f172a; padding-bottom: 14px; margin-bottom: 20px; }
+        .report-kop h2 { font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; color: #0f172a; }
+        .report-kop h3 { font-size: 13px; font-weight: 700; color: #312e81; text-transform: uppercase; margin-top: 4px; }
+        .report-kop-meta { margin-top: 8px; font-size: 12px; font-weight: 700; color: #1e293b; }
+        .report-kop-sub { margin-top: 2px; font-size: 11px; color: #475569; }
+        .report-section { margin-bottom: 22px; }
+        .report-section-title { font-size: 12.5px; font-weight: 800; border-left: 4px solid #0d9488; padding-left: 8px; text-transform: uppercase; margin-bottom: 8px; color: #0f172a; }
+        .report-table { width: 100%; border-collapse: collapse; border: 1px solid #94a3b8; font-size: 11px; }
+        .report-table th { background-color: #f1f5f9; color: #0f172a; border: 1px solid #94a3b8; padding: 6px 8px; font-size: 10.5px; font-weight: 700; text-transform: uppercase; }
+        .report-table td { border: 1px solid #94a3b8; padding: 6px 8px; font-size: 11px; line-height: 1.4; vertical-align: top; word-break: break-word; }
+        .sig-table { display: table; width: 100%; table-layout: fixed; margin-top: 28px; padding-top: 14px; border-top: 1px solid #cbd5e1; break-inside: avoid; page-break-inside: avoid; }
+        .sig-cell { display: table-cell; width: 33.33%; text-align: center; vertical-align: top; font-size: 11px; padding: 0 6px; }
+        .sig-space { height: 58px; }
+
         /* Modals Overlay & Content */
         .modal-overlay { position: fixed; inset: 0; background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 50; display: none; align-items: center; justify-content: center; padding: 16px; }
         .modal-overlay.open { display: flex !important; }
         .modal-body { background: white; border-radius: 16px; max-width: 750px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); position: relative; font-size: calc(13px * var(--ui-scale)); }
         .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 18px; color: #64748b; cursor: pointer; }
 
-        /* Print Settings — MENGUNCI TAMPILAN CETAK & PREVIEW AGAR TETAP MENGIKUTI ACUAN STANDAR */
+        /* Print Settings — STANDAR CETAK PRESISI A4 */
+        @page {
+            size: A4 portrait;
+            margin: 14mm 14mm 16mm 14mm;
+        }
         @media print {
             :root, html.font-large, html.font-xlarge {
                 --ui-scale: 1 !important;
             }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
             .no-print { display: none !important; }
-            body { background: white !important; color: black !important; font-size: 12px !important; line-height: 1.4 !important; }
+            body { background: white !important; color: black !important; font-size: 11.5px !important; line-height: 1.4 !important; }
             .main-container { margin: 0 !important; padding: 0 !important; max-width: 100% !important; }
-            .card { border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }
-            #reportSingleContainer, #reportClusterContainer { padding: 10px 16px !important; max-width: 100% !important; }
-            #reportSingleContainer h2, #reportClusterContainer h2 { font-size: 16px !important; }
-            #reportSingleContainer h3, #reportClusterContainer h3 { font-size: 14px !important; }
-            #reportSingleContainer h4, #reportClusterContainer h4 { font-size: 12px !important; }
-            #reportSingleContainer p, #reportClusterContainer p { font-size: 11px !important; line-height: 1.5 !important; }
-            table { font-size: 11px !important; }
-            th, td { padding: 6px 8px !important; font-size: 11px !important; line-height: 1.35 !important; }
-            .badge { font-size: 10px !important; padding: 2px 6px !important; }
-            .page-break { page-break-before: always; }
+            .card, .report-sheet { border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; max-width: 100% !important; overflow: visible !important; }
+            thead { display: table-header-group; }
+            tfoot { display: table-row-group; }
+            tr, .sig-table, .report-kop { break-inside: avoid !important; page-break-inside: avoid !important; }
+            .report-section-title { break-after: avoid !important; page-break-after: avoid !important; }
         }
     </style>
 </head>
@@ -244,21 +265,21 @@
                     </select>
                 </div>
 
-                <button type="button" onclick="openAiUploadModal()" class="btn btn-amber" title="Unggah file Excel Rapor Pendidikan sekolah binaan">
+                <button type="button" onclick="openAiUploadModal()" class="btn btn-amber" title="Unggah file Excel Rapor Pendidikan Asli">
                     ✦ Unggah Excel Rapor
                 </button>
-
-                <!-- IMPOR DATA JSON KIRIMAN SEKOLAH (DIRECT OVERLAY AGAR AMAN DI ANDROID/TABLET/WEBVIEW) -->
-                <div class="btn btn-teal file-btn-wrapper" title="Impor file .json kiriman dari Kepala Sekolah / TPS">
+                
+                <!-- TOMBOL DIRECT FILE OVERLAY UNTUK IMPOR JSON SATDIK / BACKUP -->
+                <div class="btn btn-teal file-btn-wrapper" title="Impor data JSON dari Sekolah Binaan atau cadangan Pengawas">
                     <span>📥 Impor JSON Satdik</span>
-                    <input type="file" id="importSatdikJsonInput" onchange="importSatdikJsonFile(event)" accept=".json,application/json">
+                    <input type="file" id="importJsonInput" onchange="importJsonFile(event)" accept=".json,application/json">
                 </div>
 
-                <button type="button" onclick="openClusterModal()" class="btn btn-indigo" title="Kelola Daftar Sekolah Binaan Pengawas">
+                <button type="button" onclick="openSchoolManager()" class="btn btn-indigo" title="Kelola daftar Sekolah Binaan">
                     🏫 Sekolah Binaan (<span id="schoolCountBadge">1</span>)
                 </button>
                 
-                <button type="button" onclick="handlePrintDocument()" class="btn btn-emerald" title="Cetak Laporan Supervisi atau Simpan PDF">
+                <button type="button" onclick="handlePrintDocument()" class="btn btn-emerald" title="Cetak Laporan / Simpan PDF">
                     🖨 Cetak Laporan
                 </button>
             </div>
@@ -269,19 +290,22 @@
     <div class="main-container">
         
         <!-- FLOATING NOTIFICATION TOAST -->
-        <div id="syncToast" style="display:none; position:fixed; bottom:20px; right:20px; z-index:999; background:#0f172a; color:white; border-left:4px solid #10b981; padding:12px 20px; border-radius:8px; box-shadow:0 10px 15px -3px rgba(0,0,0,0.3); font-size:calc(13px * var(--ui-scale)); font-weight:600;">
-            <span style="color:#10b981; margin-right:6px;">✓</span> <span id="syncToastText">Data Rapor & Dokumen PBD Tersimpan!</span>
+        <div id="syncToast" style="display:none; position:fixed; bottom:20px; right:20px; z-index:999; background:#0f172a; color:white; border-left:4px solid #34d399; padding:12px 20px; border-radius:8px; box-shadow:0 10px 15px -3px rgba(0,0,0,0.3); font-size:calc(13px * var(--ui-scale)); font-weight:600;">
+            <span style="color:#34d399; margin-right:6px;">✓</span> <span id="syncToastText">Perubahan Tersimpan!</span>
         </div>
 
         <!-- SCHOOL & SUPERVISOR IDENTITY BANNER -->
         <div class="card no-print">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
-                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                    <span style="font-size:calc(12px * var(--ui-scale)); font-weight:800; color:#1e1b4b; text-transform:uppercase;">🏫 Sekolah Binaan Aktif:</span>
-                    <select id="activeSchoolSwitcher" onchange="switchActiveSchool(this.value)" class="form-control" style="width:auto; min-width:260px; background:#eef2ff; border-color:#c7d2fe; color:#312e81;">
-                    </select>
+            <!-- School Switcher -->
+            <div style="background-color: #eef2ff; border: 1px solid #c7d2fe; border-radius: 8px; padding: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 8px; flex: 1 1 320px; min-width: 0;">
+                    <span style="font-size: calc(12px * var(--ui-scale)); font-weight: 800; color: #312e81; text-transform: uppercase; white-space: nowrap;">🏫 Sekolah Binaan Aktif:</span>
+                    <select id="activeSchoolSwitcher" onchange="switchActiveSchool(this.value)" class="form-control" style="flex: 1 1 auto; min-width: 0; max-width: 100%; border-color: #818cf8; color: #312e81; background: white;"></select>
                 </div>
-                <button type="button" onclick="openClusterModal()" class="btn btn-sm btn-slate">+ Tambah / Kelola Sekolah Binaan</button>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; flex-shrink: 0;">
+                    <button type="button" onclick="exportToFile()" class="btn btn-sm btn-teal" title="Simpan cadangan seluruh sekolah binaan (.json)">💾 Simpan Cadangan (.json)</button>
+                    <button type="button" onclick="openSchoolManager()" class="btn btn-sm btn-slate">+ Tambah / Kelola Sekolah Binaan</button>
+                </div>
             </div>
 
             <div class="grid-5">
@@ -297,8 +321,8 @@
                     <label>Status Keterlaksanaan PBD</label>
                     <select id="statusRapor" onchange="updateSchoolIdentity()" class="form-control">
                         <option value="Sudah PBD & Terverifikasi" selected>Sudah PBD & Terverifikasi</option>
-                        <option value="Dalam Pendampingan">Dalam Pendampingan</option>
-                        <option value="Belum Unggah Rapor">Belum Unggah Rapor</option>
+                        <option value="Dalam Proses Pendampingan">Dalam Proses Pendampingan</option>
+                        <option value="Belum Unggah / Perlu Pembinaan">Belum Unggah / Perlu Pembinaan</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -318,12 +342,12 @@
                     <input type="text" id="supervisorNIP" placeholder="Masukkan NIP Pengawas..." onchange="updateSupervisorIdentity()" class="form-control" style="background-color: #eef2ff;">
                 </div>
                 <div class="form-group">
-                    <label style="color: #0f766e;">Nama Kepala Sekolah & Gelar</label>
-                    <input type="text" id="kepsekName" placeholder="Nama Kepala Sekolah Aktif..." onchange="updateSchoolIdentity()" class="form-control" style="background-color: #f0fdfa;">
+                    <label style="color: #065f46;">Nama Kepala Sekolah & Gelar</label>
+                    <input type="text" id="kepsekName" placeholder="Nama Kepala Sekolah..." onchange="updateSchoolIdentity()" class="form-control" style="background-color: #ecfdf5;">
                 </div>
                 <div class="form-group">
-                    <label style="color: #0f766e;">NIP Kepala Sekolah</label>
-                    <input type="text" id="kepsekNIP" placeholder="NIP Kepala Sekolah..." onchange="updateSchoolIdentity()" class="form-control" style="background-color: #f0fdfa;">
+                    <label style="color: #065f46;">NIP Kepala Sekolah</label>
+                    <input type="text" id="kepsekNIP" placeholder="NIP Kepala Sekolah..." onchange="updateSchoolIdentity()" class="form-control" style="background-color: #ecfdf5;">
                 </div>
             </div>
         </div>
@@ -335,8 +359,8 @@
                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
                     <div style="width: 40px; height: 40px; border-radius: 10px; background: #fef3c7; color: #b45309; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold;">✦</div>
                     <div>
-                        <h3 class="section-heading">Pemindai AI Rapor Pendidikan</h3>
-                        <p class="section-subtext">Otomatis membaca Nama Sekolah, NPSN, dan Skor Indikator sesuai jenjang (<strong id="modalJenjangLabel">SMP</strong>) dari file Excel Rapor Pendidikan resmi.</p>
+                        <h3 class="section-heading">Pemindai AI File Rapor Pendidikan</h3>
+                        <p class="section-subtext">Otomatis memetakan Kode & Kalimat Lengkap Indikator sesuai jenjang sekolah (<strong id="modalJenjangLabel">SMP</strong>) ke 8 SNP & ARKAS.</p>
                     </div>
                 </div>
 
@@ -353,7 +377,7 @@
                 </div>
 
                 <div id="aiProcessingState" style="display: none; text-align: center; padding: 12px;">
-                    <p class="section-subtext" style="font-weight: 700; color: #0f766e;">AI sedang mengekstrak & memetakan Rapor Pendidikan ke 8 SNP & RKAS Tahunan...</p>
+                    <p class="section-subtext" style="font-weight: 700; color: #0f766e;">AI sedang mengekstrak Rapor Pendidikan ke 8 SNP & ARKAS...</p>
                 </div>
 
                 <div style="display: flex; justify-content: flex-end; gap: 8px;">
@@ -363,42 +387,36 @@
             </div>
         </div>
 
-        <!-- MODAL SEKOLAH BINAAN PENGAWAS (CLUSTER MANAGEMENT + IMPOR JSON SATDIK) -->
-        <div id="clusterModal" class="modal-overlay">
-            <div class="modal-body" style="max-width: 820px;">
-                <button type="button" onclick="closeClusterModal()" class="modal-close">✕</button>
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
-                    <div>
-                        <h3 class="section-heading">🏫 Manajemen Sekolah Binaan Pengawas</h3>
-                        <p class="section-subtext">Pilih sekolah untuk supervisi individual, impor berkas `.json` kiriman Satdik, atau rekapitulasi laporan seluruh wilayah binaan.</p>
-                    </div>
-                    <div class="btn btn-teal file-btn-wrapper" title="Impor berkas .json kiriman dari aplikasi SIPBD-MUTU SATDIK">
-                        <span>📥 Impor JSON dari Satdik</span>
-                        <input type="file" onchange="importSatdikJsonFile(event)" accept=".json,application/json">
-                    </div>
+        <!-- MODAL SCHOOL MANAGER (MULTI-SEKOLAH BINAAN) -->
+        <div id="schoolManagerModal" class="modal-overlay">
+            <div class="modal-body" style="max-width: 720px;">
+                <button type="button" onclick="closeSchoolManager()" class="modal-close">✕</button>
+                <div style="margin-bottom: 16px;">
+                    <h3 class="section-heading">🏫 Manajemen Sekolah Binaan Pengawas</h3>
+                    <p class="section-subtext">Tambah, kelola, atau impor berkas data (.json) dari Satuan Pendidikan Binaan.</p>
                 </div>
-                
-                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; margin-bottom: 16px;" class="grid-4">
+
+                <div style="background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 16px;" class="grid-4">
                     <div class="form-group">
                         <label>Nama Sekolah Baru</label>
-                        <input type="text" id="newSchoolName" placeholder="Contoh: SMPN 1 Tarogong" class="form-control">
+                        <input type="text" id="newSchName" placeholder="Contoh: SMPN 1 Garut" class="form-control" style="background: white;">
                     </div>
                     <div class="form-group">
                         <label>NPSN</label>
-                        <input type="text" id="newSchoolNpsn" placeholder="20209xxx" class="form-control">
+                        <input type="text" id="newSchNPSN" placeholder="8 Digit NPSN" class="form-control" style="background: white;">
                     </div>
                     <div class="form-group">
                         <label>Jenjang</label>
-                        <select id="newSchoolJenjang" class="form-control">
-                            <option value="SMP" selected>SMP</option>
-                            <option value="SD">SD</option>
+                        <select id="newSchJenjang" class="form-control" style="background: white;">
+                            <option value="SMP">SMP</option>
                             <option value="PAUD">PAUD</option>
+                            <option value="SD">SD</option>
                             <option value="SMA">SMA</option>
                             <option value="SMK">SMK</option>
                         </select>
                     </div>
                     <div style="display: flex; align-items: flex-end;">
-                        <button type="button" onclick="addNewSchoolToCluster()" class="btn btn-indigo" style="width: 100%; justify-content: center;">+ Tambah Sekolah</button>
+                        <button type="button" onclick="addNewSchoolBinaan()" class="btn btn-teal" style="width: 100%; justify-content: center;">+ Tambah Sekolah</button>
                     </div>
                 </div>
 
@@ -406,20 +424,15 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Satuan Pendidikan</th>
+                                <th>Nama Sekolah Binaan</th>
                                 <th>NPSN</th>
                                 <th>Jenjang</th>
-                                <th>Status PBD</th>
-                                <th>Aksi</th>
+                                <th>Status</th>
+                                <th style="text-align: center;">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="clusterSchoolListBody"></tbody>
+                        <tbody id="schoolListTableBody"></tbody>
                     </table>
-                </div>
-
-                <div style="display: flex; justify-content: space-between; margin-top: 20px; border-top: 1px solid #e2e8f0; padding-top: 16px; flex-wrap:wrap; gap:8px;">
-                    <button type="button" onclick="switchTab('tab-laporan'); showClusterReport(); closeClusterModal();" class="btn btn-amber">📋 Lihat Rekap Laporan Wilayah Binaan</button>
-                    <button type="button" onclick="closeClusterModal()" class="btn btn-slate">Tutup</button>
                 </div>
             </div>
         </div>
@@ -452,12 +465,12 @@
                     </div>
 
                     <div>
-                        <h4 style="font-size: calc(13px * var(--ui-scale)); font-weight: 700; color: #475569; margin-bottom: 8px;">2. Akar Masalah & Hasil Refleksi</h4>
+                        <h4 style="font-size: calc(13px * var(--ui-scale)); font-weight: 700; color: #475569; margin-bottom: 8px;">2. Akar Masalah & Hasil Refleksi Sekolah</h4>
                         <div id="snpModalReflectionContent" class="section-subtext" style="color: #334155;"></div>
                     </div>
 
                     <div>
-                        <h4 style="font-size: calc(13px * var(--ui-scale)); font-weight: 700; color: #475569; margin-bottom: 8px;">3. Program Benahi (RKT) Sekolah</h4>
+                        <h4 style="font-size: calc(13px * var(--ui-scale)); font-weight: 700; color: #475569; margin-bottom: 8px;">3. Rekomendasi Program Benahi (RKT)</h4>
                         <div class="table-responsive">
                             <table>
                                 <thead>
@@ -480,13 +493,13 @@
             </div>
         </div>
 
-        <!-- NAVIGATION TABS (TAMPIL PENUH 2 BARIS RAPI TANPA GESER) -->
+        <!-- NAVIGATION TABS -->
         <div class="tab-bar no-print">
             <button type="button" onclick="switchTab('tab-ringkasan')" id="btn-tab-ringkasan" class="tab-btn active">📊 Dasbor Eksekutif</button>
             <button type="button" onclick="switchTab('tab-identifikasi')" id="btn-tab-identifikasi" class="tab-btn">1. Identifikasi & 8 SNP</button>
             <button type="button" onclick="switchTab('tab-refleksi')" id="btn-tab-refleksi" class="tab-btn">2. Refleksi & Akar Masalah</button>
             <button type="button" onclick="switchTab('tab-benahi')" id="btn-tab-benahi" class="tab-btn">3. Benahi (RKT & ARKAS)</button>
-            <button type="button" onclick="switchTab('tab-supervisi-monev')" id="btn-tab-supervisi-monev" class="tab-btn">4. Supervisi & Monev</button>
+            <button type="button" onclick="switchTab('tab-supervisi')" id="btn-tab-supervisi" class="tab-btn">4. Supervisi & Monev</button>
             <button type="button" onclick="switchTab('tab-laporan')" id="btn-tab-laporan" class="tab-btn">📋 Dokumen Laporan</button>
         </div>
 
@@ -522,9 +535,9 @@
 
                 <div class="stat-card">
                     <div>
-                        <div class="stat-title">Progres Monev Supervisi</div>
+                        <div class="stat-title">Keterlaksanaan RKT Binaan</div>
                         <div id="statMonevProgress" class="stat-value" style="color: #0d9488;">0%</div>
-                        <div class="stat-sub">Keterlaksanaan RKT binaan</div>
+                        <div class="stat-sub">Progres verifikasi pengawas</div>
                     </div>
                     <div class="stat-icon" style="background: #ccfbf1; color: #0d9488;">↻</div>
                 </div>
@@ -561,7 +574,7 @@
                 <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
                     <div>
                         <h3 class="section-heading" style="margin-bottom: 8px; color: #dc2626;">🎯 Indikator Prioritas Pembenahan</h3>
-                        <p class="section-subtext" style="margin-bottom: 12px;">Indikator yang direkomendasikan masuk ke dalam RKT & RKAS satuan pendidikan:</p>
+                        <p class="section-subtext" style="margin-bottom: 12px;">Indikator yang direkomendasikan masuk ke dalam RKT & RKAS sekolah:</p>
                         <div id="priorityListDashboard" style="display: flex; flex-direction: column; gap: 8px;"></div>
                     </div>
                     <button type="button" onclick="switchTab('tab-refleksi')" class="btn btn-teal" style="width: 100%; margin-top: 16px; justify-content: center;">
@@ -578,13 +591,13 @@
                     <div>
                         <h3 class="section-heading">Tahap 1: Identifikasi Capaian Rapor Pendidikan & Pemetaan 8 SNP</h3>
                         <p class="section-subtext">Klik sel pada tabel untuk menyunting langsung skor, label capaian, atau pemetaan standar.</p>
-                        <div style="margin-top: 6px; display: inline-flex; align-items: center; gap: 6px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 4px 10px; border-radius: 6px; font-size: calc(11px * var(--ui-scale)); font-weight: 700;">
-                            <span>🏫 Sumber Data Sekolah Binaan:</span>
+                        <div style="margin-top: 6px; display: inline-flex; align-items: center; gap: 6px; background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 4px 10px; border-radius: 6px; font-size: calc(11px * var(--ui-scale)); font-weight: 700;">
+                            <span>📊 Sumber Data Aktif:</span>
                             <span id="dataSourceBadgeText">SMPN 3 Tarogong Kidul</span>
                         </div>
                     </div>
                     <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                        <button type="button" onclick="cleanNonJenjangIndicators()" class="btn btn-slate" title="Hapus indikator SMK jika jenjang sekolah aktif adalah SMP/SD/PAUD/SMA">🧹 Bersihkan Indikator Non-Jenjang</button>
+                        <button type="button" onclick="cleanNonJenjangIndicators()" class="btn btn-slate" title="Hapus indikator SMK jika jenjang sekolah binaan adalah SMP/SD/PAUD/SMA">🧹 Bersihkan Indikator Non-Jenjang</button>
                         <button type="button" onclick="addNewIndicatorRow()" class="btn btn-teal">+ Tambah Indikator</button>
                     </div>
                 </div>
@@ -616,7 +629,7 @@
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
                     <div>
-                        <h3 class="section-heading">Tahap 2: Refleksi & Identifikasi Akar Masalah</h3>
+                        <h3 class="section-heading">Tahap 2: Refleksi & Identifikasi Akar Masalah Bersama Pengawas</h3>
                         <p class="section-subtext">Petakan temuan fakta rapor dengan akar masalah subindikator serta bukti validasi lapangan.</p>
                     </div>
                     <div style="display:flex; gap:8px;">
@@ -648,7 +661,7 @@
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
                     <div>
-                        <h3 class="section-heading">Tahap 3: Rencana Kerja Tahunan (RKT) Satuan Pendidikan — 12 Bulan</h3>
+                        <h3 class="section-heading">Tahap 3: Rekomendasi Rencana Kerja Tahunan (RKT) — 12 Bulan</h3>
                         <p class="section-subtext">Program kerja tahunan mencakup pembenahan indikator prioritas rapor serta dukungan rutin guru/tendik dan operasional sekolah selama 1 tahun penuh (12 bulan).</p>
                     </div>
                     <div style="display:flex; gap:8px;">
@@ -678,7 +691,7 @@
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
                     <div>
-                        <h3 class="section-heading">Tahap 4: Rancangan Kegiatan dan Anggaran Sekolah (RKAS / ARKAS) — 1 Tahun Anggaran</h3>
+                        <h3 class="section-heading">Tahap 4: Rekomendasi Rancangan Kegiatan dan Anggaran Sekolah (RKAS / ARKAS) — 1 Tahun Anggaran</h3>
                         <p class="section-subtext">Tersinkronisasi otomatis dengan RKT (termasuk <strong>Honorarium Rutin 12 Bulan</strong> Non-ASN/Honor Murni & <strong>Honor Narasumber IHT</strong>) serta mematuhi <strong>Permendikdasmen No. 8 Tahun 2026</strong>.</p>
                     </div>
                     <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -761,7 +774,7 @@
                         <tfoot>
                             <tr style="background: #f8fafc; font-weight: bold;">
                                 <td colspan="7" style="text-align: right; text-transform: uppercase;">Total Rencana Anggaran Tahunan (12 Bulan):</td>
-                                <td id="arkasTotalSum" style="color: #0d9488; font-size: calc(14px * var(--ui-scale));">Rp 0</td>
+                                <td id="arkasTotalSum" class="nowrap" style="color: #0d9488; font-size: calc(14px * var(--ui-scale));">Rp 0</td>
                                 <td></td>
                             </tr>
                         </tfoot>
@@ -771,12 +784,12 @@
         </div>
 
         <!-- TAB 5: SUPERVISI & MONEV -->
-        <div id="tab-supervisi-monev" class="tab-content">
+        <div id="tab-supervisi" class="tab-content">
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
                     <div>
-                        <h3 class="section-heading">📋 Instrumen Supervisi & Monev Keterlaksanaan RKT oleh Pengawas</h3>
-                        <p class="section-subtext">Catatan hasil pendampingan, monitoring bukti fisik, dan tindak lanjut pembinaan satuan pendidikan.</p>
+                        <h3 class="section-heading">📋 Instrumen Monitoring, Evaluasi & Pendampingan Pengawas</h3>
+                        <p class="section-subtext">Verifikasi keterlaksanaan program RKT, pemeriksaan bukti fisik, dan catatan pembinaan lapangan.</p>
                     </div>
                     <button type="button" onclick="syncMonevFromRKT()" class="btn btn-amber">↻ Sinkronkan dari RKT</button>
                 </div>
@@ -789,8 +802,8 @@
                                 <th>Kegiatan Benahi Konkret</th>
                                 <th>Target Terukur</th>
                                 <th>Status Pelaksanaan</th>
-                                <th>Bukti Fisik / Portofolio</th>
-                                <th>Catatan Supervisi Pengawas</th>
+                                <th>Bukti Fisik Terverifikasi</th>
+                                <th>Catatan Pendampingan Pengawas</th>
                                 <th>Rencana Tindak Lanjut (RTL)</th>
                             </tr>
                         </thead>
@@ -802,141 +815,146 @@
 
         <!-- TAB 6: DOKUMEN LAPORAN -->
         <div id="tab-laporan" class="tab-content">
-            <div class="card no-print" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:#f8fafc;">
-                <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                    <button type="button" onclick="showSingleSchoolReport()" id="btnRepSingle" class="btn btn-teal">📄 Laporan Sekolah Individual</button>
-                    <button type="button" onclick="showClusterReport()" id="btnRepCluster" class="btn btn-slate">📊 Rekap Wilayah Binaan Pengawas</button>
+            <!-- Report Sub-Mode Toggle -->
+            <div class="card no-print" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; background: #f8fafc;">
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                    <button type="button" onclick="switchTab('tab-ringkasan')" class="btn btn-slate">← Kembali ke Dasbor</button>
+                    <button type="button" id="btnRepSingle" onclick="setReportMode('single')" class="btn btn-teal">📋 Laporan Sekolah Individual</button>
+                    <button type="button" id="btnRepAggregate" onclick="setReportMode('aggregate')" class="btn btn-slate">📊 Rekap Wilayah Binaan Pengawas</button>
                 </div>
                 <button type="button" onclick="handlePrintDocument()" class="btn btn-emerald">🖨 Cetak / Simpan PDF</button>
             </div>
 
-            <!-- SINGLE SCHOOL REPORT CONTAINER -->
-            <div id="reportSingleContainer" class="card" style="max-width: 950px; margin: 0 auto; padding: 32px;">
-                <div style="text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 16px; margin-bottom: 20px;">
-                    <h2 style="font-size: 18px; font-weight: 800; text-transform: uppercase;">LAPORAN HASIL SUPERVISI & EVALUASI PERENCANAAN BERBASIS DATA (PBD)</h2>
-                    <h3 style="font-size: 14px; font-weight: 700; color: #312e81; text-transform: uppercase; margin-top: 4px;">PENDAMPINGAN PENYUSUNAN RKT & RKAS TERINTEGRASI 8 SNP</h3>
-                    <p style="font-size: 12px; margin-top: 8px; font-weight: 700;"><span id="repSchool">SMPN 3 Tarogong Kidul</span> (<span id="repSchoolStatusBadge">Negeri</span>) | NPSN: <span id="repNPSN">20209354</span> | Jenjang: <span id="repJenjang">SMP</span></p>
-                    <p style="font-size: 11px; color: #64748b;">Tahun Rapor: <span id="repYear">2026</span> | Tahun Pelajaran Sasaran: <span id="repTarget">2026/2027</span></p>
-                </div>
-
-                <div style="margin-bottom: 24px;">
-                    <h4 style="font-size: 13px; font-weight: 700; border-left: 4px solid #0d9488; padding-left: 8px; text-transform: uppercase; margin-bottom: 8px;">BAB I. RINGKASAN EKSEKUTIF PROFIL MUTU & 8 SNP</h4>
-                    <p id="repExecSummary" style="font-size: 12px; line-height: 1.6; text-align: justify; color: #334155;"></p>
-                </div>
-
-                <div style="margin-bottom: 24px;">
-                    <h4 style="font-size: 13px; font-weight: 700; border-left: 4px solid #0d9488; padding-left: 8px; text-transform: uppercase; margin-bottom: 8px;">BAB II. ANALISIS REFLEKSI & AKAR MASALAH PRIORITAS</h4>
-                    <div class="table-responsive">
-                        <table style="border: 1px solid #cbd5e1; font-size: 12px;">
-                            <thead>
-                                <tr>
-                                    <th style="border: 1px solid #cbd5e1;">No</th>
-                                    <th style="border: 1px solid #cbd5e1;">Indikator Prioritas</th>
-                                    <th style="border: 1px solid #cbd5e1;">Temuan Data (Fakta)</th>
-                                    <th style="border: 1px solid #cbd5e1;">Akar Masalah Utama</th>
-                                    <th style="border: 1px solid #cbd5e1;">Dugaan Penyebab</th>
-                                    <th style="border: 1px solid #cbd5e1;">Bukti Validasi Lapangan</th>
-                                </tr>
-                            </thead>
-                            <tbody id="repPriorityBody"></tbody>
-                        </table>
+            <!-- 6A. SINGLE SCHOOL REPORT -->
+            <div id="reportSingleContainer" class="card report-sheet">
+                <div class="report-kop">
+                    <h2>LAPORAN HASIL SUPERVISI & EVALUASI PERENCANAAN BERBASIS DATA (PBD)</h2>
+                    <h3>PENDAMPINGAN PENYUSUNAN RKT & RKAS TERINTEGRASI 8 SNP</h3>
+                    <div class="report-kop-meta">
+                        <span id="repSchool">SMPN 3 Tarogong Kidul</span> (<span id="repSchoolStatusBadge">Negeri</span>) &nbsp;|&nbsp; NPSN: <span id="repNPSN">20209354</span> &nbsp;|&nbsp; Jenjang: <span id="repJenjang">SMP</span>
+                    </div>
+                    <div class="report-kop-sub">
+                        Tahun Rapor: <span id="repYear">2026</span> &nbsp;|&nbsp; Tahun Pelajaran Sasaran: <span id="repTarget">2026/2027</span>
                     </div>
                 </div>
 
-                <div style="margin-bottom: 24px;">
-                    <h4 style="font-size: 13px; font-weight: 700; border-left: 4px solid #0d9488; padding-left: 8px; text-transform: uppercase; margin-bottom: 8px;">BAB III. REKOMENDASI RENCANA KERJA TAHUNAN (RKT) — 12 BULAN</h4>
-                    <div class="table-responsive">
-                        <table style="border: 1px solid #cbd5e1; font-size: 12px;">
-                            <thead>
-                                <tr>
-                                    <th style="border: 1px solid #cbd5e1;">Bidang / SNP</th>
-                                    <th style="border: 1px solid #cbd5e1;">Program Benahi</th>
-                                    <th style="border: 1px solid #cbd5e1;">Kegiatan Konkret</th>
-                                    <th style="border: 1px solid #cbd5e1;">PJ</th>
-                                    <th style="border: 1px solid #cbd5e1;">Target Terukur</th>
-                                </tr>
-                            </thead>
-                            <tbody id="repRktBody"></tbody>
-                        </table>
-                    </div>
+                <div class="report-section">
+                    <h4 class="report-section-title">BAB I. RINGKASAN EKSEKUTIF PROFIL MUTU & 8 SNP</h4>
+                    <p id="repExecSummary" style="font-size: 11.5px; line-height: 1.6; text-align: justify; color: #1e293b;"></p>
                 </div>
 
-                <div style="margin-bottom: 24px;">
-                    <h4 style="font-size: 13px; font-weight: 700; border-left: 4px solid #0d9488; padding-left: 8px; text-transform: uppercase; margin-bottom: 8px;">BAB IV. REKOMENDASI ANGGARAN PBD & OPERASIONAL TAHUNAN (RKAS / ARKAS)</h4>
-                    <div class="table-responsive">
-                        <table style="border: 1px solid #cbd5e1; font-size: 12px;">
-                            <thead>
-                                <tr>
-                                    <th style="border: 1px solid #cbd5e1;">Kegiatan Benahi</th>
-                                    <th style="border: 1px solid #cbd5e1;">Kode ARKAS</th>
-                                    <th style="border: 1px solid #cbd5e1;">Uraian Belanja</th>
-                                    <th style="border: 1px solid #cbd5e1; text-align:center;">Vol</th>
-                                    <th style="border: 1px solid #cbd5e1; text-align:right;">Jumlah (Rp)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="repArkasBody"></tbody>
-                        </table>
-                    </div>
+                <div class="report-section">
+                    <h4 class="report-section-title">BAB II. ANALISIS REFLEKSI & AKAR MASALAH PRIORITAS</h4>
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 30px; text-align: center;">No</th>
+                                <th style="width: 22%;">Indikator Prioritas</th>
+                                <th style="width: 15%;">Temuan Data (Fakta)</th>
+                                <th style="width: 18%;">Akar Masalah Utama</th>
+                                <th style="width: 24%;">Dugaan Penyebab</th>
+                                <th style="width: 18%;">Bukti Validasi Lapangan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="repPriorityBody"></tbody>
+                    </table>
                 </div>
 
-                <!-- Signatures -->
-                <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; font-size: 11px;">
-                    <div>
-                        <p style="color: #64748b;">Mengetahui,</p>
-                        <p style="font-weight: 700; margin-top: 4px;">Ketua Komite Sekolah</p>
-                        <div style="height: 60px;"></div>
+                <div class="report-section">
+                    <h4 class="report-section-title">BAB III. REKOMENDASI RENCANA KERJA TAHUNAN (RKT) — 12 BULAN</h4>
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 18%;">Bidang / SNP</th>
+                                <th style="width: 22%;">Program Benahi</th>
+                                <th style="width: 26%;">Kegiatan Konkret</th>
+                                <th style="width: 14%;">PJ</th>
+                                <th style="width: 20%;">Target Terukur</th>
+                            </tr>
+                        </thead>
+                        <tbody id="repRktBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="report-section">
+                    <h4 class="report-section-title">BAB IV. REKOMENDASI ANGGARAN PBD & OPERASIONAL TAHUNAN (RKAS / ARKAS)</h4>
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 28%;">Kegiatan Benahi</th>
+                                <th style="width: 11%; text-align: center;">Kode ARKAS</th>
+                                <th style="width: 31%;">Uraian Belanja</th>
+                                <th style="width: 14%; text-align: center;">Vol</th>
+                                <th style="width: 16%; text-align: right;">Jumlah (Rp)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="repArkasBody"></tbody>
+                    </table>
+                </div>
+
+                <!-- Signatures (Table Layout Anti-Terbelah saat Cetak PDF) -->
+                <div class="sig-table">
+                    <div class="sig-cell">
+                        <p style="color: #475569;">Mengetahui,</p>
+                        <p style="font-weight: 700; margin-top: 3px;">Ketua Komite Sekolah</p>
+                        <div class="sig-space"></div>
                         <p style="font-weight: 700; text-decoration: underline;">( ________________________ )</p>
                     </div>
-                    <div>
-                        <p style="color: #64748b;">Kepala Satuan Pendidikan,</p>
-                        <p style="font-weight: 700; margin-top: 4px;">Pelaksana Program</p>
-                        <div style="height: 60px;"></div>
+                    <div class="sig-cell">
+                        <p style="color: #475569;">Pelaksana Program</p>
+                        <p style="font-weight: 700; color: #065f46; margin-top: 3px;">Kepala Satuan Pendidikan,</p>
+                        <div class="sig-space"></div>
                         <p id="repKepsekName" style="font-weight: 700; text-decoration: underline;">( ________________________ )</p>
-                        <p id="repKepsekNIP" style="color: #64748b;">NIP. ........................................</p>
+                        <p id="repKepsekNIP" style="color: #475569; margin-top: 2px;">NIP. ........................................</p>
                     </div>
-                    <div>
-                        <p style="color: #64748b;">Diverifikasi dan Disetujui,</p>
-                        <p style="font-weight: 700; color: #312e81; margin-top: 4px;">Pengawas Sekolah Pembina</p>
-                        <div style="height: 60px;"></div>
-                        <p id="repSupervisorPrint" style="font-weight: 700; text-decoration: underline;">Ida Faridlah Sulaeman</p>
-                        <p id="repSupervisorNIPPrint" style="color: #64748b;">Pembina / Pengawas Satdik</p>
+                    <div class="sig-cell">
+                        <p style="color: #475569;">Diverifikasi dan Disetujui,</p>
+                        <p style="font-weight: 700; color: #312e81; margin-top: 3px;">Pengawas Sekolah Pembina</p>
+                        <div class="sig-space"></div>
+                        <p id="repSupervisorName" style="font-weight: 700; text-decoration: underline;">Ida Faridlah Sulaeman</p>
+                        <p id="repSupervisorNIP" style="color: #475569; margin-top: 2px;">NIP. ........................................</p>
                     </div>
                 </div>
             </div>
 
-            <!-- CLUSTER SUPERVISOR REPORT CONTAINER -->
-            <div id="reportClusterContainer" class="card" style="max-width: 950px; margin: 0 auto; padding: 32px; display: none;">
-                <div style="text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 16px; margin-bottom: 20px;">
-                    <h2 style="font-size: 18px; font-weight: 800; text-transform: uppercase;">LAPORAN REKAPITULASI PENDAMPINGAN PBD SEKOLAH BINAAN</h2>
-                    <h3 style="font-size: 14px; font-weight: 700; color: #312e81; text-transform: uppercase; margin-top: 4px;">PENGAWAS SEKOLAH PEMBINA WILAYAH</h3>
-                    <p style="font-size: 12px; margin-top: 8px; font-weight: 700;">Pengawas Pembina: <span id="repClusterSup">Ida Faridlah Sulaeman</span> | Tahun Pelajaran: <span id="repClusterTP">2026/2027</span></p>
+            <!-- 6B. AGGREGATE REPORT (REKAP WILAYAH BINAAN PENGAWAS) -->
+            <div id="reportAggregateContainer" class="card report-sheet" style="display: none;">
+                <div class="report-kop">
+                    <h2>REKAPITULASI CAPAIAN MUTU & PERENCANAAN BERBASIS DATA (PBD)</h2>
+                    <h3>WILAYAH BINAAN PENGAWAS SEKOLAH PEMBINA</h3>
+                    <div class="report-kop-meta">
+                        Pengawas Pembina: <span id="aggSupervisorName">Ida Faridlah Sulaeman</span> &nbsp;|&nbsp; Total Binaan: <span id="aggTotalSchools">1</span> Sekolah
+                    </div>
                 </div>
 
-                <div class="table-responsive">
-                    <table style="border: 1px solid #cbd5e1; font-size: 12px;">
+                <div class="report-section">
+                    <h4 class="report-section-title">TABEL REKAPITULASI PROFIL & ANGGARAN PBD SEKOLAH BINAAN</h4>
+                    <table class="report-table">
                         <thead>
                             <tr>
-                                <th style="border: 1px solid #cbd5e1;">No</th>
-                                <th style="border: 1px solid #cbd5e1;">Satuan Pendidikan</th>
-                                <th style="border: 1px solid #cbd5e1;">NPSN</th>
-                                <th style="border: 1px solid #cbd5e1;">Jenjang</th>
-                                <th style="border: 1px solid #cbd5e1;">Status PBD</th>
-                                <th style="border: 1px solid #cbd5e1;">Rerata Skor</th>
-                                <th style="border: 1px solid #cbd5e1;">Indikator Prioritas</th>
-                                <th style="border: 1px solid #cbd5e1;">Total Anggaran Tahunan</th>
+                                <th style="text-align: center;">No</th>
+                                <th>Satuan Pendidikan</th>
+                                <th style="text-align: center;">NPSN</th>
+                                <th style="text-align: center;">Jenjang</th>
+                                <th style="text-align: center;">Rerata Skor</th>
+                                <th style="text-align: center;">Indikator Prioritas</th>
+                                <th style="text-align: right;">Total Anggaran PBD</th>
+                                <th style="text-align: center;">Status</th>
                             </tr>
                         </thead>
-                        <tbody id="repClusterBody"></tbody>
+                        <tbody id="aggSchoolsTableBody"></tbody>
                     </table>
                 </div>
 
-                <div style="margin-top: 40px; display: flex; justify-content: flex-end; text-align: center; font-size: 11px;">
-                    <div style="width: 260px;">
-                        <p style="color: #64748b;">Disusun oleh,</p>
-                        <p style="font-weight: 700; color: #312e81; margin-top: 4px;">Pengawas Sekolah Pembina</p>
-                        <div style="height: 60px;"></div>
-                        <p id="repClusterSupSign" style="font-weight: 700; text-decoration: underline;">Ida Faridlah Sulaeman</p>
-                        <p id="repClusterSupNip" style="color: #64748b;">NIP. ........................................</p>
+                <div class="sig-table">
+                    <div class="sig-cell"></div>
+                    <div class="sig-cell"></div>
+                    <div class="sig-cell">
+                        <p style="color: #475569;">Disusun oleh,</p>
+                        <p style="font-weight: 700; color: #312e81; margin-top: 3px;">Pengawas Sekolah Pembina</p>
+                        <div class="sig-space"></div>
+                        <p id="aggSigSupName" style="font-weight: 700; text-decoration: underline;">Ida Faridlah Sulaeman</p>
+                        <p id="aggSigSupNIP" style="color: #475569; margin-top: 2px;">NIP. ........................................</p>
                     </div>
                 </div>
             </div>
@@ -947,8 +965,8 @@
     <!-- FOOTER -->
     <footer class="no-print" style="background-color: #0f172a; color: #94a3b8; font-size: calc(11px * var(--ui-scale)); padding: 16px 0; border-top: 1px solid #1e293b;">
         <div style="max-width: 1400px; margin: 0 auto; padding: 0 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-            <p>© 2026 SIPBD-MUTU 8 SNP PRO — Sistem Informasi Supervisi & Perencanaan Berbasis Data Pengawas Sekolah</p>
-            <p>Pengembang: <strong style="color: #fbbf24;">IFS</strong></p>
+            <p>© 2026 SIPBD-MUTU 8 SNP PRO — Sistem Informasi Supervisi Pengawas & Perencanaan Berbasis Data</p>
+            <p>Pengembang: <strong style="color: #f59e0b;">IFS</strong></p>
         </div>
     </footer>
 
@@ -974,7 +992,7 @@
 
             try { localStorage.setItem(FONT_SCALE_KEY, currentFontMode); } catch (e) {}
 
-            if (appState && document.getElementById('tab-ringkasan').classList.contains('active')) {
+            if (appState && appState.schools && document.getElementById('tab-ringkasan').classList.contains('active')) {
                 const sch = getActiveSchool();
                 if (sch) {
                     const jenjang = sch.jenjang || "SMP";
@@ -985,7 +1003,7 @@
 
             if (!silent) {
                 const labelMap = { normal: 'Normal (Standar)', large: 'Besar (Nyaman 50+)', xlarge: 'Ekstra Besar' };
-                showSyncToast(`Ukuran Teks Layar: ${labelMap[currentFontMode]} (Cetak tetap standar)`);
+                showSyncToast(`Ukuran Teks Layar: ${labelMap[currentFontMode]} (Cetak tetap standar A4)`);
             }
         }
 
@@ -1086,6 +1104,11 @@
                 name: "Kesiapsiagaan Bencana (SPAB) — Tingkat pengetahuan, keterampilan, dan kesiapan warga satuan pendidikan serta ketersediaan fasilitas pendukung dalam menghadapi risiko bencana.",
                 snp: "6. Standar Sarana & Prasarana"
             },
+            "D.19": {
+                short: "Tujuh Kebiasaan Anak Indonesia Hebat",
+                name: "Tujuh Kebiasaan Anak Indonesia Hebat — Nilai rerata persepsi murid berdasarkan kebiasaan bangun pagi, beribadah, berolahraga, makan sehat dan bergizi, gemar belajar, bermasyarakat, dan tidur cepat.",
+                snp: "1. Standar Kompetensi Lulusan (SKL)"
+            },
             "E.1": {
                 short: "Partisipasi Warga Sekolah",
                 name: "Partisipasi Warga Satuan Pendidikan — Tingkat keterlibatan orang tua/wali murid dan peserta didik dalam perencanaan, pengembangan, dan pelaksanaan aktivitas di satuan pendidikan.",
@@ -1110,6 +1133,16 @@
                 short: "Ketersediaan & Pengadaan Buku",
                 name: "Ketersediaan & Pengadaan Buku Pendidikan — Tingkat kecukupan buku teks utama dan buku bacaan bermutu yang tersedia bagi murid dan guru di satuan pendidikan.",
                 snp: "6. Standar Sarana & Prasarana"
+            },
+            "E.7": {
+                short: "Indeks Fasilitas Satuan Pendidikan",
+                name: "Indeks Fasilitas Satuan Pendidikan — Nilai komposit dari indeks fasilitas ruang sekolah, sanitasi sekolah, dan fasilitas TIK.",
+                snp: "6. Standar Sarana & Prasarana"
+            },
+            "E.8": {
+                short: "Indeks Kesesuaian Rombongan Belajar",
+                name: "Indeks Kesesuaian Penyelenggaraan Rombongan Belajar — Rata-rata tingkat pemenuhan kesesuaian rasio murid pada setiap rombongan belajar serta kesesuaian jumlah rombel di satuan pendidikan.",
+                snp: "7. Standar Pengelolaan"
             }
         };
 
@@ -1154,6 +1187,9 @@
                 { kodeArkas: "05.08.12", uraian: "Pemeliharaan Ringan & Pengadaan Rambu Jalur Evakuasi / P3K SPAB", sumberDana: "BOSP Reguler", vol: 1, satuan: "Paket", price: 2250000 },
                 { kodeArkas: "03.03.15", uraian: "Simulasi Tanggap Darurat Bencana Warga Satuan Pendidikan (SPAB)", sumberDana: "BOSP Reguler", vol: 1, satuan: "Kegiatan", price: 1250000 }
             ],
+            "D.19": [
+                { kodeArkas: "03.03.05", uraian: "Pembiasaan & Kampanye Tujuh Kebiasaan Anak Indonesia Hebat", sumberDana: "BOSP Reguler", vol: 1, satuan: "Kegiatan", price: 1250000 }
+            ],
             "E.1": [
                 { kodeArkas: "06.05.08", uraian: "Rapat Koordinasi Komite Sekolah & Orang Tua Murid (Parenting PBD)", sumberDana: "BOSP Reguler", vol: 40, satuan: "Orang/Kegiatan", price: 25000 }
             ],
@@ -1162,10 +1198,23 @@
             ],
             "E.6": [
                 { kodeArkas: "05.02.01", uraian: "Pengadaan Buku Teks Utama & Buku Pengayaan Perpustakaan (SIPLah)", sumberDana: "BOSP Reguler", vol: 180, satuan: "Eksemplar", price: 55000 }
+            ],
+            "E.7": [
+                { kodeArkas: "05.08.04", uraian: "Pemeliharaan Ringan Ruang Kelas, Sanitasi & Perangkat TIK Pembelajaran", sumberDana: "BOSP Reguler", vol: 1, satuan: "Paket", price: 2000000 }
             ]
         };
 
         const SMK_ONLY_CODES = ["A.4", "A.5", "A.6", "A.7", "D.17"];
+
+        function isValidSchoolNameCandidate(text) {
+            const val = String(text || "").trim();
+            if (!val || val.length < 4 || val.length > 85) return false;
+            if (val.startsWith("http")) return false;
+            if (/^\d+[\.\)]\s+/.test(val)) return false;
+            const lower = val.toLowerCase();
+            if (lower.includes("inspirasi benahi") || lower.includes("pendidik menuliskan catatan") || lower.includes("kepala satuan pendidikan")) return false;
+            return true;
+        }
 
         function isIndicatorAllowedForJenjang(code, name, jenjang) {
             const upperCode = String(code || "").trim().toUpperCase();
@@ -1197,11 +1246,12 @@
             } else if (rawName.includes(" - ")) {
                 rawName = rawName.split(" - ")[0].trim();
             } else {
-                const splitMatch = rawName.match(/^(.+?)\s+(?:Persentase|Nilai rerata|Tingkat|Kualitas|Kondisi|Proporsi)\b/i);
+                const splitMatch = rawName.match(/^(.+?)\s+(?:Persentase|Nilai rerata|Tingkat|Kualitas|Kondisi|Proporsi|Nilai komposit|Rata-rata)\b/i);
                 if (splitMatch && splitMatch[1].length >= 5) {
                     rawName = splitMatch[1].trim();
                 }
             }
+            if (rawName.length > 52) rawName = rawName.slice(0, 49).trim() + "...";
             return `${code} ${rawName}`;
         }
 
@@ -1225,11 +1275,10 @@
         let appState = {
             supervisorName: "Ida Faridlah Sulaeman",
             supervisorNIP: "",
-            supervisorRegion: "Dinas Pendidikan Kab. Garut",
-            activeSchoolId: "SCH_DEFAULT_1",
+            activeSchoolId: "SCH_1",
             schools: {
-                "SCH_DEFAULT_1": {
-                    id: "SCH_DEFAULT_1",
+                "SCH_1": {
+                    id: "SCH_1",
                     schoolName: "SMPN 3 Tarogong Kidul",
                     npsn: "20209354",
                     jenjang: "SMP",
@@ -1258,14 +1307,14 @@
 
         let radarChartInstance = null;
         let selectedFileRaw = null;
-        const LS_KEY = 'sipbd_pro_v5_state';
+        const LS_KEY = 'sipbd_mutu_v5_state';
         const CAP = ['Baik', 'Sedang', 'Kurang'];
         let dbInstance = null;
 
         function sanitizeSchoolRecord(sch) {
             if (!sch) return;
-            if (String(sch.schoolName || "").startsWith("http")) {
-                sch.schoolName = "SMPN 3 Tarogong Kidul";
+            if (!isValidSchoolNameCandidate(sch.schoolName)) {
+                sch.schoolName = "Sekolah Binaan";
             }
             if (!sch.schoolStatus) {
                 sch.schoolStatus = detectSchoolStatusFromName(sch.schoolName) || "Negeri";
@@ -1278,11 +1327,26 @@
                 isIndicatorAllowedForJenjang(ind.code, ind.name, jenjang)
             ).map(ind => {
                 const upperCode = String(ind.code || "").trim().toUpperCase();
-                if (INDICATOR_SNP_DICTIONARY[upperCode] && String(ind.name || "").length < 40) {
-                    ind.name = INDICATOR_SNP_DICTIONARY[upperCode].name;
+                if (INDICATOR_SNP_DICTIONARY[upperCode]) {
+                    if (String(ind.name || "").length < 40) ind.name = INDICATOR_SNP_DICTIONARY[upperCode].name;
+                    ind.snp = INDICATOR_SNP_DICTIONARY[upperCode].snp;
                 }
                 return ind;
             });
+
+            if (Array.isArray(sch.reflections)) {
+                sch.reflections.forEach(r => {
+                    if (String(r.fact || "").includes("Inspirasi benahi")) {
+                        r.fact = String(r.fact).split(/1\.\s+Pendidik/)[0].trim() + ` ${sch.schoolName}.`;
+                    }
+                    if (String(r.cause || "").includes("Inspirasi benahi")) {
+                        r.cause = String(r.cause).split(/1\.\s+Pendidik/)[0].trim() + ` ${sch.schoolName} belum terstruktur optimal.`;
+                    }
+                    if (String(r.evidence || "").includes("Inspirasi benahi")) {
+                        r.evidence = `Dokumen Hasil Asesmen Formatif & Lembar Supervisi Kelas di ${sch.schoolName}.`;
+                    }
+                });
+            }
         }
 
         function cleanNonJenjangIndicators() {
@@ -1298,71 +1362,6 @@
                 : `Seluruh indikator sudah sesuai jenjang ${sch.jenjang} dengan kalimat lengkap!`);
         }
 
-        /* ----------------------------------------------------
-           IMPOR JSON KIRIMAN DARI SATDIK (SINGLE / CLUSTER)
-        ---------------------------------------------------- */
-        function importSatdikJsonFile(event) {
-            const inputEl = event.target;
-            const file = inputEl.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const rawText = String(e.target.result || "").replace(/^\uFEFF/, "").trim();
-                    const parsed = JSON.parse(rawText);
-                    let importedRecord = null;
-
-                    if (parsed && parsed.schoolName && Array.isArray(parsed.indicators)) {
-                        importedRecord = parsed;
-                    } else if (parsed && parsed.schools && typeof parsed.schools === 'object') {
-                        const firstId = Object.keys(parsed.schools)[0];
-                        if (firstId) importedRecord = parsed.schools[firstId];
-                    } else if (parsed && typeof parsed === 'object') {
-                        const firstKey = Object.keys(parsed).find(k => parsed[k] && parsed[k].schoolName && Array.isArray(parsed[k].indicators));
-                        if (firstKey) importedRecord = parsed[firstKey];
-                    }
-
-                    if (!importedRecord) {
-                        throw new Error("Format berkas JSON tidak dikenali sebagai data SIPBD-MUTU.");
-                    }
-
-                    sanitizeSchoolRecord(importedRecord);
-
-                    const existingId = Object.keys(appState.schools).find(id =>
-                        (importedRecord.npsn && appState.schools[id].npsn === importedRecord.npsn) ||
-                        (appState.schools[id].schoolName.toLowerCase() === importedRecord.schoolName.toLowerCase())
-                    );
-
-                    const targetId = existingId || ("SCH_" + Date.now());
-                    appState.schools[targetId] = {
-                        ...importedRecord,
-                        id: targetId,
-                        statusRapor: "Sudah PBD & Terverifikasi",
-                        reflections: Array.isArray(importedRecord.reflections) ? importedRecord.reflections : [],
-                        rkt: Array.isArray(importedRecord.rkt) ? importedRecord.rkt : [],
-                        arkas: Array.isArray(importedRecord.arkas) ? importedRecord.arkas : [],
-                        monev: Array.isArray(importedRecord.monev) ? importedRecord.monev : []
-                    };
-
-                    appState.activeSchoolId = targetId;
-                    persist();
-                    refreshClusterDropdown();
-                    syncAllTabsAndUI();
-                    closeClusterModal();
-                    showSyncToast(`Data PBD "${importedRecord.schoolName}" (${importedRecord.npsn}) berhasil diimpor & disinkronkan!`);
-                } catch (err) {
-                    alert("Gagal mengimpor JSON Satdik: " + err.message);
-                } finally {
-                    inputEl.value = "";
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        /* ----------------------------------------------------
-           AUDIT KUOTA BOSP PERMENDIKDASMEN NO. 8 TAHUN 2026
-        ---------------------------------------------------- */
         function classifyArkasItemCategory(item) {
             const kode = String(item.kodeArkas || "").trim();
             const text = `${item.kegiatanRkt || ""} ${item.uraian || ""}`.toLowerCase();
@@ -1380,13 +1379,13 @@
         }
 
         function handlePrintDocument() {
-            const singleContainer = document.getElementById('reportSingleContainer');
-            const clusterContainer = document.getElementById('reportClusterContainer');
-            if (clusterContainer && clusterContainer.style.display === 'block') {
-                renderClusterReportView();
+            const aggContainer = document.getElementById('reportAggregateContainer');
+            if (aggContainer && aggContainer.style.display === 'block') {
+                renderAggregateReportView();
             } else {
                 renderSingleReportView();
             }
+
             try {
                 window.focus();
                 window.print();
@@ -1401,17 +1400,14 @@
             return `<td contenteditable="true" onblur="setField('${p}',${i},'${f}',this.innerText)">${esc(v)}</td>`; 
         }
 
-        /* ----------------------------------------------------
-           LOCALSTORAGE & INDEXEDDB PERSISTENCE
-        ---------------------------------------------------- */
         function initDB() {
             return new Promise((resolve) => {
                 if (!window.indexedDB) { resolve(null); return; }
-                const req = indexedDB.open("SIPBD_PRO_DB_V5", 1);
+                const req = indexedDB.open("SIPBD_MUTU_DB_V5", 1);
                 req.onupgradeneeded = (e) => {
                     const db = e.target.result;
-                    if (!db.objectStoreNames.contains("cluster")) {
-                        db.createObjectStore("cluster", { keyPath: "key" });
+                    if (!db.objectStoreNames.contains("appState")) {
+                        db.createObjectStore("appState", { keyPath: "key" });
                     }
                 };
                 req.onsuccess = (e) => { dbInstance = e.target.result; resolve(dbInstance); };
@@ -1426,8 +1422,8 @@
 
             if (dbInstance) {
                 try {
-                    const tx = dbInstance.transaction("cluster", "readwrite");
-                    const store = tx.objectStore("cluster");
+                    const tx = dbInstance.transaction("appState", "readwrite");
+                    const store = tx.objectStore("appState");
                     store.put({ key: "appState", data: appState });
                 } catch (e) { console.error("IndexedDB persist error:", e); }
             }
@@ -1449,11 +1445,11 @@
                 }
 
                 if (dbInstance) {
-                    const tx = dbInstance.transaction("cluster", "readonly");
-                    const store = tx.objectStore("cluster");
+                    const tx = dbInstance.transaction("appState", "readonly");
+                    const store = tx.objectStore("appState");
                     const req = store.get("appState");
                     req.onsuccess = () => {
-                        if (req.result && req.result.data && req.result.data.schools) {
+                        if (req.result && req.result.data && req.result.data.schools && Object.keys(req.result.data.schools).length > 0) {
                             Object.values(req.result.data.schools).forEach(s => sanitizeSchoolRecord(s));
                             appState = req.result.data;
                             resolve(true);
@@ -1468,139 +1464,10 @@
             });
         }
 
-        /* ----------------------------------------------------
-           CLUSTER & ACTIVE SCHOOL GETTERS
-        ---------------------------------------------------- */
         function getActiveSchool() {
-            if (!appState.schools[appState.activeSchoolId]) {
-                const firstKey = Object.keys(appState.schools)[0];
-                if (firstKey) appState.activeSchoolId = firstKey;
-            }
-            return appState.schools[appState.activeSchoolId];
+            return appState.schools[appState.activeSchoolId] || Object.values(appState.schools)[0];
         }
 
-        function refreshClusterDropdown() {
-            const select = document.getElementById('activeSchoolSwitcher');
-            const badge = document.getElementById('schoolCountBadge');
-            if (!select) return;
-
-            select.innerHTML = '';
-            const schoolIds = Object.keys(appState.schools);
-            if (badge) badge.textContent = schoolIds.length;
-
-            schoolIds.forEach(id => {
-                const s = appState.schools[id];
-                const opt = document.createElement('option');
-                opt.value = id;
-                opt.textContent = `${s.schoolName} (${s.jenjang}) - NPSN: ${s.npsn}`;
-                if (id === appState.activeSchoolId) opt.selected = true;
-                select.appendChild(opt);
-            });
-        }
-
-        function switchActiveSchool(schoolId) {
-            if (!appState.schools[schoolId]) return;
-            appState.activeSchoolId = schoolId;
-            persist();
-            syncAllTabsAndUI();
-            showSyncToast(`Beralih ke: ${appState.schools[schoolId].schoolName}`);
-        }
-
-        function openClusterModal() {
-            renderClusterModalTable();
-            document.getElementById('clusterModal').classList.add('open');
-        }
-
-        function closeClusterModal() {
-            document.getElementById('clusterModal').classList.remove('open');
-        }
-
-        function renderClusterModalTable() {
-            const tbody = document.getElementById('clusterSchoolListBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            Object.values(appState.schools).forEach(s => {
-                const isActive = s.id === appState.activeSchoolId;
-                const tr = document.createElement('tr');
-                if (isActive) tr.style.backgroundColor = '#f0fdfa';
-                tr.innerHTML = `
-                    <td style="font-weight:700;">${esc(s.schoolName)} ${isActive ? '<span class="badge badge-emerald" style="margin-left:4px;">Aktif</span>' : ''}</td>
-                    <td>${esc(s.npsn)}</td>
-                    <td><span class="badge badge-blue">${esc(s.jenjang)}</span></td>
-                    <td><span class="badge ${s.statusRapor === 'Sudah PBD & Terverifikasi' ? 'badge-emerald' : 'badge-amber'}">${esc(s.statusRapor)}</span></td>
-                    <td>
-                        <div style="display:flex; gap:6px;">
-                            <button type="button" onclick="switchActiveSchool('${s.id}'); closeClusterModal();" class="btn btn-sm btn-teal">Pilih</button>
-                            ${Object.keys(appState.schools).length > 1 ? `<button type="button" onclick="deleteSchoolFromCluster('${s.id}')" class="btn btn-sm btn-rose">Hapus</button>` : ''}
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function addNewSchoolToCluster() {
-            const nameInput = document.getElementById('newSchoolName').value.trim();
-            const npsnInput = document.getElementById('newSchoolNpsn').value.trim();
-            const jenjangInput = document.getElementById('newSchoolJenjang').value;
-
-            if (!nameInput) {
-                alert("Silakan isi Nama Satuan Pendidikan.");
-                return;
-            }
-
-            const newId = "SCH_" + Date.now();
-            const detectedStatus = detectSchoolStatusFromName(nameInput) || "Negeri";
-            appState.schools[newId] = {
-                id: newId,
-                schoolName: nameInput,
-                npsn: npsnInput || "00000000",
-                jenjang: jenjangInput,
-                schoolStatus: detectedStatus,
-                statusRapor: "Dalam Pendampingan",
-                evalYear: "2026",
-                targetTP: "2026/2027",
-                kepsekName: "",
-                kepsekNIP: "",
-                paguBosp: 150000000,
-                indicators: [
-                    { id: "A.1", code: "A.1", name: INDICATOR_SNP_DICTIONARY["A.1"].name, snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Sedang", skor: 62.5, change: 1.0, status: "Perhatian", rankKab: "41-60%", rankNas: "41-60%" },
-                    { id: "A.2", code: "A.2", name: INDICATOR_SNP_DICTIONARY["A.2"].name, snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Sedang", skor: 58.0, change: -0.5, status: "Prioritas Utama", rankKab: "41-60%", rankNas: "41-60%" },
-                    { id: "D.1", code: "D.1", name: INDICATOR_SNP_DICTIONARY["D.1"].name, snp: "3. Standar Proses", capaian: "Sedang", skor: 60.0, change: 0.0, status: "Perhatian", rankKab: "41-60%", rankNas: "41-60%" }
-                ],
-                reflections: [],
-                rkt: [],
-                arkas: [],
-                monev: []
-            };
-
-            appState.activeSchoolId = newId;
-            document.getElementById('newSchoolName').value = "";
-            document.getElementById('newSchoolNpsn').value = "";
-            
-            persist();
-            refreshClusterDropdown();
-            renderClusterModalTable();
-            syncAllTabsAndUI();
-            showSyncToast(`Sekolah binaan "${nameInput}" ditambahkan!`);
-        }
-
-        function deleteSchoolFromCluster(schoolId) {
-            if (Object.keys(appState.schools).length <= 1) return;
-            delete appState.schools[schoolId];
-            if (appState.activeSchoolId === schoolId) {
-                appState.activeSchoolId = Object.keys(appState.schools)[0];
-            }
-            persist();
-            refreshClusterDropdown();
-            renderClusterModalTable();
-            syncAllTabsAndUI();
-        }
-
-        /* ----------------------------------------------------
-           NAVIGATION & STATE MANAGEMENT
-        ---------------------------------------------------- */
         function switchTab(tabId) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -1615,14 +1482,21 @@
             else if (tabId === 'tab-identifikasi') renderIndicatorsTable();
             else if (tabId === 'tab-refleksi') renderReflectionsTable();
             else if (tabId === 'tab-benahi') { renderRktTable(); renderArkasTable(); }
-            else if (tabId === 'tab-supervisi-monev') renderMonevTable();
+            else if (tabId === 'tab-supervisi') renderMonevTable();
             else if (tabId === 'tab-laporan') renderSingleReportView();
+        }
+
+        function switchActiveSchool(id) {
+            if (!appState.schools[id]) return;
+            appState.activeSchoolId = id;
+            persist();
+            syncAllTabsAndUI();
+            showSyncToast(`Beralih ke: ${appState.schools[id].schoolName}`);
         }
 
         function updateSchoolIdentity() {
             const sch = getActiveSchool();
             if (!sch) return;
-
             const newName = document.getElementById('schoolName').value.trim() || sch.schoolName;
             sch.schoolName = newName;
             const detectedSt = detectSchoolStatusFromName(newName);
@@ -1638,17 +1512,17 @@
             sch.kepsekNIP = document.getElementById('kepsekNIP').value.trim();
 
             persist();
-            refreshClusterDropdown();
+            populateSchoolSwitcher();
             syncAllTabsAndUI();
-            showSyncToast("Identitas Satuan Pendidikan Tersimpan!");
+            showSyncToast("Identitas Sekolah & Kepala Sekolah Tersimpan!");
         }
 
         function updateSupervisorIdentity() {
             appState.supervisorName = document.getElementById('supervisorName').value.trim() || appState.supervisorName;
-            appState.supervisorNIP = document.getElementById('supervisorNIP').value.trim();
+            appState.supervisorNIP = document.getElementById('supervisorNIP').value.trim() || appState.supervisorNIP;
             persist();
             syncAllTabsAndUI();
-            showSyncToast("Identitas Pengawas Tersimpan!");
+            showSyncToast("Identitas Pengawas Pembina Tersimpan!");
         }
 
         function switchJenjang(val) {
@@ -1657,7 +1531,7 @@
             sch.jenjang = val;
             sanitizeSchoolRecord(sch);
             persist();
-            refreshClusterDropdown();
+            populateSchoolSwitcher();
             syncAllTabsAndUI();
             showSyncToast(`Jenjang diubah ke ${val}. Indikator non-${val} otomatis disaring.`);
         }
@@ -1706,9 +1580,26 @@
             if (path === 'arkas') renderArkasTable();
         }
 
-        /* ----------------------------------------------------
-           UI RENDERING FUNCTIONS
-        ---------------------------------------------------- */
+        function populateSchoolSwitcher() {
+            const switcher = document.getElementById('activeSchoolSwitcher');
+            const badge = document.getElementById('schoolCountBadge');
+            if (!switcher) return;
+
+            switcher.innerHTML = '';
+            const keys = Object.keys(appState.schools);
+            if (badge) badge.textContent = keys.length;
+
+            keys.forEach(k => {
+                const s = appState.schools[k];
+                const safeLabel = String(s.schoolName || "Sekolah Binaan").slice(0, 65);
+                const opt = document.createElement('option');
+                opt.value = k;
+                opt.textContent = `${safeLabel} (${s.jenjang} - NPSN: ${s.npsn})`;
+                if (k === appState.activeSchoolId) opt.selected = true;
+                switcher.appendChild(opt);
+            });
+        }
+
         function syncAllTabsAndUI() {
             const sch = getActiveSchool();
             if (!sch) return;
@@ -1719,14 +1610,15 @@
             document.getElementById('targetTP').value = sch.targetTP || '2026/2027';
             document.getElementById('kepsekName').value = sch.kepsekName || '';
             document.getElementById('kepsekNIP').value = sch.kepsekNIP || '';
+            document.getElementById('supervisorName').value = appState.supervisorName || '';
+            document.getElementById('supervisorNIP').value = appState.supervisorNIP || '';
             document.getElementById('jenjangSelect').value = sch.jenjang || 'SMP';
             const statusEl = document.getElementById('schoolStatusSelect');
             if (statusEl) statusEl.value = sch.schoolStatus || 'Negeri';
             const paguEl = document.getElementById('paguBospInput');
             if (paguEl) paguEl.value = sch.paguBosp || 150000000;
 
-            document.getElementById('supervisorName').value = appState.supervisorName || '';
-            document.getElementById('supervisorNIP').value = appState.supervisorNIP || '';
+            populateSchoolSwitcher();
 
             const activeTabBtn = document.querySelector('.tab-btn.active');
             const activeTabId = activeTabBtn ? activeTabBtn.id.replace('btn-', '') : 'tab-ringkasan';
@@ -1881,8 +1773,9 @@
 
         function renderIndicatorsTable() {
             const sch = getActiveSchool();
+            if (!sch) return;
             const tbody = document.getElementById('indicatorTableBody');
-            if (!tbody || !sch) return;
+            if (!tbody) return;
             tbody.innerHTML = '';
             
             const badgeText = document.getElementById('dataSourceBadgeText');
@@ -1920,7 +1813,6 @@
 
         function removeIndicator(idx) {
             const sch = getActiveSchool();
-            if (!sch) return;
             sch.indicators.splice(idx, 1);
             persist();
             renderIndicatorsTable();
@@ -1928,7 +1820,6 @@
 
         function addNewIndicatorRow() {
             const sch = getActiveSchool();
-            if (!sch) return;
             sch.indicators.push({
                 id: "IND." + Date.now(),
                 code: "Baru",
@@ -1947,8 +1838,9 @@
 
         function renderReflectionsTable() {
             const sch = getActiveSchool();
+            if (!sch) return;
             const tbody = document.getElementById('reflectionTableBody');
-            if (!tbody || !sch) return;
+            if (!tbody) return;
             tbody.innerHTML = '';
 
             (sch.reflections || []).forEach((ref, idx) => {
@@ -1956,7 +1848,7 @@
                 tr.innerHTML = `
                     <td>
                         <select class="form-control" style="font-size:inherit;" onchange="setField('reflections',${idx},'indicator',this.value)">
-                            ${sch.indicators.map(i => `<option value="${i.code} ${i.name}" ${ref.indicator.includes(i.code) ? 'selected' : ''}>${getShortIndicatorCaption(i)}</option>`).join('')}
+                            ${sch.indicators.map(i => `<option value="${getShortIndicatorCaption(i)}" ${ref.indicator.includes(i.code) ? 'selected' : ''}>${getShortIndicatorCaption(i)}</option>`).join('')}
                         </select>
                     </td>
                     ${ce('reflections', idx, 'fact', ref.fact)}
@@ -1971,9 +1863,8 @@
 
         function addReflectionRow() {
             const sch = getActiveSchool();
-            if (!sch) return;
             if (!sch.reflections) sch.reflections = [];
-            const defaultInd = sch.indicators[0] ? `${sch.indicators[0].code} ${sch.indicators[0].name}` : "A.2 Kemampuan Numerasi";
+            const defaultInd = sch.indicators[0] ? getShortIndicatorCaption(sch.indicators[0]) : "A.2 Kemampuan Numerasi";
             sch.reflections.push({
                 indicator: defaultInd,
                 fact: "Skor Sedang, butuh penguatan metode penalaran.",
@@ -1987,7 +1878,6 @@
 
         function removeReflection(idx) {
             const sch = getActiveSchool();
-            if (!sch) return;
             sch.reflections.splice(idx, 1);
             persist();
             renderReflectionsTable();
@@ -2000,7 +1890,8 @@
             const prioInds = sch.indicators.filter(i => i.capaian === 'Kurang' || i.capaian === 'Sedang');
 
             prioInds.forEach(i => {
-                const shortTitle = getShortIndicatorCaption(i).replace(/^[A-E]\.\d+\s+/, '');
+                const shortCaption = getShortIndicatorCaption(i);
+                const shortTitle = shortCaption.replace(/^[A-E]\.\d+\s+/, '');
                 let causeText = `Pelaksanaan pembelajaran kontekstual pada indikator ${shortTitle} di ${sch.schoolName} belum terstruktur optimal.`;
                 let evidenceText = `Dokumen Hasil Asesmen Formatif & Lembar Supervisi Kelas di ${sch.schoolName}.`;
 
@@ -2013,10 +1904,16 @@
                 } else if (i.code === 'D.4') {
                     causeText = `Sosialisasi pencegahan perundungan dan kekerasan serta penguatan satgas TPPK perlu diintensifkan.`;
                     evidenceText = `SK Tim Pencegahan dan Penanganan Kekerasan (TPPK) & Logbook Bimbingan Konseling.`;
+                } else if (i.code === 'E.7') {
+                    causeText = `Pemeliharaan berkala ruang kelas, sanitasi, dan perangkat TIK pembelajaran perlu dijadwalkan rutin.`;
+                    evidenceText = `Kartu Inventaris Barang (KIB) & Daftar Kondisi Sarpras Sekolah.`;
+                } else if (i.code === 'E.8') {
+                    causeText = `Penataan rasio jumlah murid per rombongan belajar perlu diselaraskan dengan standar Dapodik.`;
+                    evidenceText = `Data Rombongan Belajar Dapodik & SK Pembagian Tugas Mengajar.`;
                 }
 
                 sch.reflections.push({
-                    indicator: `${i.code} ${i.name}`,
+                    indicator: shortCaption,
                     fact: `Skor ${i.skor} (${i.capaian}) pada Rapor Pendidikan ${sch.schoolName}.`,
                     subIndicator: `${i.code}.1 Sub-Kompetensi ${shortTitle}`,
                     cause: causeText,
@@ -2031,8 +1928,9 @@
 
         function renderRktTable() {
             const sch = getActiveSchool();
+            if (!sch) return;
             const tbody = document.getElementById('rktTableBody');
-            if (!tbody || !sch) return;
+            if (!tbody) return;
             tbody.innerHTML = '';
 
             (sch.rkt || []).forEach((r, idx) => {
@@ -2052,7 +1950,6 @@
 
         function addRktRow() {
             const sch = getActiveSchool();
-            if (!sch) return;
             if (!sch.rkt) sch.rkt = [];
             sch.rkt.push({
                 bidang: "3. Standar Proses",
@@ -2068,7 +1965,6 @@
 
         function removeRkt(idx) {
             const sch = getActiveSchool();
-            if (!sch) return;
             sch.rkt.splice(idx, 1);
             persist();
             renderRktTable();
@@ -2077,6 +1973,7 @@
         function autoSuggestRkt() {
             const sch = getActiveSchool();
             if (!sch) return;
+
             const prioInds = (sch.indicators || []).filter(i => i.capaian !== 'Baik');
             const statusSekolah = sch.schoolStatus || detectSchoolStatusFromName(sch.schoolName) || "Negeri";
             const generatedRkt = [];
@@ -2159,7 +2056,6 @@
                 }
             });
 
-            // Program Rutin 1 Tahun Penuh (12 Bulan) untuk Dukungan PTK Non-ASN / Honor Murni
             if (statusSekolah === "Swasta") {
                 generatedRkt.push({
                     bidang: "5. Standar PTK & 8. Standar Pembiayaan",
@@ -2186,9 +2082,6 @@
             showSyncToast(`Rekomendasi Program RKT Tahunan (12 Bulan - ${statusSekolah}) Berhasil Disusun!`);
         }
 
-        /* ----------------------------------------------------
-           AUTO-GENERATE ARKAS TAHUNAN (12 BULAN) SINKRON RAPOR, RKT & PAGU BOSP
-        ---------------------------------------------------- */
         function autoGenerateArkasFromRaporAndRkt(silent = false) {
             const sch = getActiveSchool();
             if (!sch) return;
@@ -2240,7 +2133,6 @@
                 }
             });
 
-            // 1. Pastikan pos Buku/Perpustakaan >= 10% Pagu BOSP
             let currentBukuTotal = generatedArkas
                 .filter(item => classifyArkasItemCategory(item) === "buku")
                 .reduce((s, item) => s + (item.vol * item.price), 0);
@@ -2270,7 +2162,6 @@
                 }
             }
 
-            // 2. Fasilitasi Honorarium Rutin 12 Bulan (Swasta: ~28% Pagu, Negeri: ~12% Pagu) + Honor Narasumber IHT
             const existingIhtHonor = generatedArkas
                 .filter(item => classifyArkasItemCategory(item) === "honor")
                 .reduce((s, item) => s + (item.vol * item.price), 0);
@@ -2299,7 +2190,6 @@
                 });
             }
 
-            // 3. Validasi Plafon Honor & Sarpras agar tidak pernah melampaui batas regulasi
             let sumHonor = 0, sumSarpras = 0;
             generatedArkas.forEach(item => {
                 const cat = classifyArkasItemCategory(item);
@@ -2331,8 +2221,9 @@
 
         function renderArkasTable() {
             const sch = getActiveSchool();
+            if (!sch) return;
             const tbody = document.getElementById('arkasTableBody');
-            if (!tbody || !sch) return;
+            if (!tbody) return;
             tbody.innerHTML = '';
 
             let grandTotal = 0;
@@ -2365,7 +2256,7 @@
                     ${ce('arkas', idx, 'vol', a.vol)}
                     ${ce('arkas', idx, 'satuan', a.satuan)}
                     ${ce('arkas', idx, 'price', a.price)}
-                    <td style="font-weight:700; color:#0d9488;">Rp ${tot.toLocaleString('id-ID')}</td>
+                    <td class="nowrap" style="font-weight:700; color:#0d9488;">Rp ${tot.toLocaleString('id-ID')}</td>
                     <td style="text-align:center;"><button type="button" onclick="removeArkas(${idx})" class="btn btn-sm btn-rose">✕</button></td>
                 `;
                 tbody.appendChild(tr);
@@ -2384,7 +2275,6 @@
             sisaEl.textContent = `Rp ${sisa.toLocaleString('id-ID')}`;
             sisaEl.style.color = sisa < 0 ? '#dc2626' : '#059669';
 
-            // Update 3 Kartu Monitor Kuota Permendikdasmen No. 8 Tahun 2026
             const minBukuRp = Math.ceil(pagu * 0.10);
             const maxHonorRp = Math.floor(pagu * maxHonorRatio);
             const maxSarprasRp = Math.floor(pagu * 0.20);
@@ -2427,7 +2317,6 @@
 
         function addArkasRow() {
             const sch = getActiveSchool();
-            if (!sch) return;
             if (!sch.arkas) sch.arkas = [];
             const statusSekolah = sch.schoolStatus || detectSchoolStatusFromName(sch.schoolName) || "Negeri";
             sch.arkas.push({
@@ -2450,7 +2339,6 @@
 
         function removeArkas(idx) {
             const sch = getActiveSchool();
-            if (!sch) return;
             sch.arkas.splice(idx, 1);
             persist();
             renderArkasTable();
@@ -2458,8 +2346,9 @@
 
         function renderMonevTable() {
             const sch = getActiveSchool();
+            if (!sch) return;
             const tbody = document.getElementById('monevTableBody');
-            if (!tbody || !sch) return;
+            if (!tbody) return;
             tbody.innerHTML = '';
 
             (sch.monev || []).forEach((m, idx) => {
@@ -2492,28 +2381,33 @@
                 target: r.target,
                 status: "Proses",
                 bukti: "SK Pembagian Tugas, Daftar Hadir, Modul Ajar & SPJ BOSP",
-                catatan: `Pelaksanaan berjalan sesuai jadwal di ${sch.schoolName}.`,
+                catatan: `Telah diobservasi Pengawas pada saat pendampingan di ${sch.schoolName}.`,
                 rtl: "Penguatan implementasi di kelas & evaluasi berkala."
             }));
             persist();
             renderMonevTable();
-            showSyncToast("Program RKT Berhasil Disinkronkan ke Supervisi & Monev!");
+            showSyncToast("Program RKT Berhasil Disinkronkan ke Supervisi!");
         }
 
-        function showSingleSchoolReport() {
-            document.getElementById('reportSingleContainer').style.display = 'block';
-            document.getElementById('reportClusterContainer').style.display = 'none';
-            document.getElementById('btnRepSingle').className = 'btn btn-teal';
-            document.getElementById('btnRepCluster').className = 'btn btn-slate';
-            renderSingleReportView();
-        }
+        function setReportMode(mode) {
+            const single = document.getElementById('reportSingleContainer');
+            const agg = document.getElementById('reportAggregateContainer');
+            const btnS = document.getElementById('btnRepSingle');
+            const btnA = document.getElementById('btnRepAggregate');
 
-        function showClusterReport() {
-            document.getElementById('reportSingleContainer').style.display = 'none';
-            document.getElementById('reportClusterContainer').style.display = 'block';
-            document.getElementById('btnRepSingle').className = 'btn btn-slate';
-            document.getElementById('btnRepCluster').className = 'btn btn-teal';
-            renderClusterReportView();
+            if (mode === 'aggregate') {
+                single.style.display = 'none';
+                agg.style.display = 'block';
+                btnS.className = 'btn btn-slate';
+                btnA.className = 'btn btn-teal';
+                renderAggregateReportView();
+            } else {
+                single.style.display = 'block';
+                agg.style.display = 'none';
+                btnS.className = 'btn btn-teal';
+                btnA.className = 'btn btn-slate';
+                renderSingleReportView();
+            }
         }
 
         function renderSingleReportView() {
@@ -2526,11 +2420,11 @@
             document.getElementById('repJenjang').textContent = sch.jenjang;
             document.getElementById('repYear').textContent = sch.evalYear;
             document.getElementById('repTarget').textContent = sch.targetTP;
-            document.getElementById('repSupervisorPrint').textContent = appState.supervisorName;
-            document.getElementById('repSupervisorNIPPrint').textContent = appState.supervisorNIP ? `NIP. ${appState.supervisorNIP}` : "Pembina / Pengawas Satdik";
 
             document.getElementById('repKepsekName').textContent = sch.kepsekName ? sch.kepsekName : "( ________________________ )";
             document.getElementById('repKepsekNIP').textContent = sch.kepsekNIP ? `NIP. ${sch.kepsekNIP}` : "NIP. ........................................";
+            document.getElementById('repSupervisorName').textContent = appState.supervisorName || "Ida Faridlah Sulaeman";
+            document.getElementById('repSupervisorNIP').textContent = appState.supervisorNIP ? `NIP. ${appState.supervisorNIP}` : "NIP. ........................................";
 
             const kekuatan = (sch.indicators || []).filter(i => i.capaian === 'Baik').map(i => getShortIndicatorCaption(i).replace(/^[A-E]\.\d+\s+/, '')).join(', ') || 'indikator dasar';
             const prioritas = (sch.indicators || []).filter(i => i.capaian !== 'Baik').map(i => getShortIndicatorCaption(i).replace(/^[A-E]\.\d+\s+/, '')).join(', ') || 'penguatan berkelanjutan';
@@ -2547,12 +2441,12 @@
                 (sch.reflections || []).forEach((r, idx) => {
                     pBody.innerHTML += `
                         <tr>
-                            <td style="border:1px solid #cbd5e1; text-align:center;">${idx + 1}</td>
-                            <td style="border:1px solid #cbd5e1; font-weight:700;">${esc(r.indicator)}</td>
-                            <td style="border:1px solid #cbd5e1;">${esc(r.fact)}</td>
-                            <td style="border:1px solid #cbd5e1;">${esc(r.subIndicator)}</td>
-                            <td style="border:1px solid #cbd5e1;">${esc(r.cause)}</td>
-                            <td style="border:1px solid #cbd5e1;">${esc(r.evidence)}</td>
+                            <td style="text-align:center;">${idx + 1}</td>
+                            <td style="font-weight:700;">${esc(r.indicator)}</td>
+                            <td>${esc(r.fact)}</td>
+                            <td>${esc(r.subIndicator)}</td>
+                            <td>${esc(r.cause)}</td>
+                            <td>${esc(r.evidence)}</td>
                         </tr>
                     `;
                 });
@@ -2564,11 +2458,11 @@
                 (sch.rkt || []).forEach(r => {
                     rBody.innerHTML += `
                         <tr>
-                            <td style="border:1px solid #cbd5e1;">${esc(r.bidang)}</td>
-                            <td style="border:1px solid #cbd5e1; font-weight:700;">${esc(r.program)}</td>
-                            <td style="border:1px solid #cbd5e1;">${esc(r.kegiatan)}</td>
-                            <td style="border:1px solid #cbd5e1;">${esc(r.pj)}</td>
-                            <td style="border:1px solid #cbd5e1;">${esc(r.target)}</td>
+                            <td>${esc(r.bidang)}</td>
+                            <td style="font-weight:700;">${esc(r.program)}</td>
+                            <td>${esc(r.kegiatan)}</td>
+                            <td>${esc(r.pj)}</td>
+                            <td>${esc(r.target)}</td>
                         </tr>
                     `;
                 });
@@ -2583,60 +2477,62 @@
                     sumArkas += tot;
                     aBody.innerHTML += `
                         <tr>
-                            <td style="border:1px solid #cbd5e1;">${esc(a.kegiatanRkt)}</td>
-                            <td style="border:1px solid #cbd5e1; font-weight:700;">${esc(a.kodeArkas)}</td>
-                            <td style="border:1px solid #cbd5e1;">${esc(a.uraian)}</td>
-                            <td style="border:1px solid #cbd5e1; text-align:center;">${esc(a.vol)} ${esc(a.satuan)}</td>
-                            <td style="border:1px solid #cbd5e1; text-align:right;">Rp ${tot.toLocaleString('id-ID')}</td>
+                            <td>${esc(a.kegiatanRkt)}</td>
+                            <td style="font-weight:700; text-align:center;">${esc(a.kodeArkas)}</td>
+                            <td>${esc(a.uraian)}</td>
+                            <td class="nowrap" style="text-align:center;">${esc(a.vol)} ${esc(a.satuan)}</td>
+                            <td class="nowrap" style="text-align:right;">Rp ${tot.toLocaleString('id-ID')}</td>
                         </tr>
                     `;
                 });
                 aBody.innerHTML += `
                     <tr style="background:#f8fafc; font-weight:800;">
-                        <td colspan="4" style="border:1px solid #cbd5e1; text-align:right;">TOTAL ANGGARAN TAHUNAN (12 BULAN):</td>
-                        <td style="border:1px solid #cbd5e1; text-align:right; color:#0f766e;">Rp ${sumArkas.toLocaleString('id-ID')}</td>
+                        <td colspan="4" style="text-align:right;">TOTAL ANGGARAN TAHUNAN (12 BULAN):</td>
+                        <td class="nowrap" style="text-align:right; color:#0f766e;">Rp ${sumArkas.toLocaleString('id-ID')}</td>
                     </tr>
                 `;
             }
         }
 
-        function renderClusterReportView() {
-            document.getElementById('repClusterSup').textContent = appState.supervisorName;
-            document.getElementById('repClusterSupSign').textContent = appState.supervisorName;
-            document.getElementById('repClusterSupNip').textContent = appState.supervisorNIP ? `NIP. ${appState.supervisorNIP}` : "NIP. ........................................";
+        function renderAggregateReportView() {
+            document.getElementById('aggSupervisorName').textContent = appState.supervisorName || "Ida Faridlah Sulaeman";
+            document.getElementById('aggSigSupName').textContent = appState.supervisorName || "Ida Faridlah Sulaeman";
+            document.getElementById('aggSigSupNIP').textContent = appState.supervisorNIP ? `NIP. ${appState.supervisorNIP}` : "NIP. ........................................";
 
-            const tbody = document.getElementById('repClusterBody');
+            const keys = Object.keys(appState.schools);
+            document.getElementById('aggTotalSchools').textContent = keys.length;
+
+            const tbody = document.getElementById('aggSchoolsTableBody');
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            Object.values(appState.schools).forEach((s, idx) => {
+            keys.forEach((k, idx) => {
+                const s = appState.schools[k];
                 const inds = s.indicators || [];
-                const avg = inds.length > 0 ? (inds.reduce((acc, i) => acc + (parseFloat(i.skor) || 0), 0) / inds.length).toFixed(2) : "0.00";
-                const prio = inds.filter(i => i.capaian !== 'Baik').map(i => i.code).join(', ') || "-";
-                const totalArkas = (s.arkas || []).reduce((acc, a) => acc + ((parseFloat(a.vol) || 0) * (parseFloat(a.price) || 0)), 0);
+                const avg = inds.length > 0 ? (inds.reduce((sum, i) => sum + (parseFloat(i.skor) || 0), 0) / inds.length).toFixed(2) : "0.00";
+                const prioCount = inds.filter(i => i.capaian !== 'Baik').length;
+                const totArkas = (s.arkas || []).reduce((sum, a) => sum + ((parseFloat(a.vol) || 0) * (parseFloat(a.price) || 0)), 0);
 
                 tbody.innerHTML += `
                     <tr>
-                        <td style="border:1px solid #cbd5e1; text-align:center;">${idx + 1}</td>
-                        <td style="border:1px solid #cbd5e1; font-weight:700;">${esc(s.schoolName)} (${esc(s.schoolStatus || 'Negeri')})</td>
-                        <td style="border:1px solid #cbd5e1;">${esc(s.npsn)}</td>
-                        <td style="border:1px solid #cbd5e1; text-align:center;">${esc(s.jenjang)}</td>
-                        <td style="border:1px solid #cbd5e1;">${esc(s.statusRapor)}</td>
-                        <td style="border:1px solid #cbd5e1; text-align:center; font-weight:700;">${avg}</td>
-                        <td style="border:1px solid #cbd5e1;">${esc(prio)}</td>
-                        <td style="border:1px solid #cbd5e1; text-align:right;">Rp ${totalArkas.toLocaleString('id-ID')}</td>
+                        <td style="text-align:center;">${idx + 1}</td>
+                        <td style="font-weight:700;">${esc(s.schoolName)}</td>
+                        <td style="text-align:center;">${esc(s.npsn)}</td>
+                        <td style="text-align:center;">${esc(s.jenjang)}</td>
+                        <td style="text-align:center; font-weight:700;">${avg}</td>
+                        <td style="text-align:center;">${prioCount} Indikator</td>
+                        <td class="nowrap" style="text-align:right; font-weight:700;">Rp ${totArkas.toLocaleString('id-ID')}</td>
+                        <td style="text-align:center;">${esc(s.statusRapor)}</td>
                     </tr>
                 `;
             });
         }
 
-        /* ----------------------------------------------------
-           MODAL HANDLERS (8 SNP & AI SCANNER)
-        ---------------------------------------------------- */
         function openSnpDetailModal(snpName) {
             const sch = getActiveSchool();
+            if (!sch) return;
             const modal = document.getElementById('snpDetailModal');
-            if (!modal || !sch) return;
+            if (!modal) return;
             
             document.getElementById('snpModalTitle').textContent = `Penjabaran ${snpName}`;
             
@@ -2706,6 +2602,90 @@
             document.getElementById('snpDetailModal').classList.remove('open');
         }
 
+        function openSchoolManager() {
+            const modal = document.getElementById('schoolManagerModal');
+            if (!modal) return;
+            renderSchoolListManager();
+            modal.classList.add('open');
+        }
+
+        function closeSchoolManager() {
+            document.getElementById('schoolManagerModal').classList.remove('open');
+        }
+
+        function renderSchoolListManager() {
+            const tbody = document.getElementById('schoolListTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const keys = Object.keys(appState.schools);
+            keys.forEach(k => {
+                const s = appState.schools[k];
+                const isActive = k === appState.activeSchoolId;
+                tbody.innerHTML += `
+                    <tr style="background: ${isActive ? '#eef2ff' : 'white'};">
+                        <td style="font-weight:700;">${esc(s.schoolName)} ${isActive ? '<span class="badge badge-blue">Aktif</span>' : ''}</td>
+                        <td>${esc(s.npsn)}</td>
+                        <td>${esc(s.jenjang)}</td>
+                        <td>${esc(s.statusRapor)}</td>
+                        <td style="text-align:center;">
+                            <button type="button" onclick="switchActiveSchool('${k}'); closeSchoolManager();" class="btn btn-sm btn-teal">Pilih</button>
+                            ${keys.length > 1 ? `<button type="button" onclick="deleteSchoolBinaan('${k}')" class="btn btn-sm btn-rose">Hapus</button>` : ''}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function addNewSchoolBinaan() {
+            const name = document.getElementById('newSchName').value.trim();
+            const npsn = document.getElementById('newSchNPSN').value.trim();
+            const jenjang = document.getElementById('newSchJenjang').value;
+            if (!name) { alert("Masukkan Nama Sekolah Binaan!"); return; }
+
+            const newId = "SCH_" + Date.now();
+            const detStatus = detectSchoolStatusFromName(name) || "Negeri";
+            appState.schools[newId] = {
+                id: newId,
+                schoolName: name,
+                npsn: npsn || "00000000",
+                jenjang: jenjang,
+                schoolStatus: detStatus,
+                statusRapor: "Belum Unggah / Perlu Pembinaan",
+                evalYear: "2026",
+                targetTP: "2026/2027",
+                kepsekName: "",
+                kepsekNIP: "",
+                paguBosp: 150000000,
+                indicators: [
+                    { id: "A.1", code: "A.1", name: INDICATOR_SNP_DICTIONARY["A.1"].name, snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Sedang", skor: 62.0, change: 0, status: "Perhatian", rankKab: "41-60%", rankNas: "41-60%" },
+                    { id: "A.2", code: "A.2", name: INDICATOR_SNP_DICTIONARY["A.2"].name, snp: "1. Standar Kompetensi Lulusan (SKL)", capaian: "Kurang", skor: 48.0, change: -2.0, status: "Prioritas Utama", rankKab: "61-80%", rankNas: "61-80%" }
+                ],
+                reflections: [],
+                rkt: [],
+                arkas: [],
+                monev: []
+            };
+            appState.activeSchoolId = newId;
+            persist();
+            document.getElementById('newSchName').value = '';
+            document.getElementById('newSchNPSN').value = '';
+            renderSchoolListManager();
+            syncAllTabsAndUI();
+            showSyncToast(`Sekolah Binaan "${name}" Berhasil Ditambahkan!`);
+        }
+
+        function deleteSchoolBinaan(id) {
+            if (Object.keys(appState.schools).length <= 1) return;
+            delete appState.schools[id];
+            if (appState.activeSchoolId === id) {
+                appState.activeSchoolId = Object.keys(appState.schools)[0];
+            }
+            persist();
+            renderSchoolListManager();
+            syncAllTabsAndUI();
+        }
+
         function openAiUploadModal() {
             const sch = getActiveSchool();
             const lbl = document.getElementById('modalJenjangLabel');
@@ -2730,8 +2710,8 @@
         function processRaporWithAI() {
             if (!selectedFileRaw) return;
             document.getElementById('aiProcessingState').style.display = 'block';
-            const sch = getActiveSchool();
-            const currentJenjang = sch ? (sch.jenjang || "SMP") : "SMP";
+            const activeSch = getActiveSchool();
+            const currentJenjang = activeSch ? activeSch.jenjang : "SMP";
 
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -2742,6 +2722,12 @@
                     let detectedName = "";
                     let detectedNPSN = "";
                     const extractedMap = new Map();
+
+                    const rawFileName = String(selectedFileRaw.name || "").replace(/\.(xlsx|xls|csv)$/i, "");
+                    const fileNameSchoolMatch = rawFileName.match(/((?:TK|PAUD|SD|MI|SMP|MTs|SMA|MA|SMK|PKBM)[A-Za-z0-9\s\.\-\']{3,65})/i);
+                    if (fileNameSchoolMatch && isValidSchoolNameCandidate(fileNameSchoolMatch[1])) {
+                        detectedName = fileNameSchoolMatch[1].trim();
+                    }
 
                     workbook.SheetNames.forEach(sheetName => {
                         const sheet = workbook.Sheets[sheetName];
@@ -2755,16 +2741,23 @@
                                 if (npsnMatch) detectedNPSN = npsnMatch[0];
                             }
 
-                            for (let c = 0; c < row.length - 1; c++) {
-                                const cellLabel = String(row[c]).toLowerCase();
-                                const nextVal = String(row[c+1]).trim();
-                                if ((cellLabel.includes("nama sekolah") || cellLabel.includes("satuan pendidikan")) && nextVal.length > 3 && !nextVal.startsWith("http")) {
-                                    detectedName = nextVal;
-                                }
-                            }
-
                             for (let c = 0; c < row.length; c++) {
-                                const cellCode = String(row[c]).trim().toUpperCase();
+                                const cellText = String(row[c]).trim();
+                                const cellLower = cellText.toLowerCase();
+
+                                const inlineMatch = cellText.match(/(?:nama\s+(?:sekolah|satuan\s+pendidikan))\s*[:\-]\s*(.+)/i);
+                                if (inlineMatch && isValidSchoolNameCandidate(inlineMatch[1])) {
+                                    detectedName = inlineMatch[1].trim();
+                                }
+
+                                if (c < row.length - 1 && (cellLower === "nama sekolah" || cellLower === "nama satuan pendidikan" || cellLower === "satuan pendidikan")) {
+                                    const nextVal = String(row[c+1]).trim();
+                                    if (isValidSchoolNameCandidate(nextVal)) {
+                                        detectedName = nextVal;
+                                    }
+                                }
+
+                                const cellCode = cellText.toUpperCase();
                                 if (/^[A-E]\.\d{1,2}$/.test(cellCode) && !extractedMap.has(cellCode)) {
                                     let indName = "";
                                     let skorVal = null;
@@ -2822,20 +2815,18 @@
                     });
 
                     let newIndicators = Array.from(extractedMap.values());
-                    if (newIndicators.length === 0 && sch) {
-                        newIndicators = sch.indicators;
+                    if (newIndicators.length === 0) {
+                        newIndicators = getActiveSchool().indicators;
                     }
 
-                    if (sch) {
-                        if (detectedName) {
-                            sch.schoolName = detectedName;
-                            const detStatus = detectSchoolStatusFromName(detectedName);
-                            if (detStatus) sch.schoolStatus = detStatus;
-                        }
-                        if (detectedNPSN) sch.npsn = detectedNPSN;
-                        sch.indicators = newIndicators;
-                        sch.statusRapor = "Sudah PBD & Terverifikasi";
+                    const sch = getActiveSchool();
+                    if (detectedName && isValidSchoolNameCandidate(detectedName)) {
+                        sch.schoolName = detectedName;
+                        const detStatus = detectSchoolStatusFromName(detectedName);
+                        if (detStatus) sch.schoolStatus = detStatus;
                     }
+                    if (detectedNPSN) sch.npsn = detectedNPSN;
+                    sch.indicators = newIndicators;
 
                     autoGenerateAIReflections();
                     autoSuggestRkt();
@@ -2845,7 +2836,6 @@
 
                     document.getElementById('aiProcessingState').style.display = 'none';
                     closeAiUploadModal();
-                    refreshClusterDropdown();
                     syncAllTabsAndUI();
                     showSyncToast(`Ekstraksi Selesai: ${newIndicators.length} Indikator, RKT & RKAS Tahunan (${sch.schoolStatus}) untuk ${sch.schoolName}!`);
 
@@ -2857,9 +2847,60 @@
             reader.readAsArrayBuffer(selectedFileRaw);
         }
 
-        /* ----------------------------------------------------
-           APPLICATION INITIALIZATION LOOP
-        ---------------------------------------------------- */
+        function exportToFile() {
+            const dataStr = JSON.stringify(appState, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Backup_SIPBD_MUTU_PRO_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showSyncToast("File Backup JSON Berhasil Diunduh!");
+        }
+
+        function importJsonFile(event) {
+            const inputEl = event.target;
+            const file = inputEl.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const rawText = String(e.target.result || "").replace(/^\uFEFF/, "").trim();
+                    const parsed = JSON.parse(rawText);
+
+                    if (parsed && parsed.schools && typeof parsed.schools === 'object') {
+                        Object.values(parsed.schools).forEach(s => sanitizeSchoolRecord(s));
+                        appState = parsed;
+                        persist();
+                        syncAllTabsAndUI();
+                        showSyncToast(`Data Wilayah Binaan (${Object.keys(parsed.schools).length} Sekolah) Berhasil Diimpor!`);
+                    } else if (parsed && parsed.schoolName && Array.isArray(parsed.indicators)) {
+                        sanitizeSchoolRecord(parsed);
+                        const existingId = Object.keys(appState.schools).find(k =>
+                            appState.schools[k].npsn === parsed.npsn && parsed.npsn !== "00000000"
+                        );
+                        const targetId = existingId || ("SCH_" + Date.now());
+                        parsed.id = targetId;
+                        parsed.statusRapor = "Sudah PBD & Terverifikasi";
+                        appState.schools[targetId] = parsed;
+                        appState.activeSchoolId = targetId;
+                        persist();
+                        syncAllTabsAndUI();
+                        showSyncToast(`Data Sekolah Binaan "${parsed.schoolName}" Berhasil Diimpor!`);
+                    } else {
+                        alert("Format file JSON tidak dikenali sebagai data SIPBD-MUTU.");
+                    }
+                } catch (err) {
+                    alert("Gagal membaca file JSON: " + err.message);
+                } finally {
+                    inputEl.value = "";
+                }
+            };
+            reader.readAsText(file);
+        }
+
         window.onload = async function() {
             try {
                 const savedFont = localStorage.getItem(FONT_SCALE_KEY);
@@ -2868,7 +2909,6 @@
 
             await initDB();
             await loadPersistedData();
-            refreshClusterDropdown();
             syncAllTabsAndUI();
         };
     </script>
