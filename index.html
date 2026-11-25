@@ -691,18 +691,21 @@
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
                     <div>
-                        <h3 class="section-heading">Tahap 4: Rekomendasi Rancangan Kegiatan dan Anggaran Sekolah (RKAS / ARKAS) — 1 Tahun Anggaran</h3>
-                        <p class="section-subtext">Tersinkronisasi otomatis dengan RKT (termasuk <strong>Honorarium Rutin 12 Bulan</strong> Non-ASN/Honor Murni & <strong>Honor Narasumber IHT</strong>) serta mematuhi <strong>Permendikdasmen No. 8 Tahun 2026</strong>.</p>
+                        <h3 class="section-heading">Tahap 4: Rancangan Kegiatan dan Anggaran Sekolah (RKAS / ARKAS) — 12 Bulan & Tahap I–II</h3>
+                        <p class="section-subtext">Terintegrasi langsung dengan RKT Satdik, distribusi <strong>12 Bulan (Jan–Des)</strong>, pembagian <strong>Tahap I (50%) & Tahap II (50%)</strong>, serta audit kuota <strong>Permendikdasmen No. 8 Tahun 2026</strong>.</p>
                     </div>
                     <div style="display:flex; gap:8px; flex-wrap:wrap;">
                         <button type="button" onclick="autoGenerateArkasFromRaporAndRkt()" class="btn btn-amber" title="Susun otomatis rancangan RKAS Tahunan (12 Bulan) yang sinkron dengan Rapor, RKT, & kuota BOSP Negeri/Swasta">
-                            ✦ Rekomendasi ARKAS Tahunan Otomatis (Sinkron RKT & Pagu BOSP)
+                            ✦ Rekomendasi ARKAS Otomatis (Sinkron RKT & Pagu)
+                        </button>
+                        <button type="button" onclick="autoBalanceSupervisorBudget()" class="btn btn-teal" title="Seimbangkan sisa pagu sekolah binaan agar pas 100% (Sisa Rp 0)">
+                            ⚖️ Seimbangkan Pagu (100%)
                         </button>
                         <button type="button" onclick="addArkasRow()" class="btn btn-emerald">+ Tambah Item ARKAS</button>
                     </div>
                 </div>
 
-                <!-- Simulasi & Status Pagu BOSP -->
+                <!-- Simulasi Pagu BOSP Berbasis Jumlah Siswa & Status Sekolah -->
                 <div style="background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 10px; padding: 14px; margin-bottom: 14px;" class="grid-4">
                     <div class="form-group">
                         <label style="color: #0f766e;">Status Satuan Pendidikan</label>
@@ -712,16 +715,36 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label style="color: #0f766e;">Total Pagu BOSP Reguler Tahunan (Rp)</label>
-                        <input type="number" id="paguBospInput" value="150000000" onchange="updateBospPagu(this.value)" class="form-control" style="background: white;">
+                        <label style="color: #0f766e;">Jumlah Siswa & Satuan Biaya (Rp)</label>
+                        <div style="display:flex; gap:6px;">
+                            <input type="number" id="studentCountInput" value="150" min="1" onchange="recalcPaguFromStudents()" class="form-control" style="background: white; width: 42%;" title="Jumlah Siswa Dapodik">
+                            <input type="number" id="unitCostInput" value="1100000" min="0" onchange="recalcPaguFromStudents()" class="form-control" style="background: white; width: 58%;" title="Satuan Biaya BOSP per Siswa">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label style="color: #0f766e;">Total Pagu BOSP Reguler (Rp)</label>
+                        <input type="number" id="paguBospInput" value="150000000" onchange="updateBospPagu(this.value)" class="form-control" style="background: white; font-weight: 700;">
                     </div>
                     <div style="display: flex; flex-direction: column; justify-content: center;">
-                        <span class="stat-title">Total Rencana Belanja Tahunan</span>
-                        <span id="arkasTotalTop" style="font-size: calc(18px * var(--ui-scale)); font-weight: 800; color: #0f172a; margin-top: 4px;">Rp 0</span>
+                        <span class="stat-title">Total Belanja / Sisa Pagu</span>
+                        <span id="arkasTotalTop" style="font-size: calc(16px * var(--ui-scale)); font-weight: 800; color: #0f172a; margin-top: 2px;">Rp 0</span>
+                        <span id="sisaPaguBosp" style="font-size: calc(13px * var(--ui-scale)); font-weight: 700; color: #059669;">Sisa: Rp 150.000.000</span>
                     </div>
-                    <div style="display: flex; flex-direction: column; justify-content: center;">
-                        <span class="stat-title">Sisa Pagu BOSP (Operasional Lainnya)</span>
-                        <span id="sisaPaguBosp" style="font-size: calc(18px * var(--ui-scale)); font-weight: 800; color: #059669; margin-top: 4px;">Rp 150.000.000</span>
+                </div>
+
+                <!-- Ringkasan Penyaluran Tahap I & Tahap II -->
+                <div class="grid-3" style="margin-bottom: 14px;">
+                    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:10px 14px;">
+                        <div style="font-size:11px; font-weight:700; color:#1e40af; text-transform:uppercase;">Alokasi Tahap I (Januari – Juni)</div>
+                        <div id="arkasTahap1Top" style="font-size:calc(16px * var(--ui-scale)); font-weight:800; color:#1d4ed8; margin-top:2px;">Rp 0</div>
+                    </div>
+                    <div style="background:#f5f3ff; border:1px solid #ddd6fe; border-radius:8px; padding:10px 14px;">
+                        <div style="font-size:11px; font-weight:700; color:#5b21b6; text-transform:uppercase;">Alokasi Tahap II (Juli – Desember)</div>
+                        <div id="arkasTahap2Top" style="font-size:calc(16px * var(--ui-scale)); font-weight:800; color:#6d28d9; margin-top:2px;">Rp 0</div>
+                    </div>
+                    <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:8px; padding:10px 14px;">
+                        <div style="font-size:11px; font-weight:700; color:#065f46; text-transform:uppercase;">Total Rencana 1 Tahun (12 Bulan)</div>
+                        <div id="arkasTahapTotalTop" style="font-size:calc(16px * var(--ui-scale)); font-weight:800; color:#047857; margin-top:2px;">Rp 0</div>
                     </div>
                 </div>
 
@@ -763,17 +786,22 @@
                                 <th>Kode Kegiatan ARKAS</th>
                                 <th>Uraian Barang / Jasa</th>
                                 <th>Sumber Dana</th>
-                                <th>Vol</th>
+                                <th>Vol Smt 1 (Jan–Jun)</th>
+                                <th>Vol Smt 2 (Jul–Des)</th>
                                 <th>Satuan</th>
                                 <th>Harga Satuan (Rp)</th>
-                                <th>Jumlah (Rp)</th>
+                                <th>Tahap I (Rp)</th>
+                                <th>Tahap II (Rp)</th>
+                                <th>Total 1 Tahun (Rp)</th>
                                 <th style="text-align: center;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="arkasTableBody"></tbody>
                         <tfoot>
                             <tr style="background: #f8fafc; font-weight: bold;">
-                                <td colspan="7" style="text-align: right; text-transform: uppercase;">Total Rencana Anggaran Tahunan (12 Bulan):</td>
+                                <td colspan="8" style="text-align: right; text-transform: uppercase;">Total Rencana Anggaran Tahunan (Tahap I + Tahap II):</td>
+                                <td id="arkasTahap1Sum" class="nowrap" style="color: #1d4ed8;">Rp 0</td>
+                                <td id="arkasTahap2Sum" class="nowrap" style="color: #6d28d9;">Rp 0</td>
                                 <td id="arkasTotalSum" class="nowrap" style="color: #0d9488; font-size: calc(14px * var(--ui-scale));">Rp 0</td>
                                 <td></td>
                             </tr>
@@ -1525,15 +1553,29 @@
             showSyncToast("Identitas Pengawas Pembina Tersimpan!");
         }
 
+        const JENJANG_UNIT_COST = {
+            PAUD: 600000,
+            SD: 900000,
+            SMP: 1100000,
+            SMA: 1500000,
+            SMK: 1600000,
+            SLB: 3500000,
+            KESETARAAN: 1500000
+        };
+
         function switchJenjang(val) {
             const sch = getActiveSchool();
             if (!sch) return;
             sch.jenjang = val;
+            if (JENJANG_UNIT_COST[val]) {
+                sch.unitCost = JENJANG_UNIT_COST[val];
+                const siswa = parseInt(sch.studentCount) || 150;
+                sch.paguBosp = siswa * sch.unitCost;
+            }
             sanitizeSchoolRecord(sch);
             persist();
-            populateSchoolSwitcher();
             syncAllTabsAndUI();
-            showSyncToast(`Jenjang diubah ke ${val}. Indikator non-${val} otomatis disaring.`);
+            showSyncToast(`Jenjang diubah ke ${val}. Satuan biaya BOSP & indikator non-${val} disesuaikan otomatis.`);
         }
 
         function updateSchoolStatus(val) {
@@ -1615,6 +1657,14 @@
             document.getElementById('jenjangSelect').value = sch.jenjang || 'SMP';
             const statusEl = document.getElementById('schoolStatusSelect');
             if (statusEl) statusEl.value = sch.schoolStatus || 'Negeri';
+            const unitCost = sch.unitCost || JENJANG_UNIT_COST[sch.jenjang || 'SMP'] || 1100000;
+            const studentCount = sch.studentCount || Math.max(1, Math.round((sch.paguBosp || 150000000) / unitCost));
+            sch.unitCost = unitCost;
+            sch.studentCount = studentCount;
+            const siswaEl = document.getElementById('studentCountInput');
+            if (siswaEl) siswaEl.value = studentCount;
+            const unitEl = document.getElementById('unitCostInput');
+            if (unitEl) unitEl.value = unitCost;
             const paguEl = document.getElementById('paguBospInput');
             if (paguEl) paguEl.value = sch.paguBosp || 150000000;
 
@@ -2082,6 +2132,126 @@
             showSyncToast(`Rekomendasi Program RKT Tahunan (12 Bulan - ${statusSekolah}) Berhasil Disusun!`);
         }
 
+        /* ----------------------------------------------------
+           INTEGRASI RKAS 12 BULAN, TAHAP I–II & PENYEIMBANG PAGU
+        ---------------------------------------------------- */
+        function recalcPaguFromStudents() {
+            const sch = getActiveSchool();
+            if (!sch) return;
+            const siswa = Math.max(1, parseInt(document.getElementById('studentCountInput').value) || 1);
+            const satuan = Math.max(0, parseInt(document.getElementById('unitCostInput').value) || 0);
+            sch.studentCount = siswa;
+            sch.unitCost = satuan;
+            sch.paguBosp = siswa * satuan;
+            document.getElementById('paguBospInput').value = sch.paguBosp;
+            persist();
+            renderArkasTable();
+        }
+
+        function computeArkasRowTahap(item) {
+            const price = parseFloat(item.price) || 0;
+            if (Array.isArray(item.months) && item.months.length === 12) {
+                const v1 = item.months.slice(0, 6).reduce((a, b) => a + (parseFloat(b) || 0), 0);
+                const v2 = item.months.slice(6, 12).reduce((a, b) => a + (parseFloat(b) || 0), 0);
+                item.vol1 = v1;
+                item.vol2 = v2;
+                item.vol = v1 + v2;
+            } else {
+                const totalVol = parseFloat(item.vol) || 0;
+                if (item.vol1 === undefined || item.vol2 === undefined) {
+                    item.vol1 = Math.ceil(totalVol / 2);
+                    item.vol2 = Math.max(0, totalVol - item.vol1);
+                }
+                const v1 = parseFloat(item.vol1) || 0;
+                const v2 = parseFloat(item.vol2) || 0;
+                item.vol = v1 + v2;
+                item.months = [0, 0, v1, 0, 0, 0, 0, 0, v2, 0, 0, 0];
+            }
+            item.tahap1 = (parseFloat(item.vol1) || 0) * price;
+            item.tahap2 = (parseFloat(item.vol2) || 0) * price;
+            item.total = item.tahap1 + item.tahap2;
+            return item;
+        }
+
+        function setArkasVolSemester(idx, semField, val) {
+            const sch = getActiveSchool();
+            if (!sch || !sch.arkas || !sch.arkas[idx]) return;
+            const num = Math.max(0, parseFloat(String(val).replace(',', '.')) || 0);
+            sch.arkas[idx][semField] = num;
+            const v1 = parseFloat(sch.arkas[idx].vol1) || 0;
+            const v2 = parseFloat(sch.arkas[idx].vol2) || 0;
+            sch.arkas[idx].vol = v1 + v2;
+            sch.arkas[idx].months = [0, 0, v1, 0, 0, 0, 0, 0, v2, 0, 0, 0];
+            computeArkasRowTahap(sch.arkas[idx]);
+            persist();
+            renderArkasTable();
+        }
+
+        function autoBalanceSupervisorBudget() {
+            const sch = getActiveSchool();
+            if (!sch) return;
+            const pagu = parseFloat(sch.paguBosp) || 0;
+            let grandTotal = 0;
+            (sch.arkas || []).forEach(item => {
+                computeArkasRowTahap(item);
+                grandTotal += item.total;
+            });
+
+            const diff = pagu - grandTotal;
+            if (diff === 0) {
+                showSyncToast("Anggaran RKAS sudah seimbang 100% dengan Pagu BOSP (Sisa Rp 0).");
+                return;
+            }
+
+            if (diff > 0) {
+                const adjIdx = sch.arkas.findIndex(i => i.isAutoBalance);
+                if (adjIdx >= 0) {
+                    sch.arkas[adjIdx].price += diff;
+                    computeArkasRowTahap(sch.arkas[adjIdx]);
+                } else {
+                    const t1Part = Math.floor(diff / 2);
+                    const t2Part = diff - t1Part;
+                    if (t1Part > 0) {
+                        sch.arkas.push(computeArkasRowTahap({
+                            kegiatanRkt: "Pelaksanaan Pembelajaran & Penguatan Literasi-Numerasi (Tahap I)",
+                            kodeArkas: "03.03.01",
+                            uraian: "Pengadaan Bahan Praktik Pembelajaran & Media Literasi-Numerasi (Penyeimbang Tahap I)",
+                            sumberDana: "BOSP Reguler",
+                            vol1: 1, vol2: 0, vol: 1,
+                            satuan: "Paket",
+                            price: t1Part,
+                            months: [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            isAutoBalance: true
+                        }));
+                    }
+                    if (t2Part > 0) {
+                        sch.arkas.push(computeArkasRowTahap({
+                            kegiatanRkt: "Pelaksanaan Pembelajaran & Penguatan Literasi-Numerasi (Tahap II)",
+                            kodeArkas: "03.03.01",
+                            uraian: "Pengadaan Bahan Praktik Pembelajaran & Ekstrakurikuler (Penyeimbang Tahap II)",
+                            sumberDana: "BOSP Reguler",
+                            vol1: 0, vol2: 1, vol: 1,
+                            satuan: "Paket",
+                            price: t2Part,
+                            months: [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+                            isAutoBalance: true
+                        }));
+                    }
+                }
+                showSyncToast(`Sisa pagu Rp ${diff.toLocaleString('id-ID')} berhasil diseimbangkan ke Tahap I & II!`);
+            } else {
+                const ratio = pagu / grandTotal;
+                sch.arkas.forEach(item => {
+                    item.price = Math.max(100, Math.floor(item.price * ratio));
+                    computeArkasRowTahap(item);
+                });
+                showSyncToast("Nominal item belanja disesuaikan proporsional agar tidak melebihi Pagu BOSP.");
+            }
+
+            persist();
+            renderArkasTable();
+        }
+
         function autoGenerateArkasFromRaporAndRkt(silent = false) {
             const sch = getActiveSchool();
             if (!sch) return;
@@ -2108,34 +2278,38 @@
                 const templates = ARKAS_PBD_TEMPLATES[code];
                 if (templates && templates.length > 0) {
                     templates.forEach(tpl => {
-                        generatedArkas.push({
+                        const v1 = Math.ceil(tpl.vol / 2);
+                        const v2 = Math.max(0, tpl.vol - v1);
+                        generatedArkas.push(computeArkasRowTahap({
                             kegiatanRkt: kegiatanLabel,
                             kodeArkas: tpl.kodeArkas,
                             uraian: tpl.uraian,
                             sumberDana: tpl.sumberDana,
+                            vol1: v1,
+                            vol2: v2,
                             vol: tpl.vol,
                             satuan: tpl.satuan,
-                            price: tpl.price,
-                            total: tpl.vol * tpl.price
-                        });
+                            price: tpl.price
+                        }));
                     });
                 } else {
-                    generatedArkas.push({
+                    generatedArkas.push(computeArkasRowTahap({
                         kegiatanRkt: kegiatanLabel,
                         kodeArkas: "04.06.01",
                         uraian: `Konsumsi & ATK Pendampingan Peningkatan ${shortTitle} (${code})`,
                         sumberDana: "BOSP Reguler",
+                        vol1: 13,
+                        vol2: 12,
                         vol: 25,
                         satuan: "Orang/Kegiatan",
-                        price: 35000,
-                        total: 875000
-                    });
+                        price: 35000
+                    }));
                 }
             });
 
             let currentBukuTotal = generatedArkas
                 .filter(item => classifyArkasItemCategory(item) === "buku")
-                .reduce((s, item) => s + (item.vol * item.price), 0);
+                .reduce((s, item) => s + item.total, 0);
 
             if (currentBukuTotal < minBukuAmount) {
                 const kekuranganBuku = minBukuAmount - currentBukuTotal;
@@ -2144,27 +2318,31 @@
                 if (existingBukuIdx >= 0) {
                     const itemBuku = generatedArkas[existingBukuIdx];
                     const tambahVol = Math.ceil(kekuranganBuku / (itemBuku.price || 55000));
-                    itemBuku.vol += tambahVol;
-                    itemBuku.total = itemBuku.vol * itemBuku.price;
+                    itemBuku.vol1 += Math.ceil(tambahVol / 2);
+                    itemBuku.vol2 += Math.floor(tambahVol / 2);
+                    computeArkasRowTahap(itemBuku);
                 } else {
                     const hargaBuku = 55000;
                     const volBuku = Math.ceil(minBukuAmount / hargaBuku);
-                    generatedArkas.unshift({
+                    const v1 = Math.ceil(volBuku / 2);
+                    const v2 = Math.max(0, volBuku - v1);
+                    generatedArkas.unshift(computeArkasRowTahap({
                         kegiatanRkt: "Pengembangan Perpustakaan & Pojok Baca Literasi (Wajib Min. 10% BOSP)",
                         kodeArkas: "05.02.01",
                         uraian: "Pengadaan Buku Teks Utama & Buku Bacaan Bermutu Perpustakaan (SIPLah)",
                         sumberDana: "BOSP Reguler",
+                        vol1: v1,
+                        vol2: v2,
                         vol: volBuku,
                         satuan: "Eksemplar",
-                        price: hargaBuku,
-                        total: volBuku * hargaBuku
-                    });
+                        price: hargaBuku
+                    }));
                 }
             }
 
             const existingIhtHonor = generatedArkas
                 .filter(item => classifyArkasItemCategory(item) === "honor")
-                .reduce((s, item) => s + (item.vol * item.price), 0);
+                .reduce((s, item) => s + item.total, 0);
 
             const targetRoutineRatio = statusSekolah === "Swasta" ? 0.28 : 0.12;
             const availableForRoutine = Math.max(0, Math.min(Math.floor(pagu * targetRoutineRatio), maxHonorAmount - existingIhtHonor));
@@ -2174,7 +2352,7 @@
                 const totalOrangBulan = jumlahOrang * 12;
                 const tarifPerBulan = Math.max(250000, Math.floor((availableForRoutine / totalOrangBulan) / 25000) * 25000);
 
-                generatedArkas.push({
+                generatedArkas.push(computeArkasRowTahap({
                     kegiatanRkt: statusSekolah === "Swasta"
                         ? "Pembayaran Honorarium Rutin Bulanan Guru & Tendik Non-ASN (12 Bulan)"
                         : "Pembayaran Honorarium Rutin Bulanan Guru/Tendik Honor Murni (12 Bulan)",
@@ -2183,30 +2361,35 @@
                         ? `Honorarium Rutin Guru & Tendik Non-ASN (${jumlahOrang} Orang × 12 Bulan)`
                         : `Honorarium Rutin Guru/Tendik Honor Murni (${jumlahOrang} Orang × 12 Bulan)`,
                     sumberDana: "BOSP Reguler",
+                    vol1: jumlahOrang * 6,
+                    vol2: jumlahOrang * 6,
                     vol: totalOrangBulan,
                     satuan: "Orang/Bulan",
-                    price: tarifPerBulan,
-                    total: totalOrangBulan * tarifPerBulan
-                });
+                    price: tarifPerBulan
+                }));
             }
 
             let sumHonor = 0, sumSarpras = 0;
             generatedArkas.forEach(item => {
                 const cat = classifyArkasItemCategory(item);
                 if (cat === "honor") {
-                    if (sumHonor + (item.vol * item.price) > maxHonorAmount) {
+                    if (sumHonor + item.total > maxHonorAmount) {
                         const sisaKuota = Math.max(0, maxHonorAmount - sumHonor);
-                        item.vol = Math.floor(sisaKuota / (item.price || 1));
-                        item.total = item.vol * item.price;
+                        const maxVol = Math.floor(sisaKuota / (item.price || 1));
+                        item.vol1 = Math.ceil(maxVol / 2);
+                        item.vol2 = Math.max(0, maxVol - item.vol1);
+                        computeArkasRowTahap(item);
                     }
-                    sumHonor += item.vol * item.price;
+                    sumHonor += item.total;
                 } else if (cat === "sarpras") {
-                    if (sumSarpras + (item.vol * item.price) > maxSarprasAmount) {
+                    if (sumSarpras + item.total > maxSarprasAmount) {
                         const sisaKuota = Math.max(0, maxSarprasAmount - sumSarpras);
-                        item.vol = Math.floor(sisaKuota / (item.price || 1));
-                        item.total = item.vol * item.price;
+                        const maxVol = Math.floor(sisaKuota / (item.price || 1));
+                        item.vol1 = Math.ceil(maxVol / 2);
+                        item.vol2 = Math.max(0, maxVol - item.vol1);
+                        computeArkasRowTahap(item);
                     }
-                    sumSarpras += item.vol * item.price;
+                    sumSarpras += item.total;
                 }
             });
 
@@ -2215,7 +2398,7 @@
             renderArkasTable();
             if (!silent) {
                 const maxHonorLabel = statusSekolah === "Swasta" ? "40%" : "20%";
-                showSyncToast(`RKAS Tahunan (12 Bulan - ${statusSekolah}) Tersusun! Buku ≥ 10%, Honor (12 Bln + IHT) ≤ ${maxHonorLabel}, Sarpras ≤ 20%.`);
+                showSyncToast(`RKAS Tahunan (12 Bulan - ${statusSekolah}) Tersusun! Buku ≥ 10%, Honor ≤ ${maxHonorLabel}, Sarpras ≤ 20%.`);
             }
         }
 
@@ -2227,19 +2410,22 @@
             tbody.innerHTML = '';
 
             let grandTotal = 0;
+            let totalTahap1 = 0;
+            let totalTahap2 = 0;
             let totalBuku = 0;
             let totalHonor = 0;
             let totalSarpras = 0;
 
             (sch.arkas || []).forEach((a, idx) => {
-                const tot = (parseFloat(a.vol) || 0) * (parseFloat(a.price) || 0);
-                a.total = tot;
-                grandTotal += tot;
+                computeArkasRowTahap(a);
+                grandTotal += a.total;
+                totalTahap1 += a.tahap1;
+                totalTahap2 += a.tahap2;
 
                 const cat = classifyArkasItemCategory(a);
-                if (cat === "buku") totalBuku += tot;
-                else if (cat === "honor") totalHonor += tot;
-                else if (cat === "sarpras") totalSarpras += tot;
+                if (cat === "buku") totalBuku += a.total;
+                else if (cat === "honor") totalHonor += a.total;
+                else if (cat === "sarpras") totalSarpras += a.total;
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -2253,17 +2439,25 @@
                             <option value="Non-Anggaran" ${a.sumberDana === 'Non-Anggaran' ? 'selected' : ''}>Non-Anggaran</option>
                         </select>
                     </td>
-                    ${ce('arkas', idx, 'vol', a.vol)}
+                    <td contenteditable="true" style="text-align:center; background:#eff6ff; font-weight:700;" onblur="setArkasVolSemester(${idx},'vol1',this.textContent)">${a.vol1}</td>
+                    <td contenteditable="true" style="text-align:center; background:#f5f3ff; font-weight:700;" onblur="setArkasVolSemester(${idx},'vol2',this.textContent)">${a.vol2}</td>
                     ${ce('arkas', idx, 'satuan', a.satuan)}
                     ${ce('arkas', idx, 'price', a.price)}
-                    <td class="nowrap" style="font-weight:700; color:#0d9488;">Rp ${tot.toLocaleString('id-ID')}</td>
+                    <td class="nowrap" style="font-weight:600; color:#1d4ed8;">Rp ${a.tahap1.toLocaleString('id-ID')}</td>
+                    <td class="nowrap" style="font-weight:600; color:#6d28d9;">Rp ${a.tahap2.toLocaleString('id-ID')}</td>
+                    <td class="nowrap" style="font-weight:700; color:#0d9488;">Rp ${a.total.toLocaleString('id-ID')}</td>
                     <td style="text-align:center;"><button type="button" onclick="removeArkas(${idx})" class="btn btn-sm btn-rose">✕</button></td>
                 `;
                 tbody.appendChild(tr);
             });
 
+            document.getElementById('arkasTahap1Sum').textContent = `Rp ${totalTahap1.toLocaleString('id-ID')}`;
+            document.getElementById('arkasTahap2Sum').textContent = `Rp ${totalTahap2.toLocaleString('id-ID')}`;
             document.getElementById('arkasTotalSum').textContent = `Rp ${grandTotal.toLocaleString('id-ID')}`;
             document.getElementById('arkasTotalTop').textContent = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+            if (document.getElementById('arkasTahap1Top')) document.getElementById('arkasTahap1Top').textContent = `Rp ${totalTahap1.toLocaleString('id-ID')}`;
+            if (document.getElementById('arkasTahap2Top')) document.getElementById('arkasTahap2Top').textContent = `Rp ${totalTahap2.toLocaleString('id-ID')}`;
+            if (document.getElementById('arkasTahapTotalTop')) document.getElementById('arkasTahapTotalTop').textContent = `Rp ${grandTotal.toLocaleString('id-ID')}`;
 
             const pagu = parseFloat(sch.paguBosp) || 0;
             const statusSekolah = sch.schoolStatus || detectSchoolStatusFromName(sch.schoolName) || "Negeri";
@@ -2272,7 +2466,7 @@
 
             const sisa = pagu - grandTotal;
             const sisaEl = document.getElementById('sisaPaguBosp');
-            sisaEl.textContent = `Rp ${sisa.toLocaleString('id-ID')}`;
+            sisaEl.textContent = `Sisa: Rp ${sisa.toLocaleString('id-ID')}`;
             sisaEl.style.color = sisa < 0 ? '#dc2626' : '#059669';
 
             const minBukuRp = Math.ceil(pagu * 0.10);
@@ -2319,7 +2513,7 @@
             const sch = getActiveSchool();
             if (!sch.arkas) sch.arkas = [];
             const statusSekolah = sch.schoolStatus || detectSchoolStatusFromName(sch.schoolName) || "Negeri";
-            sch.arkas.push({
+            sch.arkas.push(computeArkasRowTahap({
                 kegiatanRkt: statusSekolah === "Swasta"
                     ? "Pembayaran Honorarium Rutin Bulanan Guru/Tendik Non-ASN (12 Bulan)"
                     : "Pembayaran Honorarium Rutin Bulanan GTK Honor Murni (12 Bulan)",
@@ -2328,11 +2522,12 @@
                     ? "Honorarium Rutin Guru/Tendik Non-ASN (1 Orang × 12 Bulan)"
                     : "Honorarium Rutin GTK Honor Murni (1 Orang × 12 Bulan)",
                 sumberDana: "BOSP Reguler",
+                vol1: 6,
+                vol2: 6,
                 vol: 12,
                 satuan: "Orang/Bulan",
-                price: 500000,
-                total: 6000000
-            });
+                price: 500000
+            }));
             persist();
             renderArkasTable();
         }
@@ -2471,23 +2666,25 @@
             const aBody = document.getElementById('repArkasBody');
             if (aBody) {
                 aBody.innerHTML = '';
-                let sumArkas = 0;
+                let sumArkas = 0, sumT1 = 0, sumT2 = 0;
                 (sch.arkas || []).forEach(a => {
-                    const tot = (parseFloat(a.vol) || 0) * (parseFloat(a.price) || 0);
-                    sumArkas += tot;
+                    computeArkasRowTahap(a);
+                    sumArkas += a.total;
+                    sumT1 += a.tahap1;
+                    sumT2 += a.tahap2;
                     aBody.innerHTML += `
                         <tr>
                             <td>${esc(a.kegiatanRkt)}</td>
                             <td style="font-weight:700; text-align:center;">${esc(a.kodeArkas)}</td>
-                            <td>${esc(a.uraian)}</td>
-                            <td class="nowrap" style="text-align:center;">${esc(a.vol)} ${esc(a.satuan)}</td>
-                            <td class="nowrap" style="text-align:right;">Rp ${tot.toLocaleString('id-ID')}</td>
+                            <td>${esc(a.uraian)}<br><small style="color:#475569;">Tahap I (Jan–Jun): Rp ${a.tahap1.toLocaleString('id-ID')} | Tahap II (Jul–Des): Rp ${a.tahap2.toLocaleString('id-ID')}</small></td>
+                            <td class="nowrap" style="text-align:center;">${a.vol1} + ${a.vol2} ${esc(a.satuan)}</td>
+                            <td class="nowrap" style="text-align:right;">Rp ${a.total.toLocaleString('id-ID')}</td>
                         </tr>
                     `;
                 });
                 aBody.innerHTML += `
                     <tr style="background:#f8fafc; font-weight:800;">
-                        <td colspan="4" style="text-align:right;">TOTAL ANGGARAN TAHUNAN (12 BULAN):</td>
+                        <td colspan="4" style="text-align:right;">TOTAL ANGGARAN TAHUNAN (TAHAP I: Rp ${sumT1.toLocaleString('id-ID')} | TAHAP II: Rp ${sumT2.toLocaleString('id-ID')}):</td>
                         <td class="nowrap" style="text-align:right; color:#0f766e;">Rp ${sumArkas.toLocaleString('id-ID')}</td>
                     </tr>
                 `;
@@ -2871,13 +3068,17 @@
                     const parsed = JSON.parse(rawText);
 
                     if (parsed && parsed.schools && typeof parsed.schools === 'object') {
-                        Object.values(parsed.schools).forEach(s => sanitizeSchoolRecord(s));
+                        Object.values(parsed.schools).forEach(s => {
+                            sanitizeSchoolRecord(s);
+                            (s.arkas || []).forEach(item => computeArkasRowTahap(item));
+                        });
                         appState = parsed;
                         persist();
                         syncAllTabsAndUI();
                         showSyncToast(`Data Wilayah Binaan (${Object.keys(parsed.schools).length} Sekolah) Berhasil Diimpor!`);
                     } else if (parsed && parsed.schoolName && Array.isArray(parsed.indicators)) {
                         sanitizeSchoolRecord(parsed);
+                        (parsed.arkas || []).forEach(item => computeArkasRowTahap(item));
                         const existingId = Object.keys(appState.schools).find(k =>
                             appState.schools[k].npsn === parsed.npsn && parsed.npsn !== "00000000"
                         );
@@ -2888,9 +3089,30 @@
                         appState.activeSchoolId = targetId;
                         persist();
                         syncAllTabsAndUI();
-                        showSyncToast(`Data Sekolah Binaan "${parsed.schoolName}" Berhasil Diimpor!`);
+                        showSyncToast(`Data Sekolah Binaan "${parsed.schoolName}" Berhasil Diimpor & Diintegrasikan!`);
+                    } else if (parsed && Array.isArray(parsed.items) && !parsed.indicators) {
+                        const sch = getActiveSchool();
+                        if (sch) {
+                            if (parsed.schoolName) sch.schoolName = parsed.schoolName;
+                            if (parsed.status) sch.schoolStatus = parsed.status === 'SWASTA' ? 'Swasta' : 'Negeri';
+                            if (parsed.studentCount) sch.studentCount = parseInt(parsed.studentCount) || 150;
+                            if (parsed.unitCost) sch.unitCost = parseInt(parsed.unitCost) || 1100000;
+                            sch.paguBosp = (sch.studentCount * sch.unitCost) + (parseInt(parsed.extraFund) || 0);
+                            sch.arkas = parsed.items.map(it => computeArkasRowTahap({
+                                kegiatanRkt: it.kegiatan || "Program Benahi PBD",
+                                kodeArkas: (it.rekening || "").split(" - ")[0] || "03.03.01",
+                                uraian: it.uraian || "",
+                                sumberDana: "BOSP Reguler",
+                                satuan: it.satuan || "Paket",
+                                price: parseFloat(it.harga) || 0,
+                                months: Array.isArray(it.months) && it.months.length === 12 ? it.months : [0,0,0,0,0,0,0,0,0,0,0,0]
+                            }));
+                            persist();
+                            syncAllTabsAndUI();
+                            showSyncToast(`Backup RKAS "${sch.schoolName}" Berhasil Diimpor ke Sekolah Binaan Aktif!`);
+                        }
                     } else {
-                        alert("Format file JSON tidak dikenali sebagai data SIPBD-MUTU.");
+                        alert("Format file JSON tidak dikenali sebagai data SIPBD-MUTU maupun RKAS.");
                     }
                 } catch (err) {
                     alert("Gagal membaca file JSON: " + err.message);
